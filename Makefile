@@ -8,4 +8,4 @@ install:
 
 .PHONY: clean
 clean:
-	rm -rf frontend/html/*
+	rm -rf html/*
