@@ -7,10 +7,17 @@ import ReactJson from '@microlink/react-json-view';
 import ModalImage from "react-modal-image";
 import NoImage from '../../../assets/img/no-image.jpg'
 import { FileUploader } from "react-drag-drop-files";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const fileTypes = ["JPG", "PNG", "GIF", "JPEGZ"];
 
 function Vision() {
+  const Link = ({ id, children, title }) => (
+    <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
+      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+    </OverlayTrigger>
+  );
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
@@ -22,6 +29,7 @@ function Vision() {
   const [canSubmit, setCanSubmit] = useState(true);
   const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
+  const isDisableBoostForm = useRef(null)
   const user = getBasicAuth();
 
   function sdTemplate() {
@@ -59,12 +67,14 @@ function Vision() {
       if (file && file.includes("base64,")) {
         body = {
           "question": question,
-          "image": file.split(",")[1]
+          "image": file.split(",")[1],
+          "disableboost": isDisableBoostForm.current.checked
         }
       } else {
         body = {
           "question": question,
-          "image": file
+          "image": file,
+          "disableboost": isDisableBoostForm.current.checked
         }
       }
       submit = true;
@@ -253,6 +263,10 @@ function Vision() {
           </Row>
           <Row style={{ marginTop: "20px" }}>
             <Col sm={10}>
+            <Form.Group as={Col} controlId="formGridAdmin">
+                <Form.Check ref={isDisableBoostForm} type="checkbox" label="Disable Prompt Boost" />
+                <Link title="Disable boost prompt assistant.">ℹ️</Link>
+              </Form.Group>
             </Col>
             <Col sm={2}>
               <div className="d-grid gap-2">
