@@ -439,7 +439,7 @@ function Project() {
               >
                 <Button variant="dark">Edit</Button>{' '}
               </NavLink>
-              {project.llm_type === "chat" &&
+              {data.llm_type === "chat" &&
                 <NavLink
                   to={"/projects/" + data.name + "/chat"}
                 >
