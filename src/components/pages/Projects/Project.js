@@ -506,7 +506,6 @@ function Project() {
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>ID</th>
                           <th>Source</th>
                           <th>Actions</th>
                         </tr>
@@ -517,9 +516,6 @@ function Project() {
                             return (
                               <tr key={index}>
                                 <td>{index}</td>
-                                <td>
-                                  {emb.id}
-                                </td>
                                 <td>
                                   {emb.source}
                                 </td>
