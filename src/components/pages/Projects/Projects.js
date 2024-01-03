@@ -224,22 +224,18 @@ function Projects() {
                           </NavLink>
                         }
                         {project.llm_type === "chat" &&
-                          <div>
-                            <NavLink
-                              to={"/projects/" + project.name + "/chat"}
-                            >
-                              <Button variant="dark">Chat<Link title="Models need to support Chat mode, unstable otherwise. GPT's and models with 'chat' in the name support it. Example: OpenAI GPT4, LLama based Chat models.">⚠️</Link></Button>{' '}
-                            </NavLink>
-                          </div>
+                          <NavLink
+                            to={"/projects/" + project.name + "/chat"}
+                          >
+                            <Button variant="dark">Chat<Link title="Models need to support Chat mode, unstable otherwise. GPT's and models with 'chat' in the name support it. Example: OpenAI GPT4, LLama based Chat models.">⚠️</Link></Button>{' '}
+                          </NavLink>
                         }
                         {project.llm_type !== "vision" &&
-                          <div>
-                            <NavLink
-                              to={"/projects/" + project.name + "/question"}
-                            >
-                              <Button variant="dark">Question</Button>{' '}
-                            </NavLink>
-                          </div>
+                          <NavLink
+                            to={"/projects/" + project.name + "/question"}
+                          >
+                            <Button variant="dark">Question</Button>{' '}
+                          </NavLink>
                         }
                       </td>
                       {
