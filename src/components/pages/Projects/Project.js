@@ -517,11 +517,11 @@ function Project() {
                               <tr key={index}>
                                 <td>{index}</td>
                                 <td>
-                                  {emb.source}
+                                  {emb}
                                 </td>
                                 <td>
-                                  <Button onClick={() => handleViewClick(emb.source)} variant="dark">View</Button>{' '}
-                                  <Button onClick={() => handleDeleteClick(emb.source)} variant="danger">Delete</Button>
+                                  <Button onClick={() => handleViewClick(emb)} variant="dark">View</Button>{' '}
+                                  <Button onClick={() => handleDeleteClick(emb)} variant="danger">Delete</Button>
                                 </td>
                               </tr>
                             )
