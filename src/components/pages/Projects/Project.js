@@ -28,6 +28,7 @@ function Project() {
   const user = getBasicAuth();
   const [tags, setTags] = React.useState([]);
   const typeForm = useRef(null)
+  const splitterForm = useRef(null)
   const searchForm = useRef(null)
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
@@ -148,6 +149,9 @@ function Project() {
   }
 
   const handleViewClick = (source) => {
+    if (source.source)
+      source = source.source
+
     fetch(url + "/projects/" + projectName + "/embeddings/source/" + btoa(source), {
       method: 'GET',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
@@ -414,6 +418,17 @@ function Project() {
                     </Form.Group>
                   </Tab>
                 </Tabs>
+                <Row>
+                  <Col sm={2}>
+                    <Form.Label>Splitter<Link title="Sentence should work better in human readable text.">ℹ️</Link></Form.Label>
+                  </Col>
+                  <Col sm={3}>
+                    <Form.Select ref={splitterForm}>
+                      <option value="sentence">sentence</option>
+                      <option value="token">token</option>
+                    </Form.Select>
+                  </Col>
+                </Row>
                 <Col sm={2}>
                   <Button variant="dark" type="submit">Ingest</Button>
                 </Col>
@@ -507,17 +522,31 @@ function Project() {
                         <tr>
                           <th>#</th>
                           <th>Source</th>
+                          <th>Details</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         {
                           embeddings.embeddings.map((emb, index) => {
+                            var source = emb.source
+                            var details = ""
+                            if (emb.source) {
+                              source = emb.source
+                            } else {
+                              source = emb
+                            }
+                            if (emb.score) {
+                              details = emb.score
+                            }
                             return (
                               <tr key={index}>
                                 <td>{index}</td>
                                 <td>
-                                  {emb}
+                                  {source}
+                                </td>
+                                <td>
+                                  {details}
                                 </td>
                                 <td>
                                   <Button onClick={() => handleViewClick(emb)} variant="dark">View</Button>{' '}
