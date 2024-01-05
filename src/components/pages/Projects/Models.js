@@ -13,10 +13,19 @@ function Models() {
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
@@ -45,7 +54,7 @@ function Models() {
               </tr>
             </thead>
             <tbody>
-            {
+              {
                 info.llms.map((llm, index) => {
                   return (
                     <tr key={index}>
@@ -71,7 +80,7 @@ function Models() {
               </tr>
             </thead>
             <tbody>
-            {
+              {
                 info.embeddings.map((embedding, index) => {
                   return (
                     <tr key={index}>
@@ -94,7 +103,7 @@ function Models() {
               </tr>
             </thead>
             <tbody>
-            {
+              {
                 info.loaders.map((loader, index) => {
                   return (
                     <tr key={index}>

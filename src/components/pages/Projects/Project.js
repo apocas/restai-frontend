@@ -1,4 +1,4 @@
-import { Container, Table, Row, Form, Col, Button, ListGroup, Alert, Badge, Tab, Tabs } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button, ListGroup, Alert, Badge, Tab, Tabs, Spinner } from 'react-bootstrap';
 import { NavLink, useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
@@ -101,7 +101,7 @@ function Project() {
       .then((res) => res.json())
       .then((d) => {
         setData(d)
-        if (d.documents < 20000) {
+        if (d.chunks < 30000) {
           fetchEmbeddings(projectName);
         }
       }
@@ -168,6 +168,12 @@ function Project() {
       });
   }
 
+  const clearButton = () => {
+    searchForm.current.value = "";
+    setChunks([]);
+    setChunk(null);
+  }
+
   const handleChunkViewClick = (id) => {
     fetch(url + "/projects/" + projectName + "/embeddings/id/" + id, {
       method: 'GET',
@@ -221,7 +227,7 @@ function Project() {
           .then(function (response) {
             if (!response.ok) {
               response.json().then(function (data) {
-                setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+                setError(data.detail);
               });
               throw Error(response.statusText);
             } else {
@@ -235,7 +241,7 @@ function Project() {
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
-            setError([...error, { "functionName": "onSubmitHandler FILE", "error": err.toString() }]);
+            setError(err.toString());
             setCanSubmit(true);
           });
       } else if (urlForm.current.value !== "") {
@@ -253,11 +259,15 @@ function Project() {
           headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
           body: JSON.stringify(body),
         })
-          .then(response => {
-            if (response.status === 500) {
-              setError([...error, { "functionName": "onSubmitHandler URL", "error": response.statusText }]);
+          .then(function (response) {
+            if (!response.ok) {
+              response.json().then(function (data) {
+                setError(data.detail);
+              });
+              throw Error(response.statusText);
+            } else {
+              return response.json();
             }
-            return response.json();
           })
           .then((response) => {
             urlForm.current.value = "";
@@ -266,7 +276,7 @@ function Project() {
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
-            setError([...error, { "functionName": "onSubmitHandler URL", "error": err.toString() }]);
+            setError(err.toString());
             setCanSubmit(true);
           });
       } else if (contentForm.current.value !== "") {
@@ -286,11 +296,15 @@ function Project() {
           headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
           body: JSON.stringify(body),
         })
-          .then(response => {
-            if (response.status === 500) {
-              setError([...error, { "functionName": "onSubmitHandler Text", "error": response.statusText }]);
+          .then(function (response) {
+            if (!response.ok) {
+              response.json().then(function (data) {
+                setError(data.detail);
+              });
+              throw Error(response.statusText);
+            } else {
+              return response.json();
             }
-            return response.json();
           })
           .then((response) => {
             setUploadResponse(response);
@@ -301,7 +315,7 @@ function Project() {
             contentForm.current.value = "";
             setTags([]);
           }).catch(err => {
-            setError([...error, { "functionName": "onSubmitHandler URL", "error": err.toString() }]);
+            setError(err.toString());
             setCanSubmit(true);
           });
       }
@@ -310,10 +324,19 @@ function Project() {
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
@@ -385,8 +408,7 @@ function Project() {
                 <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
                 <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
                 <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger">Reset</Button></ListGroup.Item>
-                <ListGroup.Item><b>Documents:</b> {data.documents}</ListGroup.Item>
-                <ListGroup.Item><b>Metadatas:</b> {data.metadatas}</ListGroup.Item>
+                <ListGroup.Item><b>Documents (chunks):</b> {data.chunks}</ListGroup.Item>
                 <ListGroup.Item><b>System:</b> {data.system}</ListGroup.Item>
                 <ListGroup.Item><b>K:</b> {data.k}</ListGroup.Item>
                 <ListGroup.Item><b>Score:</b> {data.score}</ListGroup.Item>
@@ -463,7 +485,11 @@ function Project() {
                   </Col>
                 </Row>
                 <Col sm={2}>
-                  <Button variant="dark" type="submit">Ingest</Button>
+                  <Button variant="dark" type="submit">
+                    {
+                      canSubmit ? <span>Ingest</span> : <Spinner animation="border" />
+                    }
+                  </Button>
                 </Col>
               </Form>
               {
@@ -553,8 +579,8 @@ function Project() {
                     embedding && (
                       <Row>
                         <Col sm={12}>
-                          <h2 ref={ref}>Details ({embedding.source}):</h2>
-                          <ListGroup style={{ height: "400px", overflowY: "scroll" }}>
+                          <h2 ref={ref}>Document ({embedding.source}):</h2>
+                          <ListGroup style={{ height: "600px", overflowY: "scroll" }}>
                             <ListGroup.Item><b>IDS:</b> <ReactJson src={embedding.ids} enableClipboard={false} collapsed={0} /></ListGroup.Item>
                             <ListGroup.Item><b>Metadatas:</b> <ReactJson src={embedding.metadatas} enableClipboard={false} /></ListGroup.Item>
                             <ListGroup.Item><b>Documents:</b> <ReactJson src={embedding.documents} enableClipboard={false} /></ListGroup.Item>
@@ -599,7 +625,7 @@ function Project() {
                             <Button variant="success" type="submit">Search</Button>
                           </Col>
                           <Col sm={1}>
-                            <Button variant="danger" onClick={() => fetchEmbeddings(data.name)}>Clear</Button>
+                            <Button variant="danger" onClick={() => clearButton()}>Clear</Button>
                           </Col>
                         </Row>
                       </Col>
@@ -648,9 +674,9 @@ function Project() {
                     chunk && (
                       <Row>
                         <Col sm={12}>
-                          <h2 ref={ref}>Details ({chunk.id}):</h2>
+                          <h2 ref={ref}>Chunk ({chunk.id}):</h2>
                           <ListGroup style={{ height: "600px", overflowY: "scroll" }}>
-                            <ListGroup.Item><ReactJson src={chunk} enableClipboard={false} collapsed={0} /></ListGroup.Item>
+                            <ListGroup.Item><ReactJson src={chunk} enableClipboard={false} /></ListGroup.Item>
                           </ListGroup>
                         </Col>
                       </Row>

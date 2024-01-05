@@ -80,13 +80,22 @@ function Question() {
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
         body: JSON.stringify(body),
       })
-        .then(response => response.json())
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              setError(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
         .then((response) => {
           setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources }]);
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+          setError(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
           setCanSubmit(true);
         });
@@ -95,19 +104,37 @@ function Question() {
 
   const fetchProject = (projectName) => {
     return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
@@ -140,11 +167,11 @@ function Question() {
       <Container style={{ marginTop: "20px" }}>
         <h1>Question {projectName}</h1>
         <h5>
-            {checkPrivacy() ?
+          {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
             :
             <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
-            }
+          }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
           <Col sm={12}>

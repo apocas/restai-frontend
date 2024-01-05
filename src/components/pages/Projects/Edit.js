@@ -31,7 +31,16 @@ function Edit() {
 
   const fetchProject = (projectName) => {
     return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => {
         setData(d)
         llmForm.current.value = d.llm
@@ -39,25 +48,46 @@ function Edit() {
         sandboxedForm.current.checked = d.sandboxed
       }
       ).catch(err => {
-        setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
   const fetchProjects = () => {
     return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
-      .then((d) => setProjects(d)
-      ).catch(err => {
-        setError([...error, { "functionName": "fetchProjects", "error": err.toString() }]);
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then(function(d) {
+        d = d.filter((project) => project.name !== projectName)
+        setProjects(d)
+      }).catch(err => {
+        setError(err.toString());
       });
   }
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
-      .then((d) => setInfo(d)
-      ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then(function (d) {
+        setInfo(d)
+      }).catch(err => {
+        setError(err.toString());
       });
   }
 
@@ -96,7 +126,7 @@ function Edit() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+            setError(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -106,7 +136,7 @@ function Edit() {
       .then(() => {
         window.location.href = "/admin/projects/" + projectName;
       }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        setError(err.toString());
       });
 
   }
