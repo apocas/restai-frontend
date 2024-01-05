@@ -84,13 +84,22 @@ function Chat() {
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
         body: JSON.stringify(body),
       })
-        .then(response => response.json())
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              setError(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
         .then((response) => {
           setMessages([...messages, { id: response.id, question: response.question, answer: response.answer, sources: response.sources }]);
           messageForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+          setError(err.toString());
           setMessages([...messages, { id: id, question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
           setCanSubmit(true);
         });
@@ -99,7 +108,16 @@ function Chat() {
 
   const fetchProject = (projectName) => {
     return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setData(d)
       ).catch(err => {
         setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
@@ -108,7 +126,16 @@ function Chat() {
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setInfo(d)
       ).catch(err => {
         setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
@@ -144,11 +171,11 @@ function Chat() {
       <Container style={{ marginTop: "20px" }}>
         <h1>Chat {projectName}</h1>
         <h5>
-            {checkPrivacy() ?
+          {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
             :
             <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
-            }
+          }
         </h5>
         <Row style={{ marginBottom: "15px", marginTop: "-9px" }}>
           <Col sm={12}>
@@ -209,7 +236,7 @@ function Chat() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>Score Threshold<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
+                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
                 <Form.Control ref={scoreForm} defaultValue={data.score} />
               </InputGroup>
             </Col>

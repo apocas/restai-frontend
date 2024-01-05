@@ -91,7 +91,7 @@ function Vision() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+              setError(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -103,7 +103,7 @@ function Vision() {
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+          setError(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [], image: null }]);
           setCanSubmit(true);
         });
@@ -231,13 +231,13 @@ function Vision() {
           <Row>
             <Col sm={1}>
               Templates:
-              </Col>
-              <Col sm={11}>
-              
-                <Button variant="dark" onClick={sdTemplate} size="sm">Generate Stable Diffusion (local)</Button>
-                <Button variant="dark" onClick={dalleTemplate} size="sm">Generate Dall-e (openai)</Button>
-                <Button variant="dark" onClick={describeTemplate} size="sm">Describe image (local)</Button>
-            
+            </Col>
+            <Col sm={11}>
+
+              <Button variant="dark" onClick={sdTemplate} size="sm">Generate Stable Diffusion (local)</Button>
+              <Button variant="dark" onClick={dalleTemplate} size="sm">Generate Dall-e (openai)</Button>
+              <Button variant="dark" onClick={describeTemplate} size="sm">Describe image (local)</Button>
+
             </Col>
           </Row>
           <hr />
@@ -263,7 +263,7 @@ function Vision() {
           </Row>
           <Row style={{ marginTop: "20px" }}>
             <Col sm={10}>
-            <Form.Group as={Col} controlId="formGridAdmin">
+              <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isDisableBoostForm} type="checkbox" label="Disable Prompt Boost" />
                 <Link title="Disable boost prompt assistant.">ℹ️</Link>
               </Form.Group>

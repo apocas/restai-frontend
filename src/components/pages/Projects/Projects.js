@@ -31,7 +31,16 @@ function Projects() {
 
   const fetchProjects = () => {
     return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => {
         setData(d)
         setDisplayData(d)
@@ -39,22 +48,40 @@ function Projects() {
           fetchUsers(d);
       }
       ).catch(err => {
-        setError([...error, { "functionName": "fetchProjects", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
   const fetchUsers = (data) => {
     return fetch(url + "/users", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then((res) => res.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then((d) => {
         var arr = {};
         for (let i = 0; i < data.length; i++) {
@@ -69,7 +96,7 @@ function Projects() {
         setUsers(arr)
       }
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUsers", "error": err.toString() }]);
+        setError(err.toString());
       });
   }
 
@@ -103,7 +130,7 @@ function Projects() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+            setError(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -114,7 +141,7 @@ function Projects() {
         //fetchProjects()
         window.location = "/admin/projects/" + projectNameForm.current.value + "/edit"
       }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        setError(err.toString());
       });
 
   }
@@ -216,25 +243,26 @@ function Projects() {
                         </NavLink>
                       </td>
                       <td>
-                        {project.llm_type === "vision" ?
+                        {project.llm_type === "vision" &&
                           <NavLink
                             to={"/projects/" + project.name + "/vision"}
                           >
                             <Button variant="dark">Vision</Button>{' '}
                           </NavLink>
-                          :
-                          <div>
-                            <NavLink
-                              to={"/projects/" + project.name + "/chat"}
-                            >
-                              <Button variant="dark">Chat<Link title="Models need to support Chat mode, unstable otherwise. GPT's and models with 'chat' in the name support it. Example: OpenAI GPT4, LLama based Chat models.">⚠️</Link></Button>{' '}
-                            </NavLink>
-                            <NavLink
-                              to={"/projects/" + project.name + "/question"}
-                            >
-                              <Button variant="dark">Question</Button>{' '}
-                            </NavLink>
-                          </div>
+                        }
+                        {project.llm_type === "chat" &&
+                          <NavLink
+                            to={"/projects/" + project.name + "/chat"}
+                          >
+                            <Button variant="dark">Chat</Button>{' '}
+                          </NavLink>
+                        }
+                        {project.llm_type !== "vision" &&
+                          <NavLink
+                            to={"/projects/" + project.name + "/question"}
+                          >
+                            <Button variant="dark">Question</Button>{' '}
+                          </NavLink>
                         }
                       </td>
                       {
