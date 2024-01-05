@@ -137,9 +137,9 @@ function Projects() {
           return response.json();
         }
       })
-      .then(() => {
+      .then((response) => {
         //fetchProjects()
-        window.location = "/admin/projects/" + projectNameForm.current.value + "/edit"
+        window.location = "/admin/projects/" + response.project + "/edit"
       }).catch(err => {
         setError(err.toString());
       });
