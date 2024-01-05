@@ -209,7 +209,7 @@ function Chat() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>Score Threshold<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
+                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
                 <Form.Control ref={scoreForm} defaultValue={data.score} />
               </InputGroup>
             </Col>
