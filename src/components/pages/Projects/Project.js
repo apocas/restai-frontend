@@ -11,7 +11,7 @@ function Project() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
-  const [data, setData] = useState({ projects: [] });
+  const [data, setData] = useState({});
   const [embeddings, setEmbeddings] = useState({ embeddings: [] });
   const [chunks, setChunks] = useState([]);
   const [file, setFile] = useState(null);
@@ -101,19 +101,15 @@ function Project() {
       .then((res) => res.json())
       .then((d) => {
         setData(d)
-        if (d.chunks < 30000) {
-          fetchEmbeddings(projectName);
-        }
-      }
-      ).catch(err => {
+        return d
+      }).catch(err => {
         setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
       });
   }
 
   const fetchEmbeddings = (projectName) => {
-    searchForm.current.value = "";
     setEmbeddings({ "embeddings": [] });
-    if (data.documents < 20000 || !data.documents) {
+    if (data.type === "rag" && (data.chunks < 30000 || !data.chunks)) {
       return fetch(url + "/projects/" + projectName + "/embeddings", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
         .then((res) => res.json())
         .then((d) => setEmbeddings(d)
@@ -359,6 +355,10 @@ function Project() {
     fetchInfo();
   }, [projectName]);
 
+  useEffect(() => {
+    fetchEmbeddings(projectName);
+  }, [data])
+
   return (
     <>
       {error.length > 0 &&
@@ -366,60 +366,54 @@ function Project() {
           {JSON.stringify(error)}
         </Alert>
       }
-      {data.llm_type === "vision" ?
-        <Container style={{ marginTop: "20px" }}>
-          <Row style={{ marginTop: "20px" }}>
-            <Col sm={6}>
-              <h1>Details {data.name}</h1>
-              <ListGroup>
-                <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
-                <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col sm={6}>
-              <h1>Actions</h1>
-              <NavLink
-                to={"/projects/" + data.name + "/edit"}
-              >
-                <Button variant="dark">Edit</Button>{' '}
-              </NavLink>
-              < NavLink
-                to={"/projects/" + data.name + "/vision"}
-              >
-                <Button variant="dark">Vision</Button>{' '}
-              </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger">Delete</Button>
-            </Col>
-          </Row>
-        </Container>
-        :
-        <Container style={{ marginTop: "20px" }}>
-          <Row style={{ marginTop: "20px" }}>
-            <Col sm={6}>
-              <h1>Details {data.name}</h1>
-              <ListGroup>
-                <ListGroup.Item><b>Privacy: </b>
-                  {checkPrivacy() ?
-                    <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
-                    :
-                    <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
-                  }
-                </ListGroup.Item>
-                <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
-                <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
-                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger">Reset</Button></ListGroup.Item>
-                <ListGroup.Item><b>Documents (chunks):</b> {data.chunks}</ListGroup.Item>
+
+      <Container style={{ marginTop: "20px" }}>
+        <Row style={{ marginTop: "20px" }}>
+          <Col sm={6}>
+            <h1>Details {data.name}</h1>
+            <ListGroup>
+              <ListGroup.Item><b>Privacy: </b>
+                {checkPrivacy() ?
+                  <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+                  :
+                  <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+                }
+              </ListGroup.Item>
+              <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
+
+              {data.type === "inference" || data.type === "rag" &&
                 <ListGroup.Item><b>System:</b> {data.system}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>Documents (chunks):</b> {data.chunks}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger">Reset</Button></ListGroup.Item>
+              }
+              {data.type === "rag" &&
                 <ListGroup.Item><b>K:</b> {data.k}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
                 <ListGroup.Item><b>Score:</b> {data.score}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
                 <ListGroup.Item><b>Sandboxed:</b> {data.sandboxed ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Project:</b> {data.sandbox_project}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col sm={6}>
-              <h1>Ingest<Link title="Ingest a file or an URL">ℹ️</Link></h1>
+              }
+            </ListGroup>
+          </Col>
+          <Col sm={6}>
+            {data.type === "rag" &&
               <Form onSubmit={onSubmitHandler}>
+                <h1>Ingest<Link title="Ingest a file or an URL">ℹ️</Link></h1>
                 <Row>
                   <Tabs
                     defaultActiveKey="file"
@@ -491,45 +485,64 @@ function Project() {
                     }
                   </Button>
                 </Col>
+                <hr />
               </Form>
-              {
-                (
-                  uploadResponse.source &&
-                  <Row>
-                    <Col sm={12}>
-                      <h5>Ingest Result:</h5>
-                      <ListGroup>
-                        <ListGroup.Item>Source: {uploadResponse.source}</ListGroup.Item>
-                        <ListGroup.Item>Documents: {uploadResponse.documents}</ListGroup.Item>
-                        <ListGroup.Item>Chunks: {uploadResponse.chunks}</ListGroup.Item>
-                      </ListGroup>
-                    </Col>
-                  </Row>
-                )
-              }
-              <hr />
-              <h1>Actions</h1>
-              <NavLink
-                to={"/projects/" + data.name + "/edit"}
+            }
+            {
+              (
+                uploadResponse.source &&
+                <Row>
+                  <Col sm={12}>
+                    <h5>Ingest Result:</h5>
+                    <ListGroup>
+                      <ListGroup.Item>Source: {uploadResponse.source}</ListGroup.Item>
+                      <ListGroup.Item>Documents: {uploadResponse.documents}</ListGroup.Item>
+                      <ListGroup.Item>Chunks: {uploadResponse.chunks}</ListGroup.Item>
+                    </ListGroup>
+                  </Col>
+                  <hr />
+                </Row>
+              )
+            }
+            <h1>Actions</h1>
+            {data.type === "vision" &&
+              < NavLink
+                to={"/projects/" + data.name + "/vision"}
               >
-                <Button variant="dark">Edit</Button>{' '}
+                <Button variant="dark">Vision</Button>{' '}
               </NavLink>
-              {data.llm_type === "chat" &&
-                <NavLink
-                  to={"/projects/" + data.name + "/chat"}
-                >
-                  <Button variant="dark">Chat</Button>{' '}
-                </NavLink>
-              }
+            }
+            {data.type === "inference" &&
+              < NavLink
+                to={"/projects/" + data.name + "/inference"}
+              >
+                <Button variant="dark">Inference</Button>{' '}
+              </NavLink>
+            }
+            <NavLink
+              to={"/projects/" + data.name + "/edit"}
+            >
+              <Button variant="dark">Edit</Button>{' '}
+            </NavLink>
+            {data.type === "rag" &&
+              <NavLink
+                to={"/projects/" + data.name + "/chat"}
+              >
+                <Button variant="dark">Chat</Button>{' '}
+              </NavLink>
+            }
+            {data.type === "rag" &&
               <NavLink
                 to={"/projects/" + data.name + "/question"}
               >
                 <Button variant="dark">Question</Button>{' '}
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger">Delete</Button>
-            </Col>
-          </Row>
-          <hr />
+            }
+            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger">Delete</Button>
+          </Col>
+        </Row>
+        <hr />
+        {data.type === "rag" &&
           <Row style={{ marginTop: "20px" }}>
             <h1>Embeddings<Link title="Ingested files and URLs">ℹ️</Link></h1>
 
@@ -686,8 +699,8 @@ function Project() {
               </Tab>
             </Tabs>
           </Row>
-        </Container >
-      }
+        }
+      </Container >
     </>
   );
 }
