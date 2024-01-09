@@ -9,6 +9,7 @@ import ProjectsEdit from './components/pages/Projects/Edit.js';
 import Chat from './components/pages/Projects/Chat.js';
 import Question from './components/pages/Projects/Question.js';
 import Vision from './components/pages/Projects/Vision.js';
+import Inference from './components/pages/Projects/Inference.js';
 import Users from './components/pages/Users/Users.js';
 import User from './components/pages/Users/User.js';
 import UsersEdit from './components/pages/Users/Edit.js';
@@ -39,6 +40,7 @@ function Root() {
               <Route path={`/projects/:projectName/question`} element={<Question />} />
               <Route path={`/projects/:projectName/chat`} element={<Chat />} />
               <Route path={`/projects/:projectName/vision`} element={<Vision />} />
+              <Route path={`/projects/:projectName/inference`} element={<Inference />} />
               <Route path={`/users`} element={<Users />} />
               <Route path={`/users/:username`} element={<User />} />
               <Route path={`/users/:username/edit`} element={<UsersEdit />} />

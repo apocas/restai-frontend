@@ -15,7 +15,10 @@ function Projects() {
   const [error, setError] = useState([]);
   const projectNameForm = useRef(null)
   const embbeddingForm = useRef(null)
+  const typeForm = useRef(null)
   const llmForm = useRef(null)
+  const [availableLLMs, setAvailableLLMs] = useState([]);
+  const [type, setType] = useState("");
   const vectorForm = useRef(null)
   const embbeddingFilter = useRef(null)
   const llmFilter = useRef(null)
@@ -117,15 +120,22 @@ function Projects() {
   // TODO: response handling
   const onSubmitHandler = (event) => {
     event.preventDefault();
+
+    var opts = {
+      "name": projectNameForm.current.value,
+      "llm": llmForm.current.value,
+      "type": typeForm.current.value
+    }
+
+    if (type === "rag") {
+      opts.embeddings = embbeddingForm.current.value;
+      opts.vectorstore = vectorForm.current.value;
+    }
+
     fetch(url + "/projects", {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
-      body: JSON.stringify({
-        "name": projectNameForm.current.value,
-        "embeddings": embbeddingForm.current.value,
-        "llm": llmForm.current.value,
-        "vectorstore": vectorForm.current.value,
-      }),
+      body: JSON.stringify(opts),
     })
       .then(function (response) {
         if (!response.ok) {
@@ -146,11 +156,35 @@ function Projects() {
 
   }
 
+  const createSelectItems = () => {
+    let items = [];
+    for (let index = 0; index < availableLLMs.length; index++) {
+      let llm = availableLLMs[index];
+      items.push(<option key={index}>{llm}</option>);
+    }
+    return items;
+  }
+
+  const typeChange = () => {
+    var type = typeForm.current.value;
+    setType(type);
+    if (type === "rag" || type === "inference") {
+      setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
+
+    } else if (type === "vision") {
+      setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
+    }
+  }
+
   useEffect(() => {
     document.title = 'RestAI Projects';
     fetchProjects();
     fetchInfo();
   }, []);
+
+  useEffect(() => {
+    //...
+  }, [type]);
 
   return (
     <>
@@ -211,6 +245,7 @@ function Projects() {
               <tr>
                 <th>#</th>
                 <th>Project Name</th>
+                <th>Type</th>
                 <th>Model</th>
                 <th>Actions</th>
                 <th>Inference<Link title="Chat has memory. Question doesn't">ℹ️</Link></th>
@@ -233,6 +268,9 @@ function Projects() {
                         </NavLink>
                       </td>
                       <td>
+                        {project.type}
+                      </td>
+                      <td>
                         {project.llm}
                       </td>
                       <td>
@@ -243,25 +281,32 @@ function Projects() {
                         </NavLink>
                       </td>
                       <td>
-                        {project.llm_type === "vision" &&
+                        {project.type === "vision" &&
                           <NavLink
                             to={"/projects/" + project.name + "/vision"}
                           >
                             <Button variant="dark">Vision</Button>{' '}
                           </NavLink>
                         }
-                        {project.llm_type === "chat" &&
+                        {project.type === "rag" && project.llm_type === "chat" &&
                           <NavLink
                             to={"/projects/" + project.name + "/chat"}
                           >
                             <Button variant="dark">Chat</Button>{' '}
                           </NavLink>
                         }
-                        {project.llm_type !== "vision" &&
+                        {project.type === "rag" &&
                           <NavLink
                             to={"/projects/" + project.name + "/question"}
                           >
                             <Button variant="dark">Question</Button>{' '}
+                          </NavLink>
+                        }
+                        {project.type === "inference" &&
+                          <NavLink
+                            to={"/projects/" + project.name + "/inference"}
+                          >
+                            <Button variant="dark">Inference</Button>{' '}
                           </NavLink>
                         }
                       </td>
@@ -294,43 +339,48 @@ function Projects() {
                 <Form.Label>Project Name</Form.Label>
                 <Form.Control ref={projectNameForm} />
               </Form.Group>
-              <Form.Group as={Col} controlId="formGridEmbeddings">
-                <Form.Label>Embeddings<Link title="Model used to compute embeddings">ℹ️</Link></Form.Label>
-                <Form.Select ref={embbeddingForm} defaultValue="">
+              <Form.Group as={Col} controlId="formGridType">
+                <Form.Label>Project Type<Link title="Project type. RAG for retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference.">ℹ️</Link></Form.Label>
+                <Form.Select ref={typeForm} onChange={typeChange}>
                   <option>Choose...</option>
-                  {
-                    info.embeddings.map((embbedding, index) => {
-                      return (
-                        <option key={index}>{embbedding.name}</option>
-                      )
-                    }
-                    )
-                  }
+                  <option key="rag">rag</option>
+                  <option key="inference">inference</option>
+                  <option key="vision">vision</option>
                 </Form.Select>
               </Form.Group>
+              {type === "rag" &&
+                <Form.Group as={Col} controlId="formGridEmbeddings">
+                  <Form.Label>Embeddings<Link title="Model used to compute embeddings">ℹ️</Link></Form.Label>
+                  <Form.Select ref={embbeddingForm} defaultValue="">
+                    <option>Choose...</option>
+                    {
+                      info.embeddings.map((embbedding, index) => {
+                        return (
+                          <option key={index}>{embbedding.name}</option>
+                        )
+                      }
+                      )
+                    }
+                  </Form.Select>
+                </Form.Group>
+              }
 
               <Form.Group as={Col} controlId="formGridLLM">
                 <Form.Label>LLM</Form.Label>
                 <Form.Select ref={llmForm} defaultValue="">
-                  <option>Choose...</option>
-                  {
-                    info.llms.map((llm, index) => {
-                      return (
-                        <option key={index}>{llm.name}</option>
-                      )
-                    }
-                    )
-                  }
+                  {createSelectItems()}
                 </Form.Select>
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridVector">
-                <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
-                <Form.Select ref={vectorForm} defaultValue="chroma">
-                  <option>chroma</option>
-                  <option>redis</option>
-                </Form.Select>
-              </Form.Group>
+              {type === "rag" &&
+                <Form.Group as={Col} controlId="formGridVector">
+                  <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
+                  <Form.Select ref={vectorForm} defaultValue="chroma">
+                    <option>chroma</option>
+                    <option>redis</option>
+                  </Form.Select>
+                </Form.Group>
+              }
             </Row>
             <Button variant="dark" type="submit" className="mb-2">
               Create
