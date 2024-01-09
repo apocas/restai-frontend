@@ -524,7 +524,7 @@ function Project() {
             >
               <Button variant="dark">Edit</Button>{' '}
             </NavLink>
-            {data.type === "rag" &&
+            {data.type === "rag" && data.llm_type === "chat" &&
               <NavLink
                 to={"/projects/" + data.name + "/chat"}
               >
