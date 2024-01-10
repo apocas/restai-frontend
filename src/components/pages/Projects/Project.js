@@ -362,7 +362,7 @@ function Project() {
   return (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }
@@ -541,9 +541,9 @@ function Project() {
             <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger">Delete</Button>
           </Col>
         </Row>
-        <hr />
         {data.type === "rag" &&
           <Row style={{ marginTop: "20px" }}>
+            <hr />
             <h1>Embeddings<Link title="Ingested files and URLs">ℹ️</Link></h1>
 
             <Tabs

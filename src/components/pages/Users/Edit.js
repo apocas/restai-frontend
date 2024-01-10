@@ -25,10 +25,11 @@ function Edit() {
   // TODO: response handling
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    var update = {
-      "is_admin": isadminForm.current.checked,
-      "is_private": isprivateForm.current.checked
-    };
+    var update = {};
+    if (user.admin) {
+      update.is_admin = isadminForm.current.checked
+      update.is_private = isprivateForm.current.checked
+    }
     if (passwordForm.current.value !== "") {
       update.password = passwordForm.current.value
     }
@@ -38,22 +39,32 @@ function Edit() {
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
       body: JSON.stringify(update),
     })
-      .then(response => response.json())
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
       .then(response => {
         window.location.href = "/admin/users/" + username;
       })
       .catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        setError(err.toString());
       });
-
   }
 
   const fetchUser = (username) => {
     return fetch(url + "/users/" + username, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then((res) => res.json())
       .then((d) => {
-        isadminForm.current.checked = d.is_admin
-        isprivateForm.current.checked = d.is_private
+        if (user.admin) {
+          isadminForm.current.checked = d.is_admin
+          isprivateForm.current.checked = d.is_private
+        }
       }
       ).catch(err => {
         setError([...error, { "functionName": "fetchUser", "error": err.toString() }]);
@@ -69,7 +80,7 @@ function Edit() {
   return (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }
@@ -87,7 +98,7 @@ function Edit() {
                 <Link title="Admins have access to all projects and can edit all users">ℹ️</Link>
               </Form.Group>
             }
-                {user.admin &&
+            {user.admin &&
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isprivateForm} type="checkbox" label="Private models only" />
                 <Link title="Can only use private/local models">ℹ️</Link>
@@ -98,7 +109,7 @@ function Edit() {
             Save
           </Button>
           <NavLink to={"/users/" + username} >
-              <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
+            <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
           </NavLink>
         </Form>
       </Container>

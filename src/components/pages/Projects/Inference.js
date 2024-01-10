@@ -27,7 +27,7 @@ function Inference() {
   );
 
   function resumeTemplate() {
-    systemForm.current.value = "Resume the following text in 30 words or less."
+    systemForm.current.value = "Summary the following text in 30 words or less. Do not invent anything, stick to the provided text. If there isn't enough information, answer saying that."
     questionForm.current.value = "Turmoil has engulfed the Galactic Republic. The taxation of trade routes to outlying star systems is in dispute. Hoping to resolve the matter with a blockade of deadly battleships, the greedy Trade Federation has stopped all shipping to the small planet of Naboo. While the Congress of the Republic endlessly debates this alarming chain of events, the Supreme Chancellor has secretly dispatched two Jedi Knights, the guardians of peace and justice in the galaxy, to settle the conflict."
   }
 
@@ -128,7 +128,7 @@ function Inference() {
   return (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }

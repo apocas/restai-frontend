@@ -189,7 +189,7 @@ function Projects() {
   return (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }

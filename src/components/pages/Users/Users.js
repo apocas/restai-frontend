@@ -70,7 +70,7 @@ function Users() {
   return user.admin ? (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }

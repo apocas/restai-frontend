@@ -109,10 +109,6 @@ function Edit() {
 
     if (data.type === "rag" || data.type === "inference") {
       opts.system = systemForm.current.value
-
-      if (opts.system.trim() === "") {
-        delete opts.system;
-      }
     }
 
     if (data.type === "rag") {
@@ -162,25 +158,28 @@ function Edit() {
   }, [projectName]);
 
   useEffect(() => {
-    llmForm.current.value = data.llm
-    if (data.type === "rag") {
-      projectForm.current.value = data.sandbox_project ? data.sandbox_project : "N/A"
-      sandboxedForm.current.checked = data.sandboxed
-    }
-
     if (data.type === "rag" || data.type === "inference") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
 
     } else if (data.type === "vision") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
     }
+
+    if (data.type === "rag") {
+      projectForm.current.value = data.sandbox_project ? data.sandbox_project : "N/A"
+      sandboxedForm.current.checked = data.sandboxed
+    }
   }, [data]);
+
+  useEffect(() => {
+    llmForm.current.value = data.llm
+  }, [availableLLMs]);
 
 
   return (
     <>
       {error.length > 0 &&
-        <Alert variant="danger">
+        <Alert variant="danger" style={{ textAlign: "center" }}>
           {JSON.stringify(error)}
         </Alert>
       }
@@ -201,7 +200,7 @@ function Edit() {
                 <Form.Label>System Message<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>
                 <Form.Control rows="2" as="textarea" ref={systemForm} defaultValue={data.system ? data.system : ""} />
               </Form.Group>
-              <hr />
+              <hr style={{ marginTop: "20px" }} />
             </Row>
           }
 
