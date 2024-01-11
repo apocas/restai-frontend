@@ -175,7 +175,7 @@ function Question() {
         </h5>
         <Row style={{ marginBottom: "15px" }}>
           <Col sm={12}>
-            (Remember that in Question mode, every question is stateless there is no memory of previous questions)
+            (Remember that in Question mode, every question is stateless there is no memory of previous questions. If there are no embeddings expect "Empty Response" in the output.)
           </Col>
         </Row>
         <Form onSubmit={onSubmitHandler}>
