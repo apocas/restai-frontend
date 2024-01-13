@@ -214,7 +214,7 @@ function Projects() {
           </Col>
           <Col sm={4}>
             <Form.Group as={Col} controlId="formGridEmbeddings">
-              <Form.Label>Embeddings<Link title="Model used to compute embeddings">ℹ️</Link></Form.Label>
+              <Form.Label>Embeddings</Form.Label>
               <Form.Select ref={embbeddingFilter} onChange={handleFilterChange} defaultValue="All">
                 <option>All</option>
                 {
@@ -230,7 +230,7 @@ function Projects() {
           </Col>
           <Col sm={4}>
             <Form.Group as={Col} controlId="formGridVector">
-              <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
+              <Form.Label>Vectorstore</Form.Label>
               <Form.Select ref={vectorFilter} onChange={handleFilterChange} defaultValue="All">
                 <option>All</option>
                 <option>chroma</option>

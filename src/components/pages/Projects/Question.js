@@ -47,6 +47,11 @@ function Question() {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
+    
+    if(data.chunks === 0) {
+      setError("No data. Ingest some data first.");
+      return;
+    }
 
     var system = systemForm.current.value;
     var question = questionForm.current.value;
