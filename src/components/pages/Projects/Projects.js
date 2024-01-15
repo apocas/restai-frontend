@@ -313,7 +313,7 @@ function Projects() {
                           <NavLink
                             to={"/projects/" + project.name + "/inference"}
                           >
-                            <Button variant="dark">Inference</Button>{' '}
+                            <Button variant="dark">Question</Button>{' '}
                           </NavLink>
                         }
                       </td>

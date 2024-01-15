@@ -121,7 +121,7 @@ function Inference() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Inference ' + projectName;
+    document.title = 'RestAI  Inference - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 
@@ -133,7 +133,7 @@ function Inference() {
         </Alert>
       }
       <Container style={{ marginTop: "20px" }}>
-        <h1>Inference {projectName}</h1>
+        <h1>Inference - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>

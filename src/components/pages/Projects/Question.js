@@ -157,7 +157,7 @@ function Question() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Question ' + projectName;
+    document.title = 'RestAI  Question - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -170,7 +170,7 @@ function Question() {
         </Alert>
       }
       <Container style={{ marginTop: "20px" }}>
-        <h1>Question {projectName}</h1>
+        <h1>Question - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>

@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge, NavLink } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -6,6 +6,7 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { WithContext as ReactTags } from 'react-tag-input';
 
 function Inference() {
 
@@ -17,6 +18,7 @@ function Inference() {
   const [data, setData] = useState({ projects: [] });
   const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
+  const [tags, setTags] = React.useState([]);
   const user = getBasicAuth();
 
   const Link = ({ id, children, title }) => (
@@ -37,6 +39,14 @@ function Inference() {
     );
   }
 
+  const handleDelete = i => {
+    setTags(tags.filter((tag, index) => index !== i));
+  };
+
+  const handleAddition = tag => {
+    setTags([...tags, tag]);
+  };
+
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
@@ -48,12 +58,17 @@ function Inference() {
       body = {
         "question": question
       }
+
+      if (tags.length > 0) {
+        body.tables = tags.map((tag) => tag.text);
+      }
+
       submit = true;
     }
 
     if (submit && canSubmit) {
       setCanSubmit(false);
-      setAnswers([...answers, { question: question, answer: null, sources: []}]);
+      setAnswers([...answers, { question: question, answer: null, sources: [] }]);
       fetch(url + "/projects/" + projectName + "/questionsql", {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
@@ -70,12 +85,12 @@ function Inference() {
           }
         })
         .then((response) => {
-          setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources}]);
+          setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources }]);
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
           setError(err.toString());
-          setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors."}]);
+          setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors." }]);
           setCanSubmit(true);
         });
     }
@@ -108,7 +123,7 @@ function Inference() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Inference ' + projectName;
+    document.title = 'RestAI  QuestionSQL - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 
@@ -120,7 +135,7 @@ function Inference() {
         </Alert>
       }
       <Container style={{ marginTop: "20px" }}>
-        <h1>Question (SQL) {projectName}</h1>
+        <h1>Question (SQL) - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
@@ -179,7 +194,21 @@ function Inference() {
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={10}>
+            <Col sm={1}>
+              <Form.Label>Tables:<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope.">ℹ️</Link></Form.Label>
+            </Col>
+            <Col sm={9}>
+              <ReactTags
+                tags={tags}
+                suggestions={[]}
+                delimiters={[188, 13]}
+                handleDelete={handleDelete}
+                handleAddition={handleAddition}
+                handleDrag={function () { }}
+                handleTagClick={function () { }}
+                inputFieldPosition="top"
+                autocomplete
+              />
             </Col>
             <Col sm={2}>
               <div className="d-grid gap-2">

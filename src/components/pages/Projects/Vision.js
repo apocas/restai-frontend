@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, NavLink } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -149,7 +149,7 @@ function Vision() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Question ' + projectName;
+    document.title = 'RestAI  Vision - ' + projectName;
   }, [projectName]);
 
   return (
@@ -160,7 +160,7 @@ function Vision() {
         </Alert>
       }
       <Container style={{ marginTop: "20px" }}>
-        <h1>Vision {projectName}</h1>
+        <h1>Vision - {projectName}</h1>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>
           (For generation remember to specify if you want to use dall-e or stable diffusion in plain english)
         </Row>

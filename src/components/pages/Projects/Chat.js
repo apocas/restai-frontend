@@ -156,7 +156,7 @@ function Chat() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Chat ' + projectName;
+    document.title = 'RestAI  Chat - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -169,7 +169,7 @@ function Chat() {
         </Alert>
       }
       <Container style={{ marginTop: "20px" }}>
-        <h1>Chat {projectName}</h1>
+        <h1>Chat - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>

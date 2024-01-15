@@ -108,11 +108,6 @@ function Users() {
                         >
                           <Button variant="dark">View</Button>{' '}
                         </NavLink>
-                        <NavLink
-                          to={"/users/" + user.username + "/edit"}
-                        >
-                          <Button variant="dark">Edit</Button>{' '}
-                        </NavLink>
                         <Button onClick={() => handleDeleteClick(user.username)} variant="danger">Delete</Button>
                       </td>
                     </tr>
@@ -139,7 +134,7 @@ function Users() {
                 <Form.Check ref={isadminForm} type="checkbox" label="Admin" />
               </Form.Group>
               <Form.Group as={Col} controlId="formGridPrivate">
-                <Form.Check ref={isprivateForm} type="checkbox" label="Private only models" />
+                <Form.Check ref={isprivateForm} type="checkbox" label="Private models only" />
               </Form.Group>
             </Row>
             <Button variant="dark" type="submit" className="mb-2">
