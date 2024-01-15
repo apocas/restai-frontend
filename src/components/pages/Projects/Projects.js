@@ -149,7 +149,7 @@ function Projects() {
       })
       .then((response) => {
         //fetchProjects()
-        window.location = "/admin/projects/" + response.project + "/edit"
+        window.location = "/admin/projects/" + response.project
       }).catch(err => {
         setError(err.toString());
       });
@@ -168,7 +168,7 @@ function Projects() {
   const typeChange = () => {
     var type = typeForm.current.value;
     setType(type);
-    if (type === "rag" || type === "inference") {
+    if (type === "rag" || type === "inference" || type === "ragsql") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
 
     } else if (type === "vision") {
@@ -302,6 +302,13 @@ function Projects() {
                             <Button variant="dark">Question</Button>{' '}
                           </NavLink>
                         }
+                        {project.type === "ragsql" &&
+                          <NavLink
+                            to={"/projects/" + project.name + "/questionsql"}
+                          >
+                            <Button variant="dark">Question</Button>{' '}
+                          </NavLink>
+                        }
                         {project.type === "inference" &&
                           <NavLink
                             to={"/projects/" + project.name + "/inference"}
@@ -340,10 +347,11 @@ function Projects() {
                 <Form.Control ref={projectNameForm} />
               </Form.Group>
               <Form.Group as={Col} controlId="formGridType">
-                <Form.Label>Project Type<Link title="Project type. RAG for retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference.">ℹ️</Link></Form.Label>
+                <Form.Label>Project Type<Link title="Project type. RAG for text retrieval augmented generation. RAGSQL for SQL retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference.">ℹ️</Link></Form.Label>
                 <Form.Select ref={typeForm} onChange={typeChange}>
                   <option>Choose...</option>
                   <option key="rag">rag</option>
+                  <option key="ragsql">ragsql</option>
                   <option key="inference">inference</option>
                   <option key="vision">vision</option>
                 </Form.Select>

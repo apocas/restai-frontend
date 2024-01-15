@@ -384,6 +384,9 @@ function Project() {
               {(data.type === "inference" || data.type === "rag") &&
                 <ListGroup.Item><b>System:</b> {data.system}</ListGroup.Item>
               }
+              {data.type === "ragsql" &&
+                <ListGroup.Item><b>Connection:</b> {data.connection}</ListGroup.Item>
+              }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Documents (chunks):</b> {data.chunks}</ListGroup.Item>
               }
@@ -534,6 +537,13 @@ function Project() {
             {data.type === "rag" &&
               <NavLink
                 to={"/projects/" + data.name + "/question"}
+              >
+                <Button variant="dark">Question</Button>{' '}
+              </NavLink>
+            }
+            {data.type === "ragsql" &&
+              <NavLink
+                to={"/projects/" + data.name + "/questionsql"}
               >
                 <Button variant="dark">Question</Button>{' '}
               </NavLink>

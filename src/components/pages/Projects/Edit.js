@@ -11,7 +11,8 @@ function Edit() {
   const [data, setData] = useState({ projects: [] });
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const [error, setError] = useState([]);
-  const systemForm = useRef(null)
+  const systemForm = useRef(null);
+  const connectionForm = useRef(null);
   const scoreForm = useRef(null);
   const projectForm = useRef(null)
   const [projects, setProjects] = useState([]);
@@ -29,6 +30,14 @@ function Edit() {
       <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
     </OverlayTrigger>
   );
+
+  function mysqlTemplate() {
+    connectionForm.current.value = "mysql+pymysql://username:password@127.0.0.1:3306/database_name"
+  }
+
+  function pgsqlTemplate() {
+    connectionForm.current.value = "postgresql+psycopg2://username:password@127.0.0.1:5432/database_name"
+  }
 
   const createSelectItems = () => {
     let items = [];
@@ -111,6 +120,10 @@ function Edit() {
       opts.system = systemForm.current.value
     }
 
+    if (data.type === "ragsql") {
+      opts.connection = connectionForm.current.value
+    }
+
     if (data.type === "rag") {
       opts.sandboxed = sandboxedForm.current.checked
       opts.censorship = censorshipForm.current.value
@@ -158,7 +171,7 @@ function Edit() {
   }, [projectName]);
 
   useEffect(() => {
-    if (data.type === "rag" || data.type === "inference") {
+    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
 
     } else if (data.type === "vision") {
@@ -194,13 +207,35 @@ function Edit() {
               </Form.Select>
             </Form.Group>
           </Row>
-          {data.type !== "vision" &&
+          {(data.type === "rag" || data.type === "inference") &&
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridSystem">
                 <Form.Label>System Message<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>
                 <Form.Control rows="2" as="textarea" ref={systemForm} defaultValue={data.system ? data.system : ""} />
               </Form.Group>
               <hr style={{ marginTop: "20px" }} />
+            </Row>
+          }
+
+          {(data.type === "ragsql") &&
+            <Row className="mb-3">
+              <Col sm={10}>
+                <Form.Group as={Col} controlId="formGridSystem">
+                  <Form.Label>Connection<Link title="Connection string">ℹ️</Link></Form.Label>
+                  <Form.Control rows="1" as="input" ref={connectionForm} defaultValue={data.connection ? data.connection : ""} />
+                </Form.Group>
+                <hr style={{ marginTop: "20px" }} />
+              </Col>
+              <Col sm={1}>
+                <InputGroup style={{ marginTop: "36px" }}>
+                  <Button variant="dark" onClick={mysqlTemplate} size="sm">mySQL</Button>
+                </InputGroup>
+              </Col>
+              <Col sm={1}>
+                <InputGroup style={{ marginTop: "36px" }}>
+                  <Button variant="dark" onClick={pgsqlTemplate} size="sm">PostgreSQL</Button>
+                </InputGroup>
+              </Col>
             </Row>
           }
 
