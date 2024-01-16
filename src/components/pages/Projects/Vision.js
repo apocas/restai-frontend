@@ -22,7 +22,6 @@ function Vision() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
   const questionForm = useRef(null);
-  const urlForm = useRef(null);
   const [uploadForm, setUploadForm] = useState(null);
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
@@ -56,8 +55,38 @@ function Vision() {
     );
   }
 
+  const repeatClick = (answer) => {
+    questionForm.current.value = answer.question;
+    onSubmitHandler();
+  }
+
+  const descriptionClick = (answer) => {
+    var lastQuestion = "";
+    if (answer.image === null) {
+      lastQuestion = answer.answer;
+    } else {
+      return repeatClick();
+    }
+
+    var question = lastQuestion
+    if (lastQuestion.indexOf("Generate an image from the following description: ") !== 0) {
+      question = "Generate an image from the following description: " + lastQuestion;
+    }
+
+    questionForm.current.value = question;
+
+    if (window.confirm("Do you want to boost this prompt using AI? (Cancel for no)")) {
+      isDisableBoostForm.current.checked = false;
+    } else {
+      isDisableBoostForm.current.checked = true;
+    }
+
+    onSubmitHandler();
+  }
+
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if (event)
+      event.preventDefault();
 
     var question = questionForm.current.value;
 
@@ -125,28 +154,8 @@ function Vision() {
   const handleFileUpload = async (file) => {
     //const file = e.target.files[0];
     const base64 = await convertToBase64(file);
-    urlForm.current.value = "";
     setFile(base64);
   };
-
-  const handleSaveClick = () => {
-    if (isValidUrl(urlForm.current.value)) {
-      setUploadForm(null);
-      setFile(urlForm.current.value);
-    } else {
-      alert("Url provided is not a valid one!");
-    }
-  };
-
-  const isValidUrl = urlString => {
-    var urlPattern = new RegExp('^(https?:\\/\\/)?' + // validate protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // validate domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // validate OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // validate port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // validate query string
-      '(\\#[-a-z\\d_]*)?$', 'i'); // validate fragment locator
-    return !!urlPattern.test(urlString);
-  }
 
   useEffect(() => {
     document.title = 'RestAI  Vision - ' + projectName;
@@ -162,7 +171,7 @@ function Vision() {
       <Container style={{ marginTop: "20px" }}>
         <h1>Vision - {projectName}</h1>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>
-          (For generation remember to specify if you want to use dall-e or stable diffusion in plain english)
+          (For generation remember to specify if you want to use Dall-e or Stable Diffusion in plain english)
         </Row>
         <Form onSubmit={onSubmitHandler}>
           <Row>
@@ -173,27 +182,36 @@ function Vision() {
                   <Card.Body>
                     {
                       answers.map((answer, index) => {
+                        let answerCopy = Object.assign({}, answer);
+                        if (answerCopy.image !== null)
+                          answerCopy.image = "...";
                         return (answer.answer != null ?
-                          <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
-                            🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
-                            🤖<span className='highlight'>ANSWER:</span> {answer.answer}
-                            {answer.image &&
-                              <Col sm={4}>
-                                <ModalImage
-                                  small={`data:image/jpg;base64,${answer.image}`}
-                                  large={`data:image/jpg;base64,${answer.image}`}
-                                  alt="Image preview"
-                                />
-                              </Col>
-                            }
-                            <Accordion>
-                              <Row style={{ textAlign: "right", marginBottom: "0px" }}>
-                                <CustomToggle eventKey="0">Details</CustomToggle>
-                              </Row>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body><ReactJson src={answer} enableClipboard={false} /></Card.Body>
-                              </Accordion.Collapse>
-                            </Accordion>
+                          <div>
+                            <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
+                              🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
+                              🤖<span className='highlight'>ANSWER:</span> {answer.answer}
+                              {answer.image &&
+                                <Col sm={4}>
+                                  <ModalImage
+                                    small={`data:image/jpg;base64,${answer.image}`}
+                                    large={`data:image/jpg;base64,${answer.image}`}
+                                    alt="Image preview"
+                                  />
+                                </Col>
+                              }
+                            </div>
+                            <div style={{ marginBottom: "0px" }}>
+                              <Accordion>
+                                <div style={{ textAlign: "right", marginBottom: "0px" }}>
+                                  <CustomToggle title="Details" eventKey="0" >🔎</CustomToggle>
+                                  {answer.image == null && <span title="Generate image from description" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => descriptionClick(answer)}>🖼️</span>}
+                                  <span title="Repeat" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => repeatClick(answer)}>🔁</span>
+                                </div>
+                                <Accordion.Collapse eventKey="0">
+                                  <Card.Body><ReactJson src={answerCopy} enableClipboard={false} /></Card.Body>
+                                </Accordion.Collapse>
+                              </Accordion>
+                            </div>
                             <hr />
                           </div>
                           :
@@ -226,6 +244,7 @@ function Vision() {
                   alt="Image preview"
                 />
               </center>
+              <FileUploader fileOrFiles={uploadForm} classes="dragging" handleChange={handleFileUpload} name="file" types={fileTypes} />
             </Col>
           </Row>
           <Row>
@@ -242,30 +261,10 @@ function Vision() {
           </Row>
           <hr />
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={5}>
-              <FileUploader fileOrFiles={uploadForm} classes="dragging" handleChange={handleFileUpload} name="file" types={fileTypes} />
-            </Col>
-            <Col style={{ marginTop: "0.9%", paddingLeft: "2.5%" }} sm={1}>
-              OR
-            </Col>
-            <Col sm={6}>
-              <InputGroup style={{ height: "90%" }} className="mb-3">
-                <Form.Control ref={urlForm}
-                  placeholder="Enter url"
-                  aria-label="Enter url"
-                  aria-describedby="basic-addon2"
-                />
-                <Button onClick={handleSaveClick} variant="outline-secondary" id="button-addon2">
-                  Save
-                </Button>
-              </InputGroup>
-            </Col>
-          </Row>
-          <Row style={{ marginTop: "20px" }}>
-            <Col sm={10}>
+            <Col sm={10} style={{display: "inline-flex"}}>
               <Form.Group as={Col} controlId="formGridAdmin">
-                <Form.Check ref={isDisableBoostForm} type="checkbox" label="Disable Prompt Boost" />
-                <Link title="Disable boost prompt assistant.">ℹ️</Link>
+                <Form.Check ref={isDisableBoostForm} type="checkbox" label="Disable Prompt Booster" />
+                <Link title="Disable prompt booster. Uses AI to boost user's prompt with more details and content.">ℹ️</Link>
               </Form.Group>
             </Col>
             <Col sm={2}>

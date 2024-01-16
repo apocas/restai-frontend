@@ -366,8 +366,7 @@ function Projects() {
                         return (
                           <option key={index}>{embbedding.name}</option>
                         )
-                      }
-                      )
+                      })
                     }
                   </Form.Select>
                 </Form.Group>

@@ -13,7 +13,7 @@ function Edit() {
   const isadminForm = useRef(null)
   const isprivateForm = useRef(null)
   var { username } = useParams();
-  const { getBasicAuth } = useContext(AuthContext);
+  const { logout, getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
 
   const Link = ({ id, children, title }) => (
@@ -25,36 +25,43 @@ function Edit() {
   // TODO: response handling
   const onSubmitHandler = (event) => {
     event.preventDefault();
+    var logoutf = false;
     var update = {};
+
     if (user.admin) {
       update.is_admin = isadminForm.current.checked
       update.is_private = isprivateForm.current.checked
     }
+
     if (passwordForm.current.value !== "") {
       update.password = passwordForm.current.value
+      if (user.username === username) {
+        logoutf = true;
+      }
     }
 
     fetch(url + "/users/" + username, {
       method: 'PATCH',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
       body: JSON.stringify(update),
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      })
-      .then(response => {
+    }).then(function (response) {
+      if (!response.ok) {
+        response.json().then(function (data) {
+          setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+        });
+        throw Error(response.statusText);
+      } else {
+        return response.json();
+      }
+    }).then(response => {
+      if (logoutf === false) {
         window.location.href = "/admin/users/" + username;
-      })
-      .catch(err => {
-        setError(err.toString());
-      });
+      } else {
+        logout();
+      }
+    }).catch(err => {
+      setError(err.toString());
+    });
   }
 
   const fetchUser = (username) => {

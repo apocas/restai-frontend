@@ -43,8 +43,14 @@ function Inference() {
     );
   }
 
+  const repeatClick = (answer) => {
+    questionForm.current.value = answer.question;
+    onSubmitHandler();
+  }
+
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if(event)
+      event.preventDefault();
 
     var system = systemForm.current.value;
     var question = questionForm.current.value;
@@ -66,7 +72,7 @@ function Inference() {
 
     if (submit && canSubmit) {
       setCanSubmit(false);
-      setAnswers([...answers, { question: question, answer: null}]);
+      setAnswers([...answers, { question: question, answer: null }]);
       fetch(url + "/projects/" + projectName + "/inference", {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
@@ -83,12 +89,12 @@ function Inference() {
           }
         })
         .then((response) => {
-          setAnswers([...answers, { question: question, answer: response.answer}]);
+          setAnswers([...answers, { question: question, answer: response.answer }]);
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
           setError(err.toString());
-          setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors."}]);
+          setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors." }]);
           setCanSubmit(true);
         });
     }
@@ -170,17 +176,22 @@ function Inference() {
                     {
                       answers.map((answer, index) => {
                         return (answer.answer != null ?
-                          <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
-                            🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
-                            🤖<span className='highlight'>ANSWER:</span> {answer.answer}
-                            <Accordion>
-                              <Row style={{ textAlign: "right", marginBottom: "0px" }}>
-                                <CustomToggle eventKey="0">Details</CustomToggle>
-                              </Row>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body><ReactJson src={answer} enableClipboard={false} /></Card.Body>
-                              </Accordion.Collapse>
-                            </Accordion>
+                          <div>
+                            <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
+                              🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
+                              🤖<span className='highlight'>ANSWER:</span> {answer.answer}
+                            </div>
+                            <div style={{ marginBottom: "0px" }}>
+                              <Accordion>
+                                <div style={{ textAlign: "right", marginBottom: "0px" }}>
+                                  <CustomToggle title="Details" eventKey="0" >🔎</CustomToggle>
+                                  <span title="Repeat" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => repeatClick(answer)}>🔁</span>
+                                </div>
+                                <Accordion.Collapse eventKey="0">
+                                  <Card.Body><ReactJson src={answer} enableClipboard={false} /></Card.Body>
+                                </Accordion.Collapse>
+                              </Accordion>
+                            </div>
                             <hr />
                           </div>
                           :

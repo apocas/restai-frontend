@@ -43,8 +43,14 @@ function Chat() {
     );
   }
 
+  const repeatClick = (message) => {
+    messageForm.current.value = message.question;
+    onSubmitHandler();
+  }
+
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if (event)
+      event.preventDefault();
 
     var question = messageForm.current.value;
     var id = "";
@@ -198,17 +204,22 @@ function Chat() {
                     {
                       messages.map((message, index) => {
                         return (message.answer != null ?
-                          <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
-                            🧑<span className='highlight'>MESSAGE:</span> {message.question} <br />
-                            🤖<span className='highlight'>RESPONSE:</span> {message.answer}
-                            <Accordion>
-                              <Row style={{ textAlign: "right", marginBottom: "0px" }}>
-                                <CustomToggle eventKey="0">Details</CustomToggle>
-                              </Row>
-                              <Accordion.Collapse eventKey="0">
-                                <Card.Body><ReactJson src={message} enableClipboard={false} /></Card.Body>
-                              </Accordion.Collapse>
-                            </Accordion>
+                          <div>
+                            <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
+                              🧑<span className='highlight'>MESSAGE:</span> {message.question} <br />
+                              🤖<span className='highlight'>RESPONSE:</span> {message.answer}
+                            </div>
+                            <div style={{ marginBottom: "0px" }}>
+                              <Accordion>
+                                <div style={{ textAlign: "right", marginBottom: "0px" }}>
+                                  <CustomToggle title="Details" eventKey="0" >🔎</CustomToggle>
+                                  <span title="Repeat" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => repeatClick(message)}>🔁</span>
+                                </div>
+                                <Accordion.Collapse eventKey="0">
+                                  <Card.Body><ReactJson src={message} enableClipboard={false} /></Card.Body>
+                                </Accordion.Collapse>
+                              </Accordion>
+                            </div>
                             <hr />
                           </div>
                           :
