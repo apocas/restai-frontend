@@ -63,7 +63,7 @@ function Users() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Users';
+    document.title = 'Users';
     fetchUsers();
   }, []);
 

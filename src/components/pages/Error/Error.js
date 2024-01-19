@@ -3,7 +3,7 @@ import React, {  useEffect } from "react";
 
 function Error() {
   useEffect(() => {
-    document.title = 'RestAI 404';
+    document.title = '404';
   }, []);
   return (
     <>

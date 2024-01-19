@@ -350,7 +350,7 @@ function Project() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Project ' + projectName;
+    document.title = 'Project - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);

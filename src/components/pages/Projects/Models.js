@@ -30,7 +30,7 @@ function Models() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Project - Models info';
+    document.title = 'Project - Models info';
     fetchInfo();
   }, []);
 

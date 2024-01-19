@@ -127,7 +127,7 @@ function Inference() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Inference - ' + projectName;
+    document.title = 'Inference - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 

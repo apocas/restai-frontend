@@ -85,7 +85,7 @@ function User() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI User ' + username;
+    document.title = 'User - ' + username;
     fetchUser(username);
     fetchProjects();
   }, [username]);

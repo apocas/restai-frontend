@@ -163,7 +163,7 @@ function Question() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Question - ' + projectName;
+    document.title = 'Question - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);

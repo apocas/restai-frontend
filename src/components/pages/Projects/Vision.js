@@ -158,7 +158,7 @@ function Vision() {
   };
 
   useEffect(() => {
-    document.title = 'RestAI  Vision - ' + projectName;
+    document.title = 'Vision - ' + projectName;
   }, [projectName]);
 
   return (

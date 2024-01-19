@@ -162,7 +162,7 @@ function Chat() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI  Chat - ' + projectName;
+    document.title = 'Chat - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);

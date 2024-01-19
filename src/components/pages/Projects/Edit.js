@@ -138,6 +138,7 @@ function Edit() {
   }
 
   useEffect(() => {
+    document.title = 'Edit - ' + projectName;
     fetchInfo();
   }, [projectName]);
 

@@ -79,7 +79,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Users';
+    document.title = 'Edit - ' + username;
     fetchUser(username);
   }, []);
 

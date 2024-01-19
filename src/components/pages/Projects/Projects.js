@@ -177,7 +177,7 @@ function Projects() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Projects';
+    document.title = 'Projects';
     fetchProjects();
     fetchInfo();
   }, []);
