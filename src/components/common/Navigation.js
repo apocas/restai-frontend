@@ -13,15 +13,13 @@ function Navigation() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const name = process.env.REACT_APP_RESTAI_NAME || "RestAI";
 
-  const logo = process.env.REACT_APP_RESTAI_LOGO || './admin/restai-logo.png';
-
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/admin">
           <img
             alt=""
-            src={require(`${logo}`)}
+            src={restaiLogo}
             width="30"
             height="30"
             className="d-inline-block align-top"
