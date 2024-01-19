@@ -406,9 +406,6 @@ function Project() {
                 <ListGroup.Item><b>Sandboxed:</b> {data.sandboxed ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Sandbox Project:</b> {data.sandbox_project}</ListGroup.Item>
-              }
-              {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
               }
             </ListGroup>

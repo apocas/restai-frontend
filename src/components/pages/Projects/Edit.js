@@ -14,8 +14,6 @@ function Edit() {
   const systemForm = useRef(null);
   const connectionForm = useRef(null);
   const scoreForm = useRef(null);
-  const projectForm = useRef(null)
-  const [projects, setProjects] = useState([]);
   const [availableLLMs, setAvailableLLMs] = useState([]);
   const kForm = useRef(null);
   const censorshipForm = useRef(null)
@@ -68,26 +66,6 @@ function Edit() {
       });
   }
 
-  const fetchProjects = () => {
-    return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            setError(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      })
-      .then(function (d) {
-        d = d.filter((project) => project.name !== projectName)
-        setProjects(d)
-      }).catch(err => {
-        setError(err.toString());
-      });
-  }
-
   const fetchInfo = () => {
     return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then(function (response) {
@@ -129,11 +107,7 @@ function Edit() {
       opts.censorship = censorshipForm.current.value
       opts.score = parseFloat(scoreForm.current.value)
       opts.k = parseInt(kForm.current.value)
-      opts.sandbox_project = projectForm.current.value
 
-      if (opts.sandbox_project === "" || opts.sandbox_project === "N/A") {
-        delete opts.sandbox_project;
-      }
 
       if (opts.censorship.trim() === "") {
         delete opts.censorship;
@@ -164,23 +138,18 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'RestAI Projects';
     fetchInfo();
-    fetchProject(projectName);
-    fetchProjects();
   }, [projectName]);
+
+  useEffect(() => {
+    fetchProject(projectName);
+  }, [info]);
 
   useEffect(() => {
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
-
     } else if (data.type === "vision") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
-    }
-
-    if (data.type === "rag") {
-      projectForm.current.value = data.sandbox_project ? data.sandbox_project : "N/A"
-      sandboxedForm.current.checked = data.sandboxed
     }
   }, [data]);
 
@@ -247,21 +216,6 @@ function Edit() {
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col sm={4}>
-                  <Form.Group as={Col} controlId="formGridProjects">
-                    <Form.Label>Sandbox Project<Link title="When sandboxed, questions that miss ingested knowledge will be passed to this project.">ℹ️</Link></Form.Label>
-                    <Form.Select ref={projectForm} defaultValue="N/A">
-                      <option>N/A</option>
-                      {
-                        projects.map((project, index) => {
-                          return (
-                            <option key={index}>{project.name}</option>
-                          )
-                        })
-                      }
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
                 <Col sm={8}>
                   <Form.Label>Censorship Message<Link title="When sandboxed, if a censorship message is set it will be used on questions that miss ingested knowledge.">ℹ️</Link></Form.Label>
                   <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
