@@ -13,7 +13,7 @@ function Navigation() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const name = process.env.REACT_APP_RESTAI_NAME || "RestAI";
 
-  const logo = process.env.REACT_APP_RESTAI_LOGO || '../../assets/img/restai-logo.png';
+  const logo = process.env.REACT_APP_RESTAI_LOGO || './restai-logo.png';
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
