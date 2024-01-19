@@ -11,6 +11,7 @@ function Navigation() {
   const [error, setError] = useState([]);
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
+  const name = process.env.REACT_APP_RESTAI_NAME || "RestAI";
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -23,7 +24,7 @@ function Navigation() {
             height="30"
             className="d-inline-block align-top"
           />{' '}
-          RestAI
+          {name}
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

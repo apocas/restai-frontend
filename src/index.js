@@ -66,7 +66,7 @@ function Root() {
             <Row>
               <Col sm={12}>
                 <hr />
-                <a href="https://github.com/apocas/restai"><b>RestAI</b>, so many 'A's and 'I's, so little time...</a>
+                Powered by <a href="https://github.com/apocas/restai"><b>RestAI</b>, so many 'A's and 'I's, so little time...</a>
               </Col>
             </Row>
           </Container>
