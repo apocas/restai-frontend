@@ -10,7 +10,7 @@ import { FileUploader } from "react-drag-drop-files";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const fileTypes = ["JPG", "PNG", "GIF", "JPEGZ"];
+const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
 function Vision() {
   const Link = ({ id, children, title }) => (
