@@ -62,7 +62,6 @@ function User() {
           alert("No key...");
         }
       }).catch(err => {
-        setType(null);
         setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
       });
   }
