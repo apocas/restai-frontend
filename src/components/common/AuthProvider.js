@@ -1,6 +1,7 @@
 import { useLocalStorage } from "./useLocalStorage";
 import React, { createContext } from 'react';
 export const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
   const login = (username, password) => {
@@ -40,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
+  
   const getBasicAuth = () => {
     return user;
   };

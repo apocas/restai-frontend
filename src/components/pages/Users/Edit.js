@@ -10,6 +10,7 @@ function Edit() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [error, setError] = useState([]);
   const passwordForm = useRef(null)
+  const ssoForm = useRef(null)
   const isadminForm = useRef(null)
   const isprivateForm = useRef(null)
   var { username } = useParams();
@@ -38,6 +39,10 @@ function Edit() {
       if (user.username === username) {
         logoutf = true;
       }
+    }
+
+    if (ssoForm.current.value !== "") {
+      update.sso = ssoForm.current.value
     }
 
     fetch(url + "/users/" + username, {
@@ -99,6 +104,12 @@ function Edit() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordForm} />
             </Form.Group>
+            {user.admin &&
+              <Form.Group as={Col} controlId="formGridUserName">
+                <Form.Label>SSO</Form.Label>
+                <Form.Control type="text" ref={ssoForm} />
+              </Form.Group>
+            }
             {user.admin &&
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isadminForm} type="checkbox" label="Admin" />

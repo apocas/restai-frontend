@@ -40,6 +40,33 @@ function User() {
       });
   }
 
+  const apikeyClick = () => {
+    fetch(url + "/users/" + username + "/apikey", {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            setError(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((response) => {
+        if (response) {
+          alert(response.api_key);
+        } else {
+          alert("No key...");
+        }
+      }).catch(err => {
+        setType(null);
+        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+      });
+  }
+
   const handleRemoveClick = (projectName) => {
     var projectsi = [];
     for (var i = 0; i < data.projects.length; i++) {
@@ -105,6 +132,7 @@ function User() {
               <NavLink to={"/users/" + data.username + "/edit"} >
                 <Button variant="dark" style={{ marginLeft: "10px" }}>Edit</Button>{' '}
               </NavLink>
+              <Button variant="dark" style={{ marginLeft: "10px" }} onClick={() => apikeyClick()}>Generate API Key</Button>{' '}
             </h1>
 
             <ListGroup>
@@ -113,6 +141,7 @@ function User() {
               <ListGroup.Item>Projects Count: {data.projects.length}</ListGroup.Item>
               <ListGroup.Item>Admin: {data.is_admin ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
               <ListGroup.Item>Private models only: {data.is_private ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+              <ListGroup.Item>Auth: {data.sso ? (data.sso) : ("local")}</ListGroup.Item>
             </ListGroup>
           </Col>
         </Row>
