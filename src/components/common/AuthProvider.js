@@ -33,9 +33,9 @@ export const AuthProvider = ({ children }) => {
       }).then((res) => {
         if (res !== null)
           if (Cookies.get('restai_token')) {
-            setUser({ username: username, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+            setUser({ username: username, expires: 28800, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
           } else {
-            setUser({ username: username, basicAuth: basicAuth, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+            setUser({ username: username, basicAuth: basicAuth, expires: 28800, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
           }
       })
   };
@@ -48,9 +48,11 @@ export const AuthProvider = ({ children }) => {
       const user = jwtDecode(Cookies.get('restai_token'));
       login(user.username);
       return false;
+    } else if(Cookies.get('restai_token') === undefined && user.basicAuth === undefined) {
+      logout();
+      return false;
     }
     if (user !== null) {
-      // check if session has expired
       if (Math.floor(Date.now() / 1000) >= (user.created + user.expires)) {
         setUser(null);
         return false;
