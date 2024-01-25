@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     if (Cookies.get('restai_token') !== undefined && user == null) {
       const user = jwtDecode(Cookies.get('restai_token'));
       login(user.username);
+      return false;
     }
     if (user !== null) {
       // check if session has expired
