@@ -12,7 +12,8 @@ export const AuthProvider = ({ children }) => {
 
     var opts = {};
     if (username !== undefined && password !== undefined) {
-      opts = { "headers": new Headers({ 'Authorization': 'Basic ' + btoa(username + ":" + password) }) }
+      basicAuth = btoa(username + ":" + password);
+      opts = { "headers": new Headers({ 'Authorization': 'Basic ' + basicAuth }) }
     }
 
     fetch(url + "/users/" + username, opts)
