@@ -1,6 +1,7 @@
 import { useLocalStorage } from "./useLocalStorage";
 import React, { createContext } from 'react';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode'
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -31,20 +32,21 @@ export const AuthProvider = ({ children }) => {
         }
       }).then((res) => {
         if (res !== null)
-        if(Cookies.get('restai_token')) {
-          setUser({ username: username, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
-        } else {
-          setUser({ username: username, basicAuth: basicAuth, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
-        }
+          if (Cookies.get('restai_token')) {
+            setUser({ username: username, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+          } else {
+            setUser({ username: username, basicAuth: basicAuth, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+          }
       })
   };
   const logout = () => {
     setUser(null)
+    Cookies.remove('restai_token');
   };
   const checkAuth = () => {
-    if(Cookies.get('restai_token') !== undefined) {
-      login();
-      return true;
+    if (Cookies.get('restai_token') !== undefined && user == null) {
+      const user = jwtDecode(Cookies.get('restai_token'));
+      login(user.username);
     }
     if (user !== null) {
       // check if session has expired
