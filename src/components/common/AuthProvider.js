@@ -41,6 +41,9 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
   };
   const checkAuth = () => {
+    if(Cookies.get('restai_token') !== undefined) {
+      return true;
+    }
     if (user !== null) {
       // check if session has expired
       if (Math.floor(Date.now() / 1000) >= (user.created + user.expires)) {
