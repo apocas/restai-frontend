@@ -1,15 +1,21 @@
 import { useLocalStorage } from "./useLocalStorage";
 import React, { createContext } from 'react';
+import Cookies from 'js-cookie';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
   const login = (username, password) => {
     const url = process.env.REACT_APP_RESTAI_API_URL || "";
-    const basicAuth = btoa(username + ":" + password);
-    fetch(url + "/users/" + username, {
-      headers: new Headers({ 'Authorization': 'Basic ' + basicAuth }),
-    })
+
+    //if (Cookies.get('restai_token') !== undefined) {}
+
+    var opts = {};
+    if (username !== undefined && password !== undefined) {
+      opts = { "headers": new Headers({ 'Authorization': 'Basic ' + btoa(username + ":" + password) }) }
+    }
+
+    fetch(url + "/users/" + username, opts)
       .then((res) => {
         if (res.status === 401) {
           setUser(null)
@@ -41,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-  
+
   const getBasicAuth = () => {
     return user;
   };
