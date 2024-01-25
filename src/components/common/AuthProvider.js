@@ -28,7 +28,11 @@ export const AuthProvider = ({ children }) => {
         }
       }).then((res) => {
         if (res !== null)
+        if(Cookies.get('restai_token')) {
+          setUser({ username: username, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+        } else {
           setUser({ username: username, basicAuth: basicAuth, expires: 43200, created: Math.floor(Date.now() / 1000), admin: res.is_admin });
+        }
       })
   };
   const logout = () => {
