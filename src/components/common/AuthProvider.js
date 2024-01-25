@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     //if (Cookies.get('restai_token') !== undefined) {}
 
     var opts = {};
+    var basicAuth = "";
     if (username !== undefined && password !== undefined) {
       basicAuth = btoa(username + ":" + password);
       opts = { "headers": new Headers({ 'Authorization': 'Basic ' + basicAuth }) }
