@@ -1,9 +1,10 @@
 import { Form, Button, Alert } from "react-bootstrap";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Navigate } from 'react-router-dom';
 import "./login.css";
 import restaiLogo from '../../../assets/img/restai-logo.png';
 import { AuthContext } from '../../common/AuthProvider.js';
+import { useLocalStorage } from "../../common/useLocalStorage";
 
 function Login() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -14,6 +15,9 @@ function Login() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState(null);
+  const [remember, setRemember] = useLocalStorage("remember", null);
+  const rememberForm = useRef(null)
+  const usernameForm = useRef(null)
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,6 +29,12 @@ function Login() {
   };
 
   const handleNextClick = async () => {
+    if (rememberForm.current.checked) {
+      setRemember({ username: inputUsername });
+    } else {
+      setRemember({ username: null });
+    }
+
     setType("processsing");
     fetch(url + "/users/" + inputUsername + "/sso", {
       method: 'GET'
@@ -51,6 +61,13 @@ function Login() {
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
+  useEffect(() => {
+    if (remember.username) {
+      rememberForm.current.checked = true;
+      setInputUsername(remember.username);
+    }
+  }, [remember.username]);
 
   return !checkAuth() ? (
     <>
@@ -85,6 +102,7 @@ function Login() {
               type="text"
               value={inputUsername}
               placeholder="Username/Email"
+              ref={usernameForm}
               onChange={(e) => setInputUsername(e.target.value)}
               required
             />
@@ -101,7 +119,7 @@ function Login() {
           </Form.Group>
           }
           <Form.Group className="mb-2" controlId="checkbox">
-            <Form.Check type="checkbox" label="Remember me" />
+            <Form.Check ref={rememberForm} type="checkbox" label="Remember me" />
           </Form.Group>
           {type === "password" &&
             <Form.Group className="mb-2" controlId="btnpwd">
