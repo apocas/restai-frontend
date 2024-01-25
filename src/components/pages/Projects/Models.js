@@ -51,6 +51,7 @@ function Models() {
                 <th>Type</th>
                 <th>Privacy</th>
                 <th>Description</th>
+                <th>Node</th>
               </tr>
             </thead>
             <tbody>
@@ -62,6 +63,7 @@ function Models() {
                       <td>{llm.type}</td>
                       <td>{llm.privacy}</td>
                       <td>{llm.description}</td>
+                      <td>{llm.node}</td>
                     </tr>
                   )
                 })
