@@ -15,7 +15,7 @@ function Login() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState(null);
-  const [remember, setRemember] = useLocalStorage("remember", null);
+  const [remember, setRemember] = useLocalStorage("remember", {"username": null});
   const rememberForm = useRef(null)
   const usernameForm = useRef(null)
 
