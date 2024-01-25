@@ -83,6 +83,7 @@ function Users() {
                 <th>#</th>
                 <th>Username</th>
                 <th>Type</th>
+                <th>Permissions</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -98,6 +99,9 @@ function Users() {
                         >
                           {user.username}
                         </NavLink>
+                      </td>
+                      <td>
+                        {user.sso ? "SSO" : "Local"}
                       </td>
                       <td>
                         {user.is_admin ? "Admin" : "User"}
