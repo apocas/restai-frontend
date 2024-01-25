@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       const user = jwtDecode(Cookies.get('restai_token'));
       login(user.username);
       return false;
-    } else if(Cookies.get('restai_token') === undefined && user.basicAuth === undefined) {
+    } else if(Cookies.get('restai_token') === undefined && user !== undefined && user.basicAuth === undefined) {
       logout();
       return false;
     }
