@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
+
   const login = (username, password) => {
     const url = process.env.REACT_APP_RESTAI_API_URL || "";
 
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
   };
   const checkAuth = () => {
     if(Cookies.get('restai_token') !== undefined) {
+      login();
       return true;
     }
     if (user !== null) {
