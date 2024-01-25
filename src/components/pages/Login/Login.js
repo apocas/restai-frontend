@@ -63,11 +63,11 @@ function Login() {
   }
 
   useEffect(() => {
-    if (remember.username) {
+    if (remember && remember.username) {
       rememberForm.current.checked = true;
       setInputUsername(remember.username);
     }
-  }, [remember.username]);
+  }, [remember]);
 
   return !checkAuth() ? (
     <>
