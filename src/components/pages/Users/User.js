@@ -135,12 +135,12 @@ function User() {
             </h1>
 
             <ListGroup>
-              <ListGroup.Item>Id: {data.id}</ListGroup.Item>
-              <ListGroup.Item>Username: {data.username}</ListGroup.Item>
-              <ListGroup.Item>Projects Count: {data.projects.length}</ListGroup.Item>
-              <ListGroup.Item>Admin: {data.is_admin ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
-              <ListGroup.Item>Private models only: {data.is_private ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
-              <ListGroup.Item>Auth: {data.sso ? (data.sso) : ("local")}</ListGroup.Item>
+              <ListGroup.Item><b>Id:</b> {data.id}</ListGroup.Item>
+              <ListGroup.Item><b>Username:</b> {data.username}</ListGroup.Item>
+              <ListGroup.Item><b>Projects Count:</b> {data.projects.length}</ListGroup.Item>
+              <ListGroup.Item><b>Admin:</b> {data.is_admin ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+              <ListGroup.Item><b>Private models only:</b> {data.is_private ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+              <ListGroup.Item><b>Auth:</b> {data.sso ? (data.sso) : ("local")}</ListGroup.Item>
             </ListGroup>
           </Col>
         </Row>

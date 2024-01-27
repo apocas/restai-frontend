@@ -21,11 +21,15 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    login(inputUsername, inputPassword)
-    await delay(500);
-    setShow(true);
-    setLoading(false);
+    if(type === "password") {
+      setLoading(true);
+      login(inputUsername, inputPassword)
+      await delay(500);
+      setShow(true);
+      setLoading(false);
+    } else {
+      handleNextClick();
+    }
   };
 
   const handleNextClick = async () => {
