@@ -66,11 +66,6 @@ function Navigation() {
                 >
                   👤{user.username}{' | '}
                 </NavLink>
-                <NavLink
-                  to={"/users/" + user.username + "/edit"}
-                >
-                  ⚙️Edit{' |'}
-                </NavLink>
                 <Button style={{ textDecoration: "none", color: "black", padding: "0px", verticalAlign: "0px" }} variant="link" onClick={logout}>
                   🚪Logout
                 </Button>

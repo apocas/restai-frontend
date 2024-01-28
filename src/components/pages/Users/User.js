@@ -41,29 +41,31 @@ function User() {
   }
 
   const apikeyClick = () => {
-    fetch(url + "/users/" + username + "/apikey", {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth })
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            setError(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
+    if (window.confirm("This will invalidate your current API Key and generate a new one. Are you sure?")) {
+      fetch(url + "/users/" + username + "/apikey", {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth })
       })
-      .then((response) => {
-        if (response) {
-          alert(response.api_key);
-        } else {
-          alert("No key...");
-        }
-      }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
-      });
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              setError(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
+        .then((response) => {
+          if (response) {
+            alert(response.api_key);
+          } else {
+            alert("No key...");
+          }
+        }).catch(err => {
+          setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        });
+    }
   }
 
   const handleRemoveClick = (projectName) => {
