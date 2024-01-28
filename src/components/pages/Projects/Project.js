@@ -35,6 +35,7 @@ function Project() {
   const searchForm = useRef(null)
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
+  const [fileDetails, setfileDetails] = useState(null);
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
@@ -188,14 +189,27 @@ function Project() {
 
   const handleFileChange = (e) => {
     if (e.target.files) {
-      setFile(e.target.files[0]);
+      var f = e.target.files[0];
+      setFile(f);
+      var aux = parseInt(f.size / chunksForm.current.value);
+      if(aux === 0)
+        aux = 1;
+      //setfileDetails("This file (" + f.name + ") has " + f.size + " bytes.\nUsing this chunk size (" + chunksForm.current.value + " bytes) means that " + aux + " chunks are going to be created.\nThis project has a K value of " + data.k + " this means that a maximum of " + parseFloat((data.k * 100) / aux).toFixed(1) + "% of this file's content is going to be used in each question.");
     }
   };
 
+
+  const handleChunkChange = (e) => {
+    if (file) {
+      var aux = parseInt(file.size / e.target.value);
+      //setfileDetails("This file (" + file.name + ") has " + file.size + " bytes.\nUsing this chunk size (" + e.target.value + " bytes) means that " + aux + " chunks are going to be created.\nThis project has a K value of " + data.k + " this means that a maximum of " + parseFloat((data.k * 100) / aux).toFixed(1) + "% of this file's content is going to be used in each question.");
+    }
+  }
+
   const resetFileInput = () => {
-    // 👇️ reset input value
     setFile(null);
     fileForm.current.value = null;
+    setfileDetails(null);
   };
 
   const handleDelete = i => {
@@ -214,6 +228,8 @@ function Project() {
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("splitter", splitterForm.current.value);
+        formData.append("chunks", chunksForm.current.value);
 
         fetch(url + "/projects/" + projectName + "/embeddings/ingest/upload", {
           method: 'POST',
@@ -469,7 +485,7 @@ function Project() {
                     <Form.Label>Chunk Size</Form.Label>
                   </Col>
                   <Col sm={3}>
-                    <Form.Select ref={chunksForm} defaultValue={256}>
+                    <Form.Select ref={chunksForm} defaultValue={256} onChange={handleChunkChange}>
                       <option value="128">128</option>
                       <option value="256">256</option>
                       <option value="512">512</option>
@@ -478,6 +494,7 @@ function Project() {
                     </Form.Select>
                   </Col>
                 </Row>
+                {fileDetails && <Row><Col><span style={{whiteSpace: "pre-line"}}>{fileDetails}</span></Col></Row>}
                 <Col sm={2}>
                   <Button variant="dark" type="submit">
                     {

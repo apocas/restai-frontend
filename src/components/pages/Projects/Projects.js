@@ -23,6 +23,7 @@ function Projects() {
   const embbeddingFilter = useRef(null)
   const llmFilter = useRef(null)
   const vectorFilter = useRef(null)
+  const typeFilter = useRef(null)
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
 
@@ -108,11 +109,12 @@ function Projects() {
     var embFilterValue = embbeddingFilter.current.value;
     var llmFilterValue = llmFilter.current.value;
     var vectorFilterValue = vectorFilter.current.value;
-    if (embFilterValue === "All" && llmFilterValue === "All" && vectorFilterValue === "All") {
+    var typeFilterValue = typeFilter.current.value;
+    if (embFilterValue === "All" && llmFilterValue === "All" && vectorFilterValue === "All" && typeFilterValue === "All") {
       newData = [...data];
       setDisplayData(newData);
     } else {
-      newData = data.filter(element => element.embeddings === embFilterValue || element.llm === llmFilterValue || element.vectorstore === vectorFilterValue)
+      newData = data.filter(element => element.embeddings === embFilterValue || element.llm === llmFilterValue || element.vectorstore === vectorFilterValue || element.type === typeFilterValue)
       setDisplayData(newData);
     }
   }
@@ -196,7 +198,7 @@ function Projects() {
       <Container style={{ marginTop: "20px" }}>
         <h1>Projects</h1>
         <Row style={{ marginBottom: "10px" }}>
-          <Col sm={4}>
+          <Col sm={3}>
             <Form.Group as={Col} controlId="formGridLLM">
               <Form.Label>LLM</Form.Label>
               <Form.Select ref={llmFilter} onChange={handleFilterChange} defaultValue="All">
@@ -212,7 +214,22 @@ function Projects() {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col sm={4}>
+          <Col sm={3}>
+            <Form.Group as={Col} controlId="formGridLLM">
+              <Form.Label>Type</Form.Label>
+              <Form.Select ref={typeFilter} onChange={handleFilterChange} defaultValue="All">
+                <option>All</option>
+                {
+                  ["rag", "ragsql", "vision", "inference"].map((type, index) => {
+                    return (
+                      <option key={index}>{type}</option>
+                    )
+                  })
+                }
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col sm={3}>
             <Form.Group as={Col} controlId="formGridEmbeddings">
               <Form.Label>Embeddings</Form.Label>
               <Form.Select ref={embbeddingFilter} onChange={handleFilterChange} defaultValue="All">
@@ -228,7 +245,7 @@ function Projects() {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col sm={4}>
+          <Col sm={3}>
             <Form.Group as={Col} controlId="formGridVector">
               <Form.Label>Vectorstore</Form.Label>
               <Form.Select ref={vectorFilter} onChange={handleFilterChange} defaultValue="All">
