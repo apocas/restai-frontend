@@ -28,7 +28,7 @@ function Vision() {
   const [canSubmit, setCanSubmit] = useState(true);
   const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
-  const isDisableBoostForm = useRef(null)
+  const isEnableBoostForm = useRef(null)
   const user = getBasicAuth();
 
   function sdTemplate() {
@@ -76,9 +76,9 @@ function Vision() {
     questionForm.current.value = question;
 
     if (window.confirm("Do you want to boost this prompt using AI? (Cancel for no)")) {
-      isDisableBoostForm.current.checked = false;
+      isEnableBoostForm.current.checked = true;
     } else {
-      isDisableBoostForm.current.checked = true;
+      isEnableBoostForm.current.checked = false;
     }
 
     onSubmitHandler();
@@ -97,13 +97,13 @@ function Vision() {
         body = {
           "question": question,
           "image": file.split(",")[1],
-          "disableboost": isDisableBoostForm.current.checked
+          "boost": isEnableBoostForm.current.checked
         }
       } else {
         body = {
           "question": question,
           "image": file,
-          "disableboost": isDisableBoostForm.current.checked
+          "boost": isEnableBoostForm.current.checked
         }
       }
       submit = true;
@@ -263,8 +263,8 @@ function Vision() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={10} style={{display: "inline-flex"}}>
               <Form.Group as={Col} controlId="formGridAdmin">
-                <Form.Check ref={isDisableBoostForm} type="checkbox" label="Disable Prompt Booster" />
-                <Link title="Disable prompt booster. Uses AI to boost user's prompt with more details and content.">ℹ️</Link>
+                <Form.Check ref={isEnableBoostForm} type="checkbox" label="Enable Prompt Booster" />
+                <Link title="Enable prompt booster. Uses AI to boost user's prompt with more details and content.">ℹ️</Link>
               </Form.Group>
             </Col>
             <Col sm={2}>
