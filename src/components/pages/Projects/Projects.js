@@ -399,9 +399,9 @@ function Projects() {
               {type === "rag" &&
                 <Form.Group as={Col} controlId="formGridVector">
                   <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
-                  <Form.Select ref={vectorForm} defaultValue="chroma">
-                    <option>chroma</option>
+                  <Form.Select ref={vectorForm} defaultValue="redis">
                     <option>redis</option>
+                    <option>chroma</option>
                   </Form.Select>
                 </Form.Group>
               }

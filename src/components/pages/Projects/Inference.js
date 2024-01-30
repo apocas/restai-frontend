@@ -73,7 +73,7 @@ function Inference() {
     if (submit && canSubmit) {
       setCanSubmit(false);
       setAnswers([...answers, { question: question, answer: null }]);
-      fetch(url + "/projects/" + projectName + "/inference", {
+      fetch(url + "/projects/" + projectName + "/question", {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
         body: JSON.stringify(body),
