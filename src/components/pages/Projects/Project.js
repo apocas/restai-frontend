@@ -383,7 +383,7 @@ function Project() {
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={6}>
-            <h1>Details {data.name} {' '}
+            <h1>Details{' '}
               <NavLink
                 to={"/projects/" + data.name + "/edit"}
               >
@@ -439,6 +439,7 @@ function Project() {
                   <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
                 }
               </ListGroup.Item>
+              <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
               <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
 
               {(data.type === "inference" || data.type === "rag") &&
