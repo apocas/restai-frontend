@@ -364,9 +364,9 @@ function Project() {
   }, [data])
 
   useEffect(() => {
-    if(uploadResponse) {
+    if (uploadResponse) {
       var perc = parseFloat((data.k * 100) / uploadResponse.chunks).toFixed(1);
-      if(perc > 100) perc = 100;
+      if (perc > 100) perc = 100;
 
       setfileDetails(uploadResponse.chunks + " chunks created. This project has a default K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.");
     }
@@ -383,7 +383,54 @@ function Project() {
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={6}>
-            <h1>Details {data.name}</h1>
+            <h1>Details {data.name} {' '}
+              <NavLink
+                to={"/projects/" + data.name + "/edit"}
+              >
+                <Button variant="dark">Edit</Button>
+              </NavLink>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}>Delete</Button>
+              {data.type === "vision" &&
+                < NavLink
+                  to={"/projects/" + data.name + "/vision"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="dark">Vision</Button>
+                </NavLink>
+              }
+              {data.type === "inference" &&
+                < NavLink
+                  to={"/projects/" + data.name + "/inference"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="dark">Inference</Button>
+                </NavLink>
+              }
+              {data.type === "rag" && data.llm_type === "chat" &&
+                <NavLink
+                  to={"/projects/" + data.name + "/chat"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="dark">Chat</Button>
+                </NavLink>
+              }
+              {data.type === "rag" &&
+                <NavLink
+                  to={"/projects/" + data.name + "/question"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="dark">Question</Button>
+                </NavLink>
+              }
+              {data.type === "ragsql" &&
+                <NavLink
+                  to={"/projects/" + data.name + "/questionsql"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="dark">Question</Button>
+                </NavLink>
+              }
+            </h1>
             <ListGroup>
               <ListGroup.Item><b>Privacy: </b>
                 {checkPrivacy() ?
@@ -507,59 +554,16 @@ function Project() {
                 <Row>
                   <Col sm={12}>
                     <h5>Ingest Result:</h5>
-                    <Row><Col><span style={{whiteSpace: "pre-line"}}>{fileDetails}</span></Col></Row>
+                    <Row><Col><span style={{ whiteSpace: "pre-line" }}>{fileDetails}</span></Col></Row>
                     <ListGroup>
                       <ListGroup.Item>Source: {uploadResponse.source}</ListGroup.Item>
                       <ListGroup.Item>Documents: {uploadResponse.documents}</ListGroup.Item>
                       <ListGroup.Item>Chunks: {uploadResponse.chunks}</ListGroup.Item>
                     </ListGroup>
                   </Col>
-                  <hr />
                 </Row>
-              )              
+              )
             }
-            <h1>Actions</h1>
-            {data.type === "vision" &&
-              < NavLink
-                to={"/projects/" + data.name + "/vision"}
-              >
-                <Button variant="dark">Vision</Button>{' '}
-              </NavLink>
-            }
-            {data.type === "inference" &&
-              < NavLink
-                to={"/projects/" + data.name + "/inference"}
-              >
-                <Button variant="dark">Inference</Button>{' '}
-              </NavLink>
-            }
-            <NavLink
-              to={"/projects/" + data.name + "/edit"}
-            >
-              <Button variant="dark">Edit</Button>{' '}
-            </NavLink>
-            {data.type === "rag" && data.llm_type === "chat" &&
-              <NavLink
-                to={"/projects/" + data.name + "/chat"}
-              >
-                <Button variant="dark">Chat</Button>{' '}
-              </NavLink>
-            }
-            {data.type === "rag" &&
-              <NavLink
-                to={"/projects/" + data.name + "/question"}
-              >
-                <Button variant="dark">Question</Button>{' '}
-              </NavLink>
-            }
-            {data.type === "ragsql" &&
-              <NavLink
-                to={"/projects/" + data.name + "/questionsql"}
-              >
-                <Button variant="dark">Question</Button>{' '}
-              </NavLink>
-            }
-            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger">Delete</Button>
           </Col>
         </Row>
         {data.type === "rag" &&

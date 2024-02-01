@@ -131,9 +131,9 @@ function User() {
             <h1>
               Details
               <NavLink to={"/users/" + data.username + "/edit"} >
-                <Button variant="dark" style={{ marginLeft: "10px" }}>Edit</Button>{' '}
+                <Button variant="dark" style={{ marginLeft: "5px" }}>Edit</Button>
               </NavLink>
-              <Button variant="dark" style={{ marginLeft: "10px" }} onClick={() => apikeyClick()}>Generate API Key</Button>{' '}
+              <Button variant="dark" style={{ marginLeft: "5px" }} onClick={() => apikeyClick()}>Generate API Key</Button>
             </h1>
 
             <ListGroup>
