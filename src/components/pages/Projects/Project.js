@@ -19,7 +19,7 @@ function Project() {
   const contentNameForm = useRef(null)
   const [embedding, setEmbedding] = useState(null);
   const [chunk, setChunk] = useState(null);
-  const [uploadResponse, setUploadResponse] = useState({ type: null });
+  const [uploadResponse, setUploadResponse] = useState(null);
   const [canSubmit, setCanSubmit] = useState(true);
   const [error, setError] = useState([]);
   const urlForm = useRef(null);
@@ -191,20 +191,8 @@ function Project() {
     if (e.target.files) {
       var f = e.target.files[0];
       setFile(f);
-      var aux = parseInt(f.size / chunksForm.current.value);
-      if(aux === 0)
-        aux = 1;
-      //setfileDetails("This file (" + f.name + ") has " + f.size + " bytes.\nUsing this chunk size (" + chunksForm.current.value + " bytes) means that " + aux + " chunks are going to be created.\nThis project has a K value of " + data.k + " this means that a maximum of " + parseFloat((data.k * 100) / aux).toFixed(1) + "% of this file's content is going to be used in each question.");
     }
   };
-
-
-  const handleChunkChange = (e) => {
-    if (file) {
-      var aux = parseInt(file.size / e.target.value);
-      //setfileDetails("This file (" + file.name + ") has " + file.size + " bytes.\nUsing this chunk size (" + e.target.value + " bytes) means that " + aux + " chunks are going to be created.\nThis project has a K value of " + data.k + " this means that a maximum of " + parseFloat((data.k * 100) / aux).toFixed(1) + "% of this file's content is going to be used in each question.");
-    }
-  }
 
   const resetFileInput = () => {
     setFile(null);
@@ -375,6 +363,15 @@ function Project() {
     fetchEmbeddings(projectName);
   }, [data])
 
+  useEffect(() => {
+    if(uploadResponse) {
+      var perc = parseFloat((data.k * 100) / uploadResponse.chunks).toFixed(1);
+      if(perc > 100) perc = 100;
+
+      setfileDetails(uploadResponse.chunks + " chunks created. This project has a default K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.");
+    }
+  }, [uploadResponse])
+
   return (
     <>
       {error.length > 0 &&
@@ -485,7 +482,7 @@ function Project() {
                     <Form.Label>Chunk Size</Form.Label>
                   </Col>
                   <Col sm={3}>
-                    <Form.Select ref={chunksForm} defaultValue={256} onChange={handleChunkChange}>
+                    <Form.Select ref={chunksForm} defaultValue={256}>
                       <option value="128">128</option>
                       <option value="256">256</option>
                       <option value="512">512</option>
@@ -494,7 +491,6 @@ function Project() {
                     </Form.Select>
                   </Col>
                 </Row>
-                {fileDetails && <Row><Col><span style={{whiteSpace: "pre-line"}}>{fileDetails}</span></Col></Row>}
                 <Col sm={2}>
                   <Button variant="dark" type="submit">
                     {
@@ -507,10 +503,11 @@ function Project() {
             }
             {
               (
-                uploadResponse.source &&
+                uploadResponse &&
                 <Row>
                   <Col sm={12}>
                     <h5>Ingest Result:</h5>
+                    <Row><Col><span style={{whiteSpace: "pre-line"}}>{fileDetails}</span></Col></Row>
                     <ListGroup>
                       <ListGroup.Item>Source: {uploadResponse.source}</ListGroup.Item>
                       <ListGroup.Item>Documents: {uploadResponse.documents}</ListGroup.Item>
@@ -519,7 +516,7 @@ function Project() {
                   </Col>
                   <hr />
                 </Row>
-              )
+              )              
             }
             <h1>Actions</h1>
             {data.type === "vision" &&
