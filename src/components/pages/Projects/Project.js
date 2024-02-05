@@ -448,6 +448,9 @@ function Project() {
               {data.type === "ragsql" &&
                 <ListGroup.Item><b>Connection:</b> {data.connection}</ListGroup.Item>
               }
+              {data.type === "ragsql" &&
+                <ListGroup.Item><b>Tables:</b> {data.tables}</ListGroup.Item>
+              }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Documents (chunks):</b> {data.chunks}</ListGroup.Item>
               }

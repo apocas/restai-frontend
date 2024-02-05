@@ -13,6 +13,7 @@ function Edit() {
   const [error, setError] = useState([]);
   const systemForm = useRef(null);
   const connectionForm = useRef(null);
+  const tablesForm = useRef(null);
   const scoreForm = useRef(null);
   const [availableLLMs, setAvailableLLMs] = useState([]);
   const kForm = useRef(null);
@@ -100,6 +101,7 @@ function Edit() {
 
     if (data.type === "ragsql") {
       opts.connection = connectionForm.current.value
+      opts.tables = tablesForm.current.value
     }
 
     if (data.type === "rag") {
@@ -194,7 +196,6 @@ function Edit() {
                   <Form.Label>Connection<Link title="Connection string">ℹ️</Link></Form.Label>
                   <Form.Control rows="1" as="input" ref={connectionForm} defaultValue={data.connection ? data.connection : ""} />
                 </Form.Group>
-                <hr style={{ marginTop: "20px" }} />
               </Col>
               <Col sm={1}>
                 <InputGroup style={{ marginTop: "36px" }}>
@@ -205,6 +206,17 @@ function Edit() {
                 <InputGroup style={{ marginTop: "36px" }}>
                   <Button variant="dark" onClick={pgsqlTemplate} size="sm">PostgreSQL</Button>
                 </InputGroup>
+              </Col>
+            </Row>
+          }
+
+          {(data.type === "ragsql") &&
+            <Row className="mb-3">
+              <Col sm={12}>
+                <Form.Group as={Col} controlId="formGridSystem">
+                  <Form.Label>Tables<Link title="Connection string">ℹ️</Link></Form.Label>
+                  <Form.Control rows="1" as="input" ref={tablesForm} defaultValue={data.tables ? data.tables : ""} />
+                </Form.Group>
               </Col>
             </Row>
           }
