@@ -95,7 +95,7 @@ function Edit() {
       "llm": llmForm.current.value
     }
 
-    if (data.type === "rag" || data.type === "inference") {
+    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
       opts.system = systemForm.current.value
     }
 
@@ -179,7 +179,7 @@ function Edit() {
               </Form.Select>
             </Form.Group>
           </Row>
-          {(data.type === "rag" || data.type === "inference") &&
+          {(data.type === "rag" || data.type === "inference" || data.type === "ragsql") &&
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridSystem">
                 <Form.Label>System Message<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>

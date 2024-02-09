@@ -442,7 +442,7 @@ function Project() {
               <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
               <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
 
-              {(data.type === "inference" || data.type === "rag") &&
+              {(data.type === "inference" || data.type === "rag" || data.type === "ragsql") &&
                 <ListGroup.Item><b>System:</b> {data.system}</ListGroup.Item>
               }
               {data.type === "ragsql" &&
