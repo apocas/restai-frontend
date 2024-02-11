@@ -43,6 +43,22 @@ function Vision() {
     questionForm.current.value = "Describe this image, be detailed."
   }
 
+  function avatarNoirTemplate() {
+    questionForm.current.value = "Draw an avatar, film noir style, ink sketch|vector, highly detailed, sharp focus, ultra sharpness, monochrome, high contrast, dramatic shadows, 1940s style, mysterious, cinematic"
+  }
+
+  function avatarMarsTemplate() {
+    questionForm.current.value = "Draw an avatar, post-apocalyptic. Mars Colony, Scavengers roam the wastelands searching for valuable resources, rovers, bright morning sunlight shining"
+  }
+
+  function avatarVibrantTemplate() {
+    questionForm.current.value = "Draw an avatar, vibrant colorful, ink sketch|vector|2d colors, at nightfall, sharp focus, highly detailed, sharp focus, the clouds,colorful,ultra sharpness"
+  }
+
+  function avatarLineTemplate() {
+    questionForm.current.value = "Draw an avatar, line art drawing. professional, sleek, modern, minimalist, graphic, line art, vector graphics"
+  }
+
   function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
 
@@ -256,6 +272,10 @@ function Vision() {
               <Button variant="dark" onClick={sdTemplate} size="sm">Generate Stable Diffusion (local)</Button>
               <Button variant="dark" onClick={dalleTemplate} size="sm">Generate Dall-e (openai)</Button>
               <Button variant="dark" onClick={describeTemplate} size="sm">Describe image (local)</Button>
+              <Button variant="dark" onClick={avatarNoirTemplate} size="sm">Avatar Noir (local)</Button>
+              <Button variant="dark" onClick={avatarMarsTemplate} size="sm">Avatar Mars (local)</Button>
+              <Button variant="dark" onClick={avatarVibrantTemplate} size="sm">Avatar Vibrant (local)</Button>
+              <Button variant="dark" onClick={avatarLineTemplate} size="sm">Avatar Line (local)</Button>
 
             </Col>
           </Row>
