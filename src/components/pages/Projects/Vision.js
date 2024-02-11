@@ -55,10 +55,6 @@ function Vision() {
     questionForm.current.value = "Draw an avatar, vibrant colorful, ink sketch|vector|2d colors, at nightfall, sharp focus, highly detailed, sharp focus, the clouds,colorful,ultra sharpness"
   }
 
-  function avatarLineTemplate() {
-    questionForm.current.value = "Draw an avatar, line art drawing. professional, sleek, modern, minimalist, graphic, line art, vector graphics"
-  }
-
   function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
 
@@ -275,7 +271,6 @@ function Vision() {
               <Button variant="dark" onClick={avatarNoirTemplate} size="sm">Avatar Noir (local)</Button>
               <Button variant="dark" onClick={avatarMarsTemplate} size="sm">Avatar Mars (local)</Button>
               <Button variant="dark" onClick={avatarVibrantTemplate} size="sm">Avatar Vibrant (local)</Button>
-              <Button variant="dark" onClick={avatarLineTemplate} size="sm">Avatar Line (local)</Button>
 
             </Col>
           </Row>
