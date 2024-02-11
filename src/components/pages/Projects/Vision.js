@@ -22,6 +22,7 @@ function Vision() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
   const questionForm = useRef(null);
+  const negativePromptForm = useRef(null);
   const [uploadForm, setUploadForm] = useState(null);
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
@@ -45,14 +46,17 @@ function Vision() {
 
   function avatarNoirTemplate() {
     questionForm.current.value = "Draw an avatar, film noir style, ink sketch|vector, highly detailed, sharp focus, ultra sharpness, monochrome, high contrast, dramatic shadows, 1940s style, mysterious, cinematic"
+    negativePromptForm.current.value = "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"
   }
 
   function avatarMarsTemplate() {
-    questionForm.current.value = "Draw an avatar, post-apocalyptic. Mars Colony, Scavengers roam the wastelands searching for valuable resources, rovers, bright morning sunlight shining"
+    questionForm.current.value = "Draw an avatar, post-apocalyptic. Mars Colony, Scavengers roam the wastelands searching for valuable resources, rovers, bright morning sunlight shining, (detailed) (intricate) (8k) (HDR) (cinematic lighting) (sharp focus)"
+    negativePromptForm.current.value = "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"
   }
 
   function avatarVibrantTemplate() {
     questionForm.current.value = "Draw an avatar, vibrant colorful, ink sketch|vector|2d colors, at nightfall, sharp focus, highly detailed, sharp focus, the clouds,colorful,ultra sharpness"
+    negativePromptForm.current.value = "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"
   }
 
   function CustomToggle({ children, eventKey }) {
@@ -105,18 +109,15 @@ function Vision() {
     var body = {};
     var submit = false;
     if (question !== "") {
+      body = {
+        "question": question,
+        "negative": negativePromptForm.current.value,
+        "boost": isEnableBoostForm.current.checked
+      }
       if (file && file.includes("base64,")) {
-        body = {
-          "question": question,
-          "image": file.split(",")[1],
-          "boost": isEnableBoostForm.current.checked
-        }
+        body.image = file.split(",")[1];
       } else {
-        body = {
-          "question": question,
-          "image": file,
-          "boost": isEnableBoostForm.current.checked
-        }
+        body.image = file;
       }
       submit = true;
     }
@@ -242,9 +243,13 @@ function Vision() {
           </Row>
           <Row style={{ marginTop: "20px" }}>
             <Col sm={8}>
-              <InputGroup style={{ height: "100%" }}>
+              <InputGroup>
                 <InputGroup.Text>{file ? "Question" : "Prompt"}</InputGroup.Text>
-                <Form.Control ref={questionForm} rows="5" as="textarea" aria-label="Question textarea" />
+                <Form.Control ref={questionForm} rows="7" as="textarea" aria-label="Question textarea" />
+              </InputGroup>
+              <InputGroup>
+                <InputGroup.Text>{"Negative Prompt"}</InputGroup.Text>
+                <Form.Control ref={negativePromptForm} rows="4" as="textarea" aria-label="Negative Prompt textarea" defaultValue={"(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"}/>
               </InputGroup>
             </Col>
             <Col sm={4}>
