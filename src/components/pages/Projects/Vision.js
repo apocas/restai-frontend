@@ -134,6 +134,7 @@ function Vision() {
           if (!response.ok) {
             response.json().then(function (data) {
               setError(data.detail);
+              alert(data.detail);
             });
             throw Error(response.statusText);
           } else {
