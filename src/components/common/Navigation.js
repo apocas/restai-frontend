@@ -48,9 +48,9 @@ function Navigation() {
             <Nav.Link as="li">|</Nav.Link>
             <Nav.Link as="li">
               <NavLink
-                to="/models"
+                to="/llms"
               >
-                Models
+                LLMs
               </NavLink>
             </Nav.Link>
             <Nav.Link as="li">

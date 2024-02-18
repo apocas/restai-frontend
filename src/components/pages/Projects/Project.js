@@ -533,7 +533,7 @@ function Project() {
                     <Form.Label>Chunk Size</Form.Label>
                   </Col>
                   <Col sm={3}>
-                    <Form.Select ref={chunksForm} defaultValue={256}>
+                    <Form.Select ref={chunksForm} defaultValue={512}>
                       <option value="128">128</option>
                       <option value="256">256</option>
                       <option value="512">512</option>
