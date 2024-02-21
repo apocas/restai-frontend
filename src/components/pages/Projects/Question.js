@@ -7,6 +7,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import toast from 'react-hot-toast';
 
 function Question() {
 
@@ -181,6 +182,9 @@ function Question() {
           setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources }]);
           questionForm.current.value = "";
           setCanSubmit(true);
+          if (response.sources.length === 0) {
+            toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
+          }
         }).catch(err => {
           setError(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
@@ -252,6 +256,9 @@ function Question() {
       setAnswert([]);
       questionForm.current.value = "";
       setCanSubmit(true);
+      if (info.sources.length === 0) {
+        toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
+      }
     }
   }, [answert]);
 

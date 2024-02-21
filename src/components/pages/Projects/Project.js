@@ -389,7 +389,7 @@ function Project() {
               >
                 <Button variant="dark">Edit</Button>
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}>Delete</Button>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>Delete</Button>
               {data.type === "vision" &&
                 < NavLink
                   to={"/projects/" + data.name + "/vision"}
@@ -584,7 +584,7 @@ function Project() {
                   <h3>Document List</h3>
                   {data.documents > 20000 && embeddings.embeddings.length === 0 ?
                     <Col sm={12}>
-                      Too many embeddings to be listed, use the retrieval tab.
+                      Too many embeddings to be listed, use the retrieval simulator.
                     </Col>
                     : (
                       <Col sm={12} style={embeddings.embeddings.length > 5 ? { height: "400px", overflowY: "scroll" } : {}}>
@@ -633,7 +633,7 @@ function Project() {
                   }
                 </Row>
               </Tab>
-              <Tab eventKey="retrieval" title="Retrieval">
+              <Tab eventKey="retrieval" title="Retrieval Simulator">
                 <Row style={{ marginTop: "20px" }}>
                   <h3>Chunks</h3>
 

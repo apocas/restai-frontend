@@ -7,6 +7,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import toast from 'react-hot-toast';
 
 function Chat() {
 
@@ -33,9 +34,7 @@ function Chat() {
   );
 
   function CustomToggle({ children, eventKey }) {
-    const decoratedOnClick = useAccordionButton(eventKey, () =>
-      console.log('totally custom!'),
-    );
+    const decoratedOnClick = useAccordionButton(eventKey);
 
     return (
       <span
@@ -186,6 +185,9 @@ function Chat() {
           setMessages([...messages, { id: response.id, question: response.question, answer: response.answer, sources: response.sources }]);
           messageForm.current.value = "";
           setCanSubmit(true);
+          if (response.sources.length === 0) {
+            toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
+          }
         }).catch(err => {
           setError(err.toString());
           setMessages([...messages, { id: id, question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
@@ -257,6 +259,9 @@ function Chat() {
       setAnswert([]);
       messageForm.current.value = "";
       setCanSubmit(true);
+      if (info.sources.length === 0) {
+        toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
+      }
     }
   }, [answert]);
 
