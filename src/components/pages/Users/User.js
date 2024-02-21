@@ -128,7 +128,7 @@ function User() {
             <h1>
               Details
               <NavLink to={"/users/" + data.username + "/edit"} >
-                <Button variant="dark" style={{ marginLeft: "5px" }}>Edit</Button>
+                <Button variant="dark" style={{ marginLeft: "5px" }}>✏️ Edit</Button>
               </NavLink>
               <Button variant="dark" style={{ marginLeft: "5px" }} onClick={() => apikeyClick()}>Generate API Key</Button>
             </h1>

@@ -118,9 +118,7 @@ function Edit() {
               </Form.Group>
             }
           </Row>
-          <Button variant="dark" type="submit" className="mb-2">
-            Save
-          </Button>
+          <Button variant="dark" type="submit" className="mb-2">💾 Save</Button>
           <NavLink to={"/users/" + username} >
             <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
           </NavLink>

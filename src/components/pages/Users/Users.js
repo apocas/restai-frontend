@@ -107,9 +107,9 @@ function Users() {
                         <NavLink
                           to={"/users/" + user.username}
                         >
-                          <Button variant="dark">View</Button>{' '}
+                          <Button variant="dark">🔎 View</Button>{' '}
                         </NavLink>
-                        <Button onClick={() => handleDeleteClick(user.username)} variant="danger">Delete</Button>
+                        <Button onClick={() => handleDeleteClick(user.username)} variant="danger">🗑️ Delete</Button>
                       </td>
                     </tr>
                   )

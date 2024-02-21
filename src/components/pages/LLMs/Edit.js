@@ -126,9 +126,7 @@ function Edit() {
               <Form.Control type="text" ref={descriptionForm} defaultValue={data.description ? data.description : ""} />
             </Form.Group>
           </Row>
-          <Button variant="dark" type="submit" className="mb-2">
-            Save
-          </Button>
+          <Button variant="dark" type="submit" className="mb-2">💾 Save</Button>
           <NavLink to={"/llms/" + llmname} >
             <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
           </NavLink>

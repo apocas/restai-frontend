@@ -383,7 +383,7 @@ function Project() {
               >
                 <Button variant="dark">✏️ Edit</Button>
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>Delete</Button>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>🗑️ Delete</Button>
               {data.type === "vision" &&
                 < NavLink
                   to={"/projects/" + data.name + "/vision"}

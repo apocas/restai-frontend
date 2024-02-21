@@ -249,9 +249,7 @@ function Edit() {
               </Col>
             </Row>
           }
-          <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}>
-            Save
-          </Button>
+          <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}>💾 Save</Button>
         </Form>
       </Container>
     </>

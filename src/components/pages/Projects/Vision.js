@@ -145,7 +145,7 @@ function Vision() {
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          toast.error(err.toString());
+          console.log(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [], image: null }]);
           setCanSubmit(true);
         });

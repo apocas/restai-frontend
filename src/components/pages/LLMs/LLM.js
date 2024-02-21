@@ -58,9 +58,9 @@ function LLM() {
             <h1>
               Details
               <NavLink to={"/llms/" + llmname + "/edit"} >
-                {user.admin && <Button variant="dark" style={{ marginLeft: "5px" }}>Edit</Button>}
+                {user.admin && <Button variant="dark" style={{ marginLeft: "5px" }}>✏️ Edit</Button>}
               </NavLink>
-              <Button variant="alert" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}>Delete</Button>
+              <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}>🗑️ Delete</Button>
             </h1>
 
             <ListGroup>

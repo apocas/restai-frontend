@@ -118,7 +118,7 @@ function LLMs() {
                         <NavLink
                           to={"/llms/" + llm.name}
                         >
-                          <Button variant="dark">View</Button>{' '}
+                          <Button variant="dark">🔎 View</Button>{' '}
                         </NavLink>
                         <Button onClick={() => handleDeleteClick(llm.name)} variant="danger">Delete</Button>
                       </td>
