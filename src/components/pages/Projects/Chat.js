@@ -7,7 +7,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 function Chat() {
 
@@ -21,7 +21,6 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
   const [data, setData] = useState({ projects: [] });
-  const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
   const isStream = useRef(null)
@@ -174,7 +173,7 @@ function Chat() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -189,7 +188,7 @@ function Chat() {
             toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
           }
         }).catch(err => {
-          setError(err.toString());
+          toast.error(err.toString());
           setMessages([...messages, { id: id, question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
           setCanSubmit(true);
         });
@@ -201,7 +200,7 @@ function Chat() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -210,7 +209,7 @@ function Chat() {
       })
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -219,7 +218,7 @@ function Chat() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -228,7 +227,7 @@ function Chat() {
       })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchInfo", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -267,11 +266,6 @@ function Chat() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Chat - {projectName}</h1>
         <h5>

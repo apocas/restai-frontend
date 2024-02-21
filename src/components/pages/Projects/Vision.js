@@ -9,6 +9,7 @@ import NoImage from '../../../assets/img/no-image.jpg'
 import { FileUploader } from "react-drag-drop-files";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
@@ -27,7 +28,6 @@ function Vision() {
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
-  const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
   const isEnableBoostForm = useRef(null)
   const user = getBasicAuth();
@@ -133,8 +133,7 @@ function Vision() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
-              alert(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -146,7 +145,7 @@ function Vision() {
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError(err.toString());
+          toast.error(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [], image: null }]);
           setCanSubmit(true);
         });
@@ -177,11 +176,6 @@ function Vision() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Vision - {projectName}</h1>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>

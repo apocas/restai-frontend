@@ -4,12 +4,12 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function LLM() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [data, setData] = useState({ projects: [] });
-  const [error, setError] = useState([]);
   var { llmname } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
@@ -29,7 +29,8 @@ function LLM() {
         window.location.href = "/admin/llms/";
       }
       ).catch(err => {
-        setError([...error, { "functionName": "handleDeleteClick", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error deleting LLM"); 
       });
     }
   }
@@ -39,7 +40,8 @@ function LLM() {
       .then((res) => res.json())
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUser", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error fetching LLM");
       });
   }
 
@@ -50,11 +52,6 @@ function LLM() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>

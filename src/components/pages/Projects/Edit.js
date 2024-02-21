@@ -4,13 +4,13 @@ import { useParams } from "react-router-dom";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function Edit() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [data, setData] = useState({ projects: [] });
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
-  const [error, setError] = useState([]);
   const systemForm = useRef(null);
   const connectionForm = useRef(null);
   const tablesForm = useRef(null);
@@ -52,7 +52,7 @@ function Edit() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -63,7 +63,7 @@ function Edit() {
         setData(d)
       }
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -72,7 +72,7 @@ function Edit() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -82,7 +82,7 @@ function Edit() {
       .then(function (d) {
         setInfo(d)
       }).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -124,7 +124,7 @@ function Edit() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -134,7 +134,7 @@ function Edit() {
       .then(() => {
         window.location.href = "/admin/projects/" + projectName;
       }).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
 
   }
@@ -163,11 +163,6 @@ function Edit() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Edit Project {projectName}</h1>
         <Form onSubmit={onSubmitHandler}>

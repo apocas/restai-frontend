@@ -4,11 +4,11 @@ import { useParams, NavLink } from "react-router-dom";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function Edit() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const [error, setError] = useState([]);
   const passwordForm = useRef(null)
   const ssoForm = useRef(null)
   const isadminForm = useRef(null)
@@ -52,7 +52,7 @@ function Edit() {
     }).then(function (response) {
       if (!response.ok) {
         response.json().then(function (data) {
-          setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+          toast.error(data.detail);
         });
         throw Error(response.statusText);
       } else {
@@ -65,7 +65,7 @@ function Edit() {
         logout();
       }
     }).catch(err => {
-      setError(err.toString());
+      toast.error(err.toString());
     });
   }
 
@@ -79,7 +79,7 @@ function Edit() {
         }
       }
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUser", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -91,11 +91,6 @@ function Edit() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Edit User {username}</h1>
         <Form onSubmit={onSubmitHandler}>

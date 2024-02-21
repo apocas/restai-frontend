@@ -2,12 +2,12 @@ import { Container, Table, Row, Form, Col, Button, Alert } from 'react-bootstrap
 import { NavLink, Navigate } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
+import { toast } from 'react-toastify';
 
 function Users() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [data, setData] = useState([]);
-  const [error, setError] = useState([]);
   const usernameForm = useRef(null)
   const passwordForm = useRef(null)
   const isadminForm = useRef(null)
@@ -22,7 +22,8 @@ function Users() {
         headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth })
       }).then(() => fetchUsers()
       ).catch(err => {
-        setError([...error, { "functionName": "handleDeleteClick", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error deleting user");
       });
     }
   }
@@ -32,7 +33,8 @@ function Users() {
       .then((res) => res.json())
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUsers", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error fetching users");
       });
   }
 
@@ -57,7 +59,7 @@ function Users() {
         isadminForm.current.checked = false
         isprivateForm.current.checked = false
       }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
 
   }
@@ -69,11 +71,6 @@ function Users() {
 
   return user.admin ? (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <Row>
           <h1>Users</h1>

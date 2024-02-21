@@ -4,12 +4,12 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function LLMs() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [data, setData] = useState([]);
-  const [error, setError] = useState([]);
   const nameForm = useRef(null)
   const classnameForm = useRef(null)
   const optionsForm = useRef(null)
@@ -32,7 +32,8 @@ function LLMs() {
         headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth })
       }).then(() => fetchLLMS()
       ).catch(err => {
-        setError([...error, { "functionName": "handleDeleteClick", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error deleting LLM");
       });
     }
   }
@@ -42,7 +43,8 @@ function LLMs() {
       .then((res) => res.json())
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchLLMS", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error fetching LLMs");
       });
   }
 
@@ -64,7 +66,7 @@ function LLMs() {
       .then(() => {
         fetchLLMS();
       }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
 
   }
@@ -76,11 +78,6 @@ function LLMs() {
 
   return user.admin ? (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <Row>
           <h1>Users</h1>

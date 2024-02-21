@@ -7,6 +7,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { toast } from 'react-toastify';
 
 function Inference() {
 
@@ -17,7 +18,6 @@ function Inference() {
   const [answers, setAnswers] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
   const [data, setData] = useState({ projects: [] });
-  const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
   const isStream = useRef(null)
@@ -150,7 +150,7 @@ function Inference() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -162,7 +162,7 @@ function Inference() {
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError(err.toString());
+          toast.error(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors." }]);
           setCanSubmit(true);
         });
@@ -174,7 +174,7 @@ function Inference() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -183,7 +183,7 @@ function Inference() {
       })
       .then((d) => setData(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -212,11 +212,6 @@ function Inference() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Inference - {projectName}</h1>
         <h5>

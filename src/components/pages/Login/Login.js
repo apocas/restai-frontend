@@ -5,12 +5,12 @@ import "./login.css";
 import restaiLogo from '../../../assets/img/restai-logo.png';
 import { AuthContext } from '../../common/AuthProvider.js';
 import { useLocalStorage } from "../../common/useLocalStorage";
+import { toast } from 'react-toastify';
 
 function Login() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const { checkAuth, login } = useContext(AuthContext);
   const [inputUsername, setInputUsername] = useState("");
-  const [error, setError] = useState([]);
   const [inputPassword, setInputPassword] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -58,7 +58,7 @@ function Login() {
         }
       }).catch(err => {
         setType(null);
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -75,11 +75,6 @@ function Login() {
 
   return !checkAuth() ? (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <div className="sign-in__wrapper">
         <div className="sign-in__backdrop"></div>
         <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>

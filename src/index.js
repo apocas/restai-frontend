@@ -23,7 +23,8 @@ import AuthProvider from './components/common/AuthProvider.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/css/index.css';
 import { Container, Row, Col } from 'react-bootstrap';
-import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -68,7 +69,18 @@ function Root() {
           </Routes>
 
           <Container style={{ marginTop: "20px", marginBottom: "20px", textAlign: "center" }}>
-          <Toaster />
+            <ToastContainer 
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
             <Row>
               <Col sm={12}>
                 <hr />

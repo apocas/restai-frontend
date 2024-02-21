@@ -4,6 +4,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function User() {
 
@@ -11,7 +12,6 @@ function User() {
   const projectForm = useRef(null)
   const [data, setData] = useState({ projects: [] });
   const [projects, setProjects] = useState([]);
-  const [error, setError] = useState([]);
   var { username } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
@@ -27,7 +27,8 @@ function User() {
       .then((res) => res.json())
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUser", "error": err.toString() }]);
+        console.log(err.toString())
+        toast.error("Error fetching user");
       });
   }
 
@@ -36,7 +37,8 @@ function User() {
       .then((res) => res.json())
       .then((d) => setProjects(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchProjects", "error": err.toString() }]);
+        console.log(err.toString())
+        toast.error("Error fetching projects");
       });
   }
 
@@ -49,7 +51,7 @@ function User() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -63,7 +65,7 @@ function User() {
             alert("No key...");
           }
         }).catch(err => {
-          setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+          toast.error(err.toString());
         });
     }
   }
@@ -85,7 +87,7 @@ function User() {
     })
       .then(response => fetchUser(username))
       .catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -108,7 +110,7 @@ function User() {
     })
       .then(response => fetchUser(username))
       .catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -120,11 +122,6 @@ function User() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>

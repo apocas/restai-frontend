@@ -7,7 +7,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 function Question() {
 
@@ -21,7 +21,6 @@ function Question() {
   const [answers, setAnswers] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
   const [data, setData] = useState({ projects: [] });
-  const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
   const isStream = useRef(null)
@@ -132,7 +131,7 @@ function Question() {
       event.preventDefault();
 
     if (data.chunks === 0) {
-      setError("No data. Ingest some data first.");
+      toast.error('No data. Ingest some data first.');
       return;
     }
 
@@ -171,7 +170,7 @@ function Question() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -183,10 +182,10 @@ function Question() {
           questionForm.current.value = "";
           setCanSubmit(true);
           if (response.sources.length === 0) {
-            toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
+            toast.error('No sources found for this question. Decrease the score cutoff parameter.');
           }
         }).catch(err => {
-          setError(err.toString());
+          toast.error(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
           setCanSubmit(true);
         });
@@ -198,7 +197,7 @@ function Question() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -207,7 +206,7 @@ function Question() {
       })
       .then((d) => setData(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -216,7 +215,7 @@ function Question() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -225,7 +224,7 @@ function Question() {
       })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -257,18 +256,13 @@ function Question() {
       questionForm.current.value = "";
       setCanSubmit(true);
       if (info.sources.length === 0) {
-        toast.error('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
+        toast.error('No sources found for this question. Decrease the score cutoff parameter.');
       }
     }
   }, [answert]);
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Question - {projectName}</h1>
         <h5>

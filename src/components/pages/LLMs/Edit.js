@@ -4,11 +4,11 @@ import { useParams, NavLink } from "react-router-dom";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function Edit() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const [error, setError] = useState([]);
   const [data, setData] = useState({ projects: [] });
   const classnameForm = useRef(null)
   const optionsForm = useRef(null)
@@ -52,7 +52,7 @@ function Edit() {
     }).then(function (response) {
       if (!response.ok) {
         response.json().then(function (data) {
-          setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+          toast.error(data.detail);
         });
         throw Error(response.statusText);
       } else {
@@ -61,7 +61,8 @@ function Edit() {
     }).then(response => {
       window.location.href = "/admin/llms/" + llmname;
     }).catch(err => {
-      setError(err.toString());
+      console.log(err.toString());
+      toast.error("Error updating LLM");
     });
   }
 
@@ -70,7 +71,8 @@ function Edit() {
       .then((res) => res.json())
       .then((d) => setData(d)
       ).catch(err => {
-        setError([...error, { "functionName": "fetchUser", "error": err.toString() }]);
+        console.log(err.toString());
+        toast.error("Error fetching LLM");
       });
   }
 
@@ -86,11 +88,6 @@ function Edit() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Edit LLM {llmname}</h1>
         <Form onSubmit={onSubmitHandler}>

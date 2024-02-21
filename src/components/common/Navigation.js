@@ -8,7 +8,6 @@ import restaiLogo from '../../assets/img/restai-logo.png';
 function Navigation() {
   const { logout, getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
-  const [error, setError] = useState([]);
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const name = process.env.REACT_APP_RESTAI_NAME || "RestAI";
