@@ -302,35 +302,35 @@ function Projects() {
                           <NavLink
                             to={"/projects/" + project.name + "/vision"}
                           >
-                            <Button variant="dark">Vision</Button>{' '}
+                            <Button variant="success">Vision</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" && project.llm_type === "chat" &&
                           <NavLink
                             to={"/projects/" + project.name + "/chat"}
                           >
-                            <Button variant="dark">Chat</Button>{' '}
+                            <Button variant="success">Chat</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" &&
                           <NavLink
                             to={"/projects/" + project.name + "/question"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "ragsql" &&
                           <NavLink
                             to={"/projects/" + project.name + "/questionsql"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "inference" &&
                           <NavLink
                             to={"/projects/" + project.name + "/inference"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">Question</Button>{' '}
                           </NavLink>
                         }
                       </td>

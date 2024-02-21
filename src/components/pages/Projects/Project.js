@@ -395,7 +395,7 @@ function Project() {
                   to={"/projects/" + data.name + "/vision"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Vision</Button>
+                  <Button variant="success">Vision</Button>
                 </NavLink>
               }
               {data.type === "inference" &&
@@ -403,7 +403,7 @@ function Project() {
                   to={"/projects/" + data.name + "/inference"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Inference</Button>
+                  <Button variant="success">Inference</Button>
                 </NavLink>
               }
               {data.type === "rag" && data.llm_type === "chat" &&
@@ -411,7 +411,7 @@ function Project() {
                   to={"/projects/" + data.name + "/chat"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Chat</Button>
+                  <Button variant="success">Chat</Button>
                 </NavLink>
               }
               {data.type === "rag" &&
@@ -419,7 +419,7 @@ function Project() {
                   to={"/projects/" + data.name + "/question"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Question</Button>
+                  <Button variant="success">Question</Button>
                 </NavLink>
               }
               {data.type === "ragsql" &&
@@ -427,7 +427,7 @@ function Project() {
                   to={"/projects/" + data.name + "/questionsql"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Question</Button>
+                  <Button variant="success">Question</Button>
                 </NavLink>
               }
             </h1>
