@@ -6,6 +6,8 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { toast } from 'react-toastify';
 
 function Inference() {
 
@@ -16,9 +18,10 @@ function Inference() {
   const [answers, setAnswers] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
   const [data, setData] = useState({ projects: [] });
-  const [error, setError] = useState([]);
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
+  const isStream = useRef(null)
+  const [answert, setAnswert] = useState([]);
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
@@ -49,7 +52,73 @@ function Inference() {
   }
 
   const onSubmitHandler = (event) => {
-    if(event)
+    if (isStream.current.checked) {
+      handlerStream(event);
+    } else {
+      handler(event);
+    }
+  }
+
+  const handlerStream = (event) => {
+    if (event)
+      event.preventDefault();
+
+    var system = systemForm.current.value;
+    var question = questionForm.current.value;
+
+    var body = {};
+    var submit = false;
+    if (system === "" && question !== "") {
+      body = {
+        "question": question
+      }
+      submit = true;
+    } else if (system !== "" && question !== "") {
+      body = {
+        "question": question,
+        "system": system
+      }
+      submit = true;
+    }
+    body.stream = true;
+
+    setAnswert([]);
+
+    if (submit && canSubmit) {
+      setCanSubmit(false);
+      fetchEventSource(url + "/projects/" + projectName + "/question", {
+        method: "POST",
+        headers: { 'Accept': 'text/event-stream', 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth },
+        body: JSON.stringify(body),
+        onopen(res) {
+          if (res.ok && res.status === 200) {
+            console.log("Connection made ", res);
+          } else if (res.status >= 400 && res.status < 500 && res.status !== 429) {
+            console.log("Client-side error ", res);
+          }
+        },
+        onmessage(event) {
+          if (event.event === "close") {
+            setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+          } else if (event.data === "") {
+            setAnswert((answert) => [...answert, "\n"]);
+          } else {
+            setAnswert((answert) => [...answert, event.data]);
+          }
+
+        },
+        onclose() {
+          console.log("Connection closed by the server");
+        },
+        onerror(err) {
+          console.log("There was an error from server", err);
+        },
+      });
+    }
+  }
+
+  const handler = (event) => {
+    if (event)
       event.preventDefault();
 
     var system = systemForm.current.value;
@@ -81,7 +150,7 @@ function Inference() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError(data.detail);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -93,7 +162,7 @@ function Inference() {
           questionForm.current.value = "";
           setCanSubmit(true);
         }).catch(err => {
-          setError(err.toString());
+          toast.error(err.toString());
           setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors." }]);
           setCanSubmit(true);
         });
@@ -105,7 +174,7 @@ function Inference() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -114,7 +183,7 @@ function Inference() {
       })
       .then((d) => setData(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -131,13 +200,18 @@ function Inference() {
     fetchProject(projectName);
   }, [projectName]);
 
+  useEffect(() => {
+    if (answert[answert.length - 1] === "RESTAICLOSED") {
+      answert.pop();
+      setAnswers([...answers, { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n') }]);
+      setAnswert([]);
+      questionForm.current.value = "";
+      setCanSubmit(true);
+    }
+  }, [answert]);
+
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Inference - {projectName}</h1>
         <h5>
@@ -168,18 +242,18 @@ function Inference() {
             </Col>
           </Row>
           <Row>
-            {answers.length > 0 &&
+            {(answers.length > 0 || answert.length > 0) &&
               <Col sm={12} style={{ marginTop: "20px" }}>
                 <Card>
                   <Card.Header>Results</Card.Header>
                   <Card.Body>
                     {
                       answers.map((answer, index) => {
-                        return (answer.answer != null ?
+                        return (
                           <div>
                             <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
                               🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
-                              🤖<span className='highlight'>ANSWER:</span> {answer.answer}
+                              🤖<span className='highlight'>ANSWER:</span> {(answer.answer == null ? <Spinner animation="grow" size="sm" /> : answer.answer)}
                             </div>
                             <div style={{ marginBottom: "0px" }}>
                               <Accordion>
@@ -194,14 +268,15 @@ function Inference() {
                             </div>
                             <hr />
                           </div>
-                          :
-                          <div className='lineBreaks' key={index} style={index === 0 ? { marginTop: "0px" } : { marginTop: "10px" }}>
-                            🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
-                            🤖<span className='highlight'>ANSWER:</span> <Spinner animation="grow" size="sm" />
-                            <hr />
-                          </div>
                         )
                       })
+                    }
+                    {answert.length > 0 &&
+                      <div className='lineBreaks' style={{ marginTop: "10px" }}>
+                        🧑<span className='highlight'>QUESTION:</span> {questionForm.current.value} <br />
+                        🤖<span className='highlight'>ANSWER:</span> {answert}
+                        <hr />
+                      </div>
                     }
                   </Card.Body>
                 </Card>
@@ -217,7 +292,12 @@ function Inference() {
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={10}>
+            <Col sm={9}>
+            </Col>
+            <Col sm={1}>
+              <Form.Group as={Col} controlId="formGridAdmin">
+                <Form.Check ref={isStream} type="checkbox" label="Stream" />
+              </Form.Group>
             </Col>
             <Col sm={2}>
               <div className="d-grid gap-2">

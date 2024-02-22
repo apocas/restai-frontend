@@ -6,6 +6,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { WithContext as ReactTags } from 'react-tag-input';
+import { toast } from 'react-toastify';
 
 function Project() {
 
@@ -21,7 +22,6 @@ function Project() {
   const [chunk, setChunk] = useState(null);
   const [uploadResponse, setUploadResponse] = useState(null);
   const [canSubmit, setCanSubmit] = useState(true);
-  const [error, setError] = useState([]);
   const urlForm = useRef(null);
   const ref = useRef(null);
   const fileForm = useRef(null);
@@ -63,7 +63,7 @@ function Project() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -73,7 +73,7 @@ function Project() {
       .then((response) => {
         setChunks(response.embeddings)
       }).catch(err => {
-        setError([...error, { "functionName": "onSubmitHandler", "error": err.toString() }]);
+        toast.error(err.toString());
       });
 
   }
@@ -84,7 +84,7 @@ function Project() {
         .then(function (response) {
           if (!response.ok) {
             response.json().then(function (data) {
-              setError([...error, { "functionName": "onSubmitHandler", "error": data.detail }]);
+              toast.error(data.detail);
             });
             throw Error(response.statusText);
           } else {
@@ -92,7 +92,7 @@ function Project() {
           }
         })
         .catch(err => {
-          setError([...error, { "functionName": "handleDeleteClick", "error": err.toString() }]);
+          toast.error(err.toString());
         });
     }
   }
@@ -104,7 +104,7 @@ function Project() {
         setData(d)
         return d
       }).catch(err => {
-        setError([...error, { "functionName": "fetchProject", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -115,7 +115,7 @@ function Project() {
         .then((res) => res.json())
         .then((d) => setEmbeddings(d)
         ).catch(err => {
-          setError([...error, { "functionName": "fetchEmbeddings", "error": err.toString() }]);
+          toast.error(err.toString());
         });
     }
   }
@@ -129,7 +129,7 @@ function Project() {
           fetchProject(projectName);
           fetchEmbeddings(projectName);
         }).catch(err => {
-          setError([...error, { "functionName": "handleDeleteClick", "error": err.toString() }]);
+          toast.error(err.toString());
         });
     }
   }
@@ -143,7 +143,7 @@ function Project() {
           fetchProject(projectName);
           fetchEmbeddings(projectName);
         }).catch(err => {
-          setError([...error, { "functionName": "handleResetEmbeddingsClick", "error": err.toString() }]);
+          toast.error(err.toString());
         });
     }
   }
@@ -161,7 +161,7 @@ function Project() {
           ref.current?.scrollIntoView({ behavior: 'smooth' });
         }, 150);
       }).catch(err => {
-        setError([...error, { "functionName": "handleViewClick", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -183,7 +183,7 @@ function Project() {
           ref.current?.scrollIntoView({ behavior: 'smooth' });
         }, 150);
       }).catch(err => {
-        setError([...error, { "functionName": "handleViewClick", "error": err.toString() }]);
+        toast.error(err.toString());
       });
   }
 
@@ -227,7 +227,7 @@ function Project() {
           .then(function (response) {
             if (!response.ok) {
               response.json().then(function (data) {
-                setError(data.detail);
+                toast.error(data.detail);
               });
               throw Error(response.statusText);
             } else {
@@ -241,7 +241,7 @@ function Project() {
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
-            setError(err.toString());
+            toast.error(err.toString());
             setCanSubmit(true);
           });
       } else if (urlForm.current.value !== "") {
@@ -262,7 +262,7 @@ function Project() {
           .then(function (response) {
             if (!response.ok) {
               response.json().then(function (data) {
-                setError(data.detail);
+                toast.error(data.detail);
               });
               throw Error(response.statusText);
             } else {
@@ -276,7 +276,7 @@ function Project() {
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
-            setError(err.toString());
+            toast.error(err.toString());
             setCanSubmit(true);
           });
       } else if (contentForm.current.value !== "") {
@@ -299,7 +299,7 @@ function Project() {
           .then(function (response) {
             if (!response.ok) {
               response.json().then(function (data) {
-                setError(data.detail);
+                toast.error(data.detail);
               });
               throw Error(response.statusText);
             } else {
@@ -315,7 +315,7 @@ function Project() {
             contentForm.current.value = "";
             setTags([]);
           }).catch(err => {
-            setError(err.toString());
+            toast.error(err.toString());
             setCanSubmit(true);
           });
       }
@@ -327,7 +327,7 @@ function Project() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -336,7 +336,7 @@ function Project() {
       })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -374,12 +374,6 @@ function Project() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
-
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={6}>
@@ -387,15 +381,15 @@ function Project() {
               <NavLink
                 to={"/projects/" + data.name + "/edit"}
               >
-                <Button variant="dark">Edit</Button>
+                <Button variant="dark">✏️ Edit</Button>
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}>Delete</Button>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>🗑️ Delete</Button>
               {data.type === "vision" &&
                 < NavLink
                   to={"/projects/" + data.name + "/vision"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Vision</Button>
+                  <Button variant="success">🖼️ Vision</Button>
                 </NavLink>
               }
               {data.type === "inference" &&
@@ -403,7 +397,7 @@ function Project() {
                   to={"/projects/" + data.name + "/inference"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Inference</Button>
+                  <Button variant="success">✉️ Question</Button>
                 </NavLink>
               }
               {data.type === "rag" && data.llm_type === "chat" &&
@@ -411,7 +405,7 @@ function Project() {
                   to={"/projects/" + data.name + "/chat"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Chat</Button>
+                  <Button variant="success">💬 Chat</Button>
                 </NavLink>
               }
               {data.type === "rag" &&
@@ -419,7 +413,7 @@ function Project() {
                   to={"/projects/" + data.name + "/question"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Question</Button>
+                  <Button variant="success">✉️ Question</Button>
                 </NavLink>
               }
               {data.type === "ragsql" &&
@@ -427,7 +421,7 @@ function Project() {
                   to={"/projects/" + data.name + "/questionsql"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="dark">Question</Button>
+                  <Button variant="success">✉️ Question</Button>
                 </NavLink>
               }
             </h1>
@@ -533,7 +527,7 @@ function Project() {
                     <Form.Label>Chunk Size</Form.Label>
                   </Col>
                   <Col sm={3}>
-                    <Form.Select ref={chunksForm} defaultValue={256}>
+                    <Form.Select ref={chunksForm} defaultValue={512}>
                       <option value="128">128</option>
                       <option value="256">256</option>
                       <option value="512">512</option>
@@ -584,7 +578,7 @@ function Project() {
                   <h3>Document List</h3>
                   {data.documents > 20000 && embeddings.embeddings.length === 0 ?
                     <Col sm={12}>
-                      Too many embeddings to be listed, use the retrieval tab.
+                      Too many embeddings to be listed, use the retrieval simulator.
                     </Col>
                     : (
                       <Col sm={12} style={embeddings.embeddings.length > 5 ? { height: "400px", overflowY: "scroll" } : {}}>
@@ -633,7 +627,7 @@ function Project() {
                   }
                 </Row>
               </Tab>
-              <Tab eventKey="retrieval" title="Retrieval">
+              <Tab eventKey="retrieval" title="Retrieval Simulator">
                 <Row style={{ marginTop: "20px" }}>
                   <h3>Chunks</h3>
 

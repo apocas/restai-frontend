@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { toast } from 'react-toastify';
 
 function Projects() {
 
@@ -12,7 +13,6 @@ function Projects() {
   const [displayData, setDisplayData] = useState([]);
   const [users, setUsers] = useState({ "teste": [] });
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
-  const [error, setError] = useState([]);
   const projectNameForm = useRef(null)
   const embbeddingForm = useRef(null)
   const typeForm = useRef(null)
@@ -38,7 +38,7 @@ function Projects() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -52,7 +52,7 @@ function Projects() {
           fetchUsers(d);
       }
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -61,7 +61,7 @@ function Projects() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -70,7 +70,7 @@ function Projects() {
       })
       .then((d) => setInfo(d)
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -79,7 +79,7 @@ function Projects() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -100,7 +100,7 @@ function Projects() {
         setUsers(arr)
       }
       ).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
   }
 
@@ -142,7 +142,7 @@ function Projects() {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            setError(data.detail);
+            toast.error(data.detail);
           });
           throw Error(response.statusText);
         } else {
@@ -153,7 +153,7 @@ function Projects() {
         //fetchProjects()
         window.location = "/admin/projects/" + response.project
       }).catch(err => {
-        setError(err.toString());
+        toast.error(err.toString());
       });
 
   }
@@ -190,11 +190,6 @@ function Projects() {
 
   return (
     <>
-      {error.length > 0 &&
-        <Alert variant="danger" style={{ textAlign: "center" }}>
-          {JSON.stringify(error)}
-        </Alert>
-      }
       <Container style={{ marginTop: "20px" }}>
         <h1>Projects</h1>
         <Row style={{ marginBottom: "10px" }}>
@@ -294,7 +289,7 @@ function Projects() {
                         <NavLink
                           to={"/projects/" + project.name}
                         >
-                          <Button variant="dark">View</Button>{' '}
+                          <Button variant="dark">🔎 View</Button>{' '}
                         </NavLink>
                       </td>
                       <td>
@@ -302,35 +297,35 @@ function Projects() {
                           <NavLink
                             to={"/projects/" + project.name + "/vision"}
                           >
-                            <Button variant="dark">Vision</Button>{' '}
+                            <Button variant="success">🖼️ Vision</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" && project.llm_type === "chat" &&
                           <NavLink
                             to={"/projects/" + project.name + "/chat"}
                           >
-                            <Button variant="dark">Chat</Button>{' '}
+                            <Button variant="success">💬 Chat</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" &&
                           <NavLink
                             to={"/projects/" + project.name + "/question"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">✉️ Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "ragsql" &&
                           <NavLink
                             to={"/projects/" + project.name + "/questionsql"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">✉️ Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "inference" &&
                           <NavLink
                             to={"/projects/" + project.name + "/inference"}
                           >
-                            <Button variant="dark">Question</Button>{' '}
+                            <Button variant="success">✉️ Question</Button>{' '}
                           </NavLink>
                         }
                       </td>
