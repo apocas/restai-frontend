@@ -7,7 +7,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
 import { MdOutlineImage, MdOutlineChat, MdInfoOutline } from "react-icons/md";
 import { FaRegPaperPlane } from "react-icons/fa";
-import { PiMagnifyingGlassPlus, PiFilePlus } from "react-icons/pi";
+import { PiMagnifyingGlassPlus } from "react-icons/pi";
 import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 
@@ -246,14 +246,13 @@ function Projects() {
           <Table striped bordered hover responsive>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Project Name</th>
+                <th>Name</th>
                 <th>Type</th>
-                <th>Model</th>
+                <th>LLM</th>
                 <th>Actions</th>
                 <th>Inference<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
                 {user.admin &&
-                  <th>Used by</th>
+                  <th>Users</th>
                 }
               </tr>
             </thead>
@@ -262,7 +261,6 @@ function Projects() {
                 displayData.map((project, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index}</td>
                       <td>
                         <NavLink
                           to={"/projects/" + project.name}
@@ -295,7 +293,7 @@ function Projects() {
                         <NavLink
                           to={"/projects/" + project.name}
                         >
-                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
+                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Info</Button>{' '}
                         </NavLink>
                       </td>
                       <td>

@@ -5,6 +5,11 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { AiOutlineDisconnect } from "react-icons/ai";
+import { PiPencilLight } from "react-icons/pi";
+import { MdInfoOutline, MdOutlineCheck } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
+
 
 function User() {
 
@@ -18,7 +23,7 @@ function User() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -128,7 +133,7 @@ function User() {
             <h1>
               Details
               <NavLink to={"/users/" + data.username + "/edit"} >
-                <Button variant="dark" style={{ marginLeft: "5px" }}>✏️ Edit</Button>
+                <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
               </NavLink>
               <Button variant="dark" style={{ marginLeft: "5px" }} onClick={() => apikeyClick()}>Generate API Key</Button>
             </h1>
@@ -136,9 +141,9 @@ function User() {
             <ListGroup>
               <ListGroup.Item><b>Id:</b> {data.id}</ListGroup.Item>
               <ListGroup.Item><b>Username:</b> {data.username}</ListGroup.Item>
-              <ListGroup.Item><b>Projects Count:</b> {data.projects.length}</ListGroup.Item>
-              <ListGroup.Item><b>Admin:</b> {data.is_admin ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
-              <ListGroup.Item><b>Private models only:</b> {data.is_private ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+              <ListGroup.Item><b>Projects:</b> {data.projects.length}</ListGroup.Item>
+              <ListGroup.Item><b>Admin:</b> {data.is_admin ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
+              <ListGroup.Item><b>Private models only:</b> {data.is_private ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
               <ListGroup.Item><b>Auth:</b> {data.sso ? (data.sso) : ("local")}</ListGroup.Item>
             </ListGroup>
           </Col>
@@ -150,7 +155,7 @@ function User() {
             <Form onSubmit={onSubmitHandler}>
               <Row className="mb-3">
                 <Form.Group as={Col} controlId="formGridProjects">
-                  <Form.Label>Project<Link title="Allow this user to access this project">ℹ️</Link></Form.Label>
+                  <Form.Label>Project<Link title="Allow this user to access this project"><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Select ref={projectForm} defaultValue="">
                     <option>Choose...</option>
                     {
@@ -164,7 +169,7 @@ function User() {
                 </Form.Group>
               </Row>
               <Button variant="dark" type="submit" className="mb-2">
-                Add Project
+                Associate
               </Button>
             </Form>
           )}
@@ -173,7 +178,6 @@ function User() {
           <Table striped bordered hover responsive>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Project Name</th>
                 <th>Actions</th>
               </tr>
@@ -183,7 +187,6 @@ function User() {
                 data.projects.map((project, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index}</td>
                       <td>
                         <NavLink
                           to={"/projects/" + project.name}
@@ -192,7 +195,7 @@ function User() {
                         </NavLink>
                       </td>
                       <td>
-                        <Button onClick={() => handleRemoveClick(project.name)} variant="danger">Remove</Button>
+                        <Button onClick={() => handleRemoveClick(project.name)} variant="danger"><AiOutlineDisconnect size="1.3em" /> Dissociate</Button>
                       </td>
                     </tr>
                   )

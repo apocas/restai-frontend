@@ -79,7 +79,6 @@ function Users() {
           <Table striped bordered hover responsive>
             <thead>
               <tr>
-                <th>#</th>
                 <th>Username</th>
                 <th>Type</th>
                 <th>Permissions</th>
@@ -91,7 +90,6 @@ function Users() {
                 data.map((user, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index}</td>
                       <td>
                         <NavLink
                           to={"/users/" + user.username}
