@@ -1,10 +1,14 @@
-import { Container, Table, Row, Form, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { MdOutlineImage, MdOutlineChat, MdInfoOutline } from "react-icons/md";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { PiMagnifyingGlassPlus, PiFilePlus } from "react-icons/pi";
+
 
 function Projects() {
 
@@ -29,7 +33,7 @@ function Projects() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -224,32 +228,6 @@ function Projects() {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col sm={3}>
-            <Form.Group as={Col} controlId="formGridEmbeddings">
-              <Form.Label>Embeddings</Form.Label>
-              <Form.Select ref={embbeddingFilter} onChange={handleFilterChange} defaultValue="All">
-                <option>All</option>
-                {
-                  info.embeddings.map((embbedding, index) => {
-                    return (
-                      <option key={index}>{embbedding.name}</option>
-                    )
-                  }
-                  )
-                }
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          <Col sm={3}>
-            <Form.Group as={Col} controlId="formGridVector">
-              <Form.Label>Vectorstore</Form.Label>
-              <Form.Select ref={vectorFilter} onChange={handleFilterChange} defaultValue="All">
-                <option>All</option>
-                <option>chroma</option>
-                <option>redis</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
         </Row>
         <Row>
           <Table striped bordered hover responsive>
@@ -260,7 +238,7 @@ function Projects() {
                 <th>Type</th>
                 <th>Model</th>
                 <th>Actions</th>
-                <th>Inference<Link title="Chat has memory. Question doesn't">ℹ️</Link></th>
+                <th>Inference<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em"/></Link></th>
                 {user.admin &&
                   <th>Used by</th>
                 }
@@ -289,7 +267,7 @@ function Projects() {
                         <NavLink
                           to={"/projects/" + project.name}
                         >
-                          <Button variant="dark">🔎 View</Button>{' '}
+                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
                         </NavLink>
                       </td>
                       <td>
@@ -297,35 +275,35 @@ function Projects() {
                           <NavLink
                             to={"/projects/" + project.name + "/vision"}
                           >
-                            <Button variant="success">🖼️ Vision</Button>{' '}
+                            <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" && project.llm_type === "chat" &&
                           <NavLink
                             to={"/projects/" + project.name + "/chat"}
                           >
-                            <Button variant="success">💬 Chat</Button>{' '}
+                            <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "rag" &&
                           <NavLink
                             to={"/projects/" + project.name + "/question"}
                           >
-                            <Button variant="success">✉️ Question</Button>{' '}
+                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "ragsql" &&
                           <NavLink
                             to={"/projects/" + project.name + "/questionsql"}
                           >
-                            <Button variant="success">✉️ Question</Button>{' '}
+                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
                           </NavLink>
                         }
                         {project.type === "inference" &&
                           <NavLink
                             to={"/projects/" + project.name + "/inference"}
                           >
-                            <Button variant="success">✉️ Question</Button>{' '}
+                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
                           </NavLink>
                         }
                       </td>
@@ -351,7 +329,7 @@ function Projects() {
         </Row>
         <hr />
         <Row>
-          <h1>Create Project</h1>
+          <h1>New Project</h1>
           <Form onSubmit={onSubmitHandler}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridProjectName">
@@ -359,7 +337,7 @@ function Projects() {
                 <Form.Control ref={projectNameForm} />
               </Form.Group>
               <Form.Group as={Col} controlId="formGridType">
-                <Form.Label>Project Type<Link title="Project type. RAG for text retrieval augmented generation. RAGSQL for SQL retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference.">ℹ️</Link></Form.Label>
+                <Form.Label>Project Type<Link title="Project type. RAG for text retrieval augmented generation. RAGSQL for SQL retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference."><MdInfoOutline size="1.4em"/></Link></Form.Label>
                 <Form.Select ref={typeForm} onChange={typeChange}>
                   <option>Choose...</option>
                   <option key="rag">rag</option>
@@ -370,7 +348,7 @@ function Projects() {
               </Form.Group>
               {type === "rag" &&
                 <Form.Group as={Col} controlId="formGridEmbeddings">
-                  <Form.Label>Embeddings<Link title="Model used to compute embeddings">ℹ️</Link></Form.Label>
+                  <Form.Label>Embeddings<Link title="Model used to compute embeddings"><MdInfoOutline size="1.4em"/></Link></Form.Label>
                   <Form.Select ref={embbeddingForm} defaultValue="">
                     <option>Choose...</option>
                     {
@@ -393,7 +371,7 @@ function Projects() {
 
               {type === "rag" &&
                 <Form.Group as={Col} controlId="formGridVector">
-                  <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
+                  <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed."><MdInfoOutline size="1.4em"/></Link></Form.Label>
                   <Form.Select ref={vectorForm} defaultValue="redis">
                     <option>redis</option>
                     <option>chroma</option>
@@ -402,7 +380,7 @@ function Projects() {
               }
             </Row>
             <Button variant="dark" type="submit" className="mb-2">
-              Create
+              <PiFilePlus size="1.3em"/> Create
             </Button>
           </Form>
         </Row>

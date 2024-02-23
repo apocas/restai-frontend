@@ -1,8 +1,10 @@
-import { Container, Table, Row, Form, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button } from 'react-bootstrap';
 import { NavLink, Navigate } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import { toast } from 'react-toastify';
+import { PiMagnifyingGlassPlus } from "react-icons/pi";
+import { MdOutlineDelete } from "react-icons/md";
 
 function Users() {
 
@@ -107,9 +109,9 @@ function Users() {
                         <NavLink
                           to={"/users/" + user.username}
                         >
-                          <Button variant="dark">🔎 View</Button>{' '}
+                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
                         </NavLink>
-                        <Button onClick={() => handleDeleteClick(user.username)} variant="danger">🗑️ Delete</Button>
+                        <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
                       </td>
                     </tr>
                   )

@@ -1,15 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Container, Navbar, Button, Nav } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import { AuthContext } from './AuthProvider.js';
 import restaiLogo from '../../assets/img/restai-logo.png';
+import { MdOutlinePerson, MdLogout } from "react-icons/md";
+import { PiBrain, PiUsersThree, PiGraph } from "react-icons/pi";
+import { HiOutlineServerStack } from "react-icons/hi2";
+
 
 
 function Navigation() {
   const { logout, getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
 
-  const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const name = process.env.REACT_APP_RESTAI_NAME || "RestAI";
 
   return (
@@ -32,7 +35,7 @@ function Navigation() {
               <NavLink
                 to="/"
               >
-                Projects
+                <PiGraph size="1.3em"/> Projects
               </NavLink>
             </Nav.Link>
             {user.admin && (
@@ -40,7 +43,7 @@ function Navigation() {
                 <NavLink
                   to="/users"
                 >
-                  Users
+                  <PiUsersThree size="1.3em"/> Users
                 </NavLink>
               </Nav.Link>
             )}
@@ -49,11 +52,11 @@ function Navigation() {
               <NavLink
                 to="/llms"
               >
-                LLMs
+                <PiBrain size="1.3em"/> LLMs
               </NavLink>
             </Nav.Link>
             <Nav.Link as="li">
-              <a href="/docs">API</a>
+              <a href="/docs"><HiOutlineServerStack size="1.3em"/> API</a>
             </Nav.Link>
           </Nav>
           {user.username && (
@@ -63,10 +66,10 @@ function Navigation() {
                 <NavLink
                   to={"/users/" + user.username}
                 >
-                  👤{user.username}{' | '}
+                  <MdOutlinePerson size="1.5em"/>{user.username}{' | '}
                 </NavLink>
                 <Button style={{ textDecoration: "none", color: "black", padding: "0px", verticalAlign: "0px" }} variant="link" onClick={logout}>
-                  🚪Logout
+                <MdLogout size="1.5em"/>Logout
                 </Button>
               </Navbar.Text>
             </Nav>

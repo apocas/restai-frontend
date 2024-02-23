@@ -7,6 +7,11 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
+import { MdOutlineImage, MdOutlineChat, MdInfoOutline, MdOutlineDelete, MdOutlineCheck } from "react-icons/md";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { PiMagnifyingGlassPlus, PiFileArrowUpLight, PiPencilLight } from "react-icons/pi";
+import { GrPowerReset } from "react-icons/gr";
+import { RxCross2 } from "react-icons/rx";
 
 function Project() {
 
@@ -381,15 +386,15 @@ function Project() {
               <NavLink
                 to={"/projects/" + data.name + "/edit"}
               >
-                <Button variant="dark">✏️ Edit</Button>
+                <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>🗑️ Delete</Button>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}><MdOutlineDelete size="1.3em" /> Delete</Button>
               {data.type === "vision" &&
                 < NavLink
                   to={"/projects/" + data.name + "/vision"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="success">🖼️ Vision</Button>
+                  <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>
                 </NavLink>
               }
               {data.type === "inference" &&
@@ -397,7 +402,7 @@ function Project() {
                   to={"/projects/" + data.name + "/inference"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="success">✉️ Question</Button>
+                  <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
                 </NavLink>
               }
               {data.type === "rag" && data.llm_type === "chat" &&
@@ -405,7 +410,7 @@ function Project() {
                   to={"/projects/" + data.name + "/chat"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="success">💬 Chat</Button>
+                  <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
                 </NavLink>
               }
               {data.type === "rag" &&
@@ -413,7 +418,7 @@ function Project() {
                   to={"/projects/" + data.name + "/question"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="success">✉️ Question</Button>
+                  <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
                 </NavLink>
               }
               {data.type === "ragsql" &&
@@ -421,16 +426,16 @@ function Project() {
                   to={"/projects/" + data.name + "/questionsql"}
                   style={{ marginLeft: "5px" }}
                 >
-                  <Button variant="success">✉️ Question</Button>
+                  <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
                 </NavLink>
               }
             </h1>
             <ListGroup>
               <ListGroup.Item><b>Privacy: </b>
                 {checkPrivacy() ?
-                  <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+                  <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
                   :
-                  <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+                  <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
                 }
               </ListGroup.Item>
               <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
@@ -452,7 +457,7 @@ function Project() {
                 <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger">Reset</Button></ListGroup.Item>
+                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger"><GrPowerReset size="1.3em" /> Reset</Button></ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>K:</b> {data.k}</ListGroup.Item>
@@ -461,7 +466,7 @@ function Project() {
                 <ListGroup.Item><b>Score:</b> {data.score}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Sandboxed:</b> {data.sandboxed ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+                <ListGroup.Item><b>Sandboxed:</b> {data.sandboxed ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
@@ -471,7 +476,7 @@ function Project() {
           <Col sm={6}>
             {data.type === "rag" &&
               <Form onSubmit={onSubmitHandler}>
-                <h1>Ingest<Link title="Ingest a file or an URL">ℹ️</Link></h1>
+                <h1>Ingest<Link title="Ingest a file or an URL"><MdInfoOutline size="1.4em"/></Link></h1>
                 <Row>
                   <Tabs
                     defaultActiveKey="file"
@@ -495,7 +500,7 @@ function Project() {
                       <Form.Group as={Col} controlId="formGridSystem" style={{ marginTop: "20px" }}>
                         <Form.Label>Name</Form.Label>
                         <Form.Control ref={contentNameForm} />
-                        <Form.Label>Keywords<Link title="Optional, if not provided system will automatically calculate them.">ℹ️</Link></Form.Label>
+                        <Form.Label>Keywords<Link title="Optional, if not provided system will automatically calculate them."><MdInfoOutline size="1.4em"/></Link></Form.Label>
                         <ReactTags
                           tags={tags}
                           suggestions={[]}
@@ -507,7 +512,7 @@ function Project() {
                           inputFieldPosition="bottom"
                           autocomplete
                         />
-                        <Form.Label>Content<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>
+                        <Form.Label>Content<Link title="Instructions for the LLM know how to behave"><MdInfoOutline size="1.4em"/></Link></Form.Label>
                         <Form.Control rows="4" as="textarea" ref={contentForm} defaultValue={""} />
                       </Form.Group>
                     </Tab>
@@ -515,7 +520,7 @@ function Project() {
                 </Row>
                 <Row style={{ marginTop: "20px" }}>
                   <Col sm={2}>
-                    <Form.Label>Splitter<Link title="Sentence should work better in human readable text.">ℹ️</Link></Form.Label>
+                    <Form.Label>Splitter<Link title="Sentence should work better in human readable text."><MdInfoOutline size="1.4em"/></Link></Form.Label>
                   </Col>
                   <Col sm={3}>
                     <Form.Select ref={splitterForm}>
@@ -539,7 +544,7 @@ function Project() {
                 <Col sm={2}>
                   <Button variant="dark" type="submit">
                     {
-                      canSubmit ? <span>Ingest</span> : <Spinner animation="border" />
+                      canSubmit ? <span><PiFileArrowUpLight size="1.3em"/> Ingest</span> : <Spinner animation="border" />
                     }
                   </Button>
                 </Col>
@@ -567,7 +572,7 @@ function Project() {
         {data.type === "rag" &&
           <Row style={{ marginTop: "20px" }}>
             <hr />
-            <h1>Embeddings<Link title="Ingested files and URLs">ℹ️</Link></h1>
+            <h1>Embeddings<Link title="Ingested files and URLs"><MdInfoOutline size="1.4em"/></Link></h1>
 
             <Tabs
               defaultActiveKey="documents"
@@ -600,8 +605,8 @@ function Project() {
                                       {emb}
                                     </td>
                                     <td>
-                                      <Button onClick={() => handleViewClick(emb)} variant="dark">View</Button>{' '}
-                                      <Button onClick={() => handleDeleteClick(emb)} variant="danger">Delete</Button>
+                                      <Button onClick={() => handleViewClick(emb)} variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
+                                      <Button onClick={() => handleDeleteClick(emb)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
                                     </td>
                                   </tr>
                                 )
