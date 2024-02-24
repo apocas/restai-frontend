@@ -252,8 +252,7 @@ function Projects() {
                 {user.admin &&
                   <th>Users</th>
                 }
-                <th>Actions</th>
-                <th>Inference<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
+                <th style={{ width: "370px" }}>Actions<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
               </tr>
             </thead>
             <tbody>
@@ -303,48 +302,52 @@ function Projects() {
                         </td>
                       }
                       <td>
-                        <NavLink
-                          to={"/projects/" + project.name}
-                        >
-                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
-                        </NavLink>
-                      </td>
-                      <td>
-                        {project.type === "vision" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/vision"}
-                          >
-                            <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "rag" && project.llm_type === "chat" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/chat"}
-                          >
-                            <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "rag" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/question"}
-                          >
-                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "ragsql" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/questionsql"}
-                          >
-                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "inference" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/inference"}
-                          >
-                            <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
-                          </NavLink>
-                        }
+                        <Row>
+                          <Col sm={4} style={{ textAlign: "left" }}>
+                            <NavLink
+                              to={"/projects/" + project.name}
+                            >
+                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
+                            </NavLink>
+                          </Col>
+                          <Col sm={8} style={{ textAlign: "right" }}>
+                            {project.type === "vision" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/vision"}
+                              >
+                                <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "rag" && project.llm_type === "chat" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/chat"}
+                              >
+                                <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "rag" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/question"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "ragsql" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/questionsql"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "inference" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/inference"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                          </Col>
+                        </Row>
                       </td>
                     </tr>
                   )

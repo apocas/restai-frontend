@@ -590,7 +590,6 @@ function Project() {
                         <Table striped bordered hover>
                           <thead>
                             <tr>
-                              <th>#</th>
                               <th>Source</th>
                               <th>Actions</th>
                             </tr>
@@ -600,7 +599,6 @@ function Project() {
                               embeddings.embeddings.map((emb, index) => {
                                 return (
                                   <tr key={index}>
-                                    <td>{index}</td>
                                     <td>
                                       {emb}
                                     </td>
@@ -678,7 +676,6 @@ function Project() {
                       <Table striped bordered hover>
                         <thead>
                           <tr>
-                            <th>#</th>
                             <th>ID</th>
                             <th>Source</th>
                             <th>Score</th>
@@ -690,7 +687,6 @@ function Project() {
                             chunks.map((chunk, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{index}</td>
                                   <td>
                                     {chunk.id}
                                   </td>

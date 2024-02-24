@@ -29,7 +29,7 @@ function Users() {
       newData = [...data];
       setDisplayData(newData);
     } else {
-      newData = data.filter(element => element.privacy === privacyFilterValue)
+      newData = data.filter(element => (privacyFilterValue === 'SSO' && element.sso) || (privacyFilterValue === 'Local' && !element.sso));
       setDisplayData(newData);
     }
   }

@@ -66,10 +66,10 @@ function Navigation() {
                 <NavLink
                   to={"/users/" + user.username}
                 >
-                  <MdOutlinePerson size="1.5em"/>{user.username}{' | '}
+                  <MdOutlinePerson size="1.5em"/> {user.username}{' | '}
                 </NavLink>
                 <Button style={{ textDecoration: "none", color: "black", padding: "0px", verticalAlign: "0px" }} variant="link" onClick={logout}>
-                <MdLogout size="1.5em"/>Logout
+                <MdLogout size="1.5em"/> Logout
                 </Button>
               </Navbar.Text>
             </Nav>
