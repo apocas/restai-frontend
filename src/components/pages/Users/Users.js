@@ -5,6 +5,8 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import { toast } from 'react-toastify';
 import { PiMagnifyingGlassPlus } from "react-icons/pi";
 import { MdOutlineDelete } from "react-icons/md";
+import { PiUsersThree, PiUserPlus } from "react-icons/pi";
+import Modal from 'react-bootstrap/Modal';
 
 function Users() {
 
@@ -16,9 +18,32 @@ function Users() {
   const isprivateForm = useRef(null)
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
+  const [displayData, setDisplayData] = useState([]);
+  const authFilter = useRef(null)
+  const [show, setShow] = useState(false);
+
+  const handleFilterChange = () => {
+    var newData = [];
+    var privacyFilterValue = authFilter.current.value;
+    if (privacyFilterValue === "All") {
+      newData = [...data];
+      setDisplayData(newData);
+    } else {
+      newData = data.filter(element => element.privacy === privacyFilterValue)
+      setDisplayData(newData);
+    }
+  }
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleCreate = () => {
+    onSubmitHandler();
+    handleClose();
+  }
 
   const handleDeleteClick = (username) => {
-    if(window.confirm("Delete " + username + "?")) {
+    if (window.confirm("Delete " + username + "?")) {
       fetch(url + "/users/" + username, {
         method: 'DELETE',
         headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth })
@@ -33,16 +58,19 @@ function Users() {
   const fetchUsers = () => {
     return fetch(url + "/users", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then((res) => res.json())
-      .then((d) => setData(d)
-      ).catch(err => {
+      .then((d) => {
+        setData(d)
+        setDisplayData(d)
+      }).catch(err => {
         console.log(err.toString());
         toast.error("Error fetching users");
       });
   }
 
-  // TODO: response handling
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if (event)
+      event.preventDefault();
+
     fetch(url + "/users", {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
@@ -56,10 +84,6 @@ function Users() {
       .then(response => response.json())
       .then(() => {
         fetchUsers()
-        usernameForm.current.value = ""
-        passwordForm.current.value = ""
-        isadminForm.current.checked = false
-        isprivateForm.current.checked = false
       }).catch(err => {
         toast.error(err.toString());
       });
@@ -75,19 +99,41 @@ function Users() {
     <>
       <Container style={{ marginTop: "20px" }}>
         <Row>
-          <h1>Users</h1>
+          <h1><PiUsersThree size="1.3em" /> Users</h1>
+          <Row style={{ marginBottom: "10px" }}>
+            <Col sm={3}>
+              <Form.Group as={Col} controlId="formGridLLM">
+                <Form.Label>Auth</Form.Label>
+                <Form.Select ref={authFilter} onChange={handleFilterChange} defaultValue="All">
+                  <option>All</option>
+                  {
+                    ["Local", "SSO"].map((type, index) => {
+                      return (
+                        <option key={index}>{type}</option>
+                      )
+                    })
+                  }
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
+              <Button variant="primary" onClick={handleShow}>
+                New User
+              </Button>
+            </Col>
+          </Row>
           <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th>Username</th>
-                <th>Type</th>
+                <th>Auth</th>
                 <th>Permissions</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {
-                data.map((user, index) => {
+                displayData.map((user, index) => {
                   return (
                     <tr key={index}>
                       <td>
@@ -107,7 +153,7 @@ function Users() {
                         <NavLink
                           to={"/users/" + user.username}
                         >
-                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
+                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
                         </NavLink>
                         <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
                       </td>
@@ -118,9 +164,13 @@ function Users() {
             </tbody>
           </Table>
         </Row>
-        <hr />
-        <Row>
-          <h1>Create User</h1>
+      </Container>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title><PiUserPlus size="1.3em" /> New User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Form onSubmit={onSubmitHandler}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridUserName">
@@ -131,6 +181,8 @@ function Users() {
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" ref={passwordForm} />
               </Form.Group>
+            </Row>
+            <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isadminForm} type="checkbox" label="Admin" />
               </Form.Group>
@@ -138,12 +190,17 @@ function Users() {
                 <Form.Check ref={isprivateForm} type="checkbox" label="Private models only" />
               </Form.Group>
             </Row>
-            <Button variant="dark" type="submit" className="mb-2">
-              Submit
-            </Button>
           </Form>
-        </Row>
-      </Container>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCreate}>
+            Create
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   ) : (
     <Navigate to="/" />

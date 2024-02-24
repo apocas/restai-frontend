@@ -10,7 +10,8 @@ import { FaRegPaperPlane } from "react-icons/fa";
 import { PiMagnifyingGlassPlus } from "react-icons/pi";
 import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
-
+import { PiGraph } from "react-icons/pi";
+import { FiFilePlus } from "react-icons/fi";
 
 function Projects() {
 
@@ -130,7 +131,6 @@ function Projects() {
     }
   }
 
-  // TODO: response handling
   const onSubmitHandler = (event) => {
     if (event)
       event.preventDefault();
@@ -203,7 +203,7 @@ function Projects() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Projects</h1>
+        <h1><PiGraph size="1.3em" /> Projects</h1>
         <Row style={{ marginBottom: "10px" }}>
           <Col sm={3}>
             <Form.Group as={Col} controlId="formGridLLM">
@@ -249,11 +249,11 @@ function Projects() {
                 <th>Name</th>
                 <th>Type</th>
                 <th>LLM</th>
-                <th>Actions</th>
-                <th>Inference<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
                 {user.admin &&
                   <th>Users</th>
                 }
+                <th>Actions</th>
+                <th>Inference<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
               </tr>
             </thead>
             <tbody>
@@ -289,11 +289,24 @@ function Projects() {
                       <td>
                         {project.llm}
                       </td>
+                      {
+                        user.admin &&
+                        <td>
+                          {typeof users[project.name] !== "undefined" && (
+                            users[project.name].map((user, index) => {
+                              if (users[project.name].length - 1 === index)
+                                return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
+                              return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
+                            })
+                          )
+                          }
+                        </td>
+                      }
                       <td>
                         <NavLink
                           to={"/projects/" + project.name}
                         >
-                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Info</Button>{' '}
+                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
                         </NavLink>
                       </td>
                       <td>
@@ -333,19 +346,6 @@ function Projects() {
                           </NavLink>
                         }
                       </td>
-                      {
-                        user.admin &&
-                        <td>
-                          {typeof users[project.name] !== "undefined" && (
-                            users[project.name].map((user, index) => {
-                              if (users[project.name].length - 1 === index)
-                                return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
-                              return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
-                            })
-                          )
-                          }
-                        </td>
-                      }
                     </tr>
                   )
                 })
@@ -357,7 +357,7 @@ function Projects() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>New Project</Modal.Title>
+          <Modal.Title><FiFilePlus size="1.3em" /> New Project</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={onSubmitHandler}>

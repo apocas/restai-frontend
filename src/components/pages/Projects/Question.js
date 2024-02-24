@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Accordion, Badge } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { toast } from 'react-toastify';
+import { MdInfoOutline } from "react-icons/md";
 
 function Question() {
 
@@ -28,7 +29,7 @@ function Question() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -267,9 +268,9 @@ function Question() {
         <h1>Question - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
@@ -345,13 +346,13 @@ function Question() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
+                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required."><MdInfoOutline size="1.4em"/></Link></InputGroup.Text>
                 <Form.Control ref={scoreForm} defaultValue={data.score} />
               </InputGroup>
             </Col>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used.">ℹ️</Link></InputGroup.Text>
+                <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used."><MdInfoOutline size="1.4em"/></Link></InputGroup.Text>
                 <Form.Control ref={kForm} defaultValue={data.k} />
               </InputGroup>
             </Col>

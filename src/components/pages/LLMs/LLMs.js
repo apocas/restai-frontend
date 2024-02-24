@@ -9,6 +9,8 @@ import { PiMagnifyingGlassPlus } from "react-icons/pi";
 import { MdOutlineDelete, MdInfoOutline } from "react-icons/md";
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
+import { PiBrain } from "react-icons/pi";
+import { FiFilePlus } from "react-icons/fi";
 
 function LLMs() {
 
@@ -110,7 +112,7 @@ function LLMs() {
     <>
       <Container style={{ marginTop: "20px" }}>
         <Row>
-          <h1>LLMs</h1>
+          <h1><PiBrain size="1.3em"/> LLMs</h1>
           <Row style={{ marginBottom: "10px" }}>
             <Col sm={3}>
               <Form.Group as={Col} controlId="formGridLLM">
@@ -193,7 +195,7 @@ function LLMs() {
                           <NavLink
                             to={"/llms/" + llm.name}
                           >
-                            <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Info</Button>{' '}
+                            <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
                           </NavLink>
                           <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
                         </td>
@@ -209,7 +211,7 @@ function LLMs() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>New LLM</Modal.Title>
+          <Modal.Title><FiFilePlus size="1.3em" /> New LLM</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={onSubmitHandler}>
