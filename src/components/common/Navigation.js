@@ -47,7 +47,6 @@ function Navigation() {
                 </NavLink>
               </Nav.Link>
             )}
-            <Nav.Link as="li">|</Nav.Link>
             <Nav.Link as="li">
               <NavLink
                 to="/llms"
@@ -55,6 +54,7 @@ function Navigation() {
                 <PiBrain size="1.3em"/> LLMs
               </NavLink>
             </Nav.Link>
+            <Nav.Link as="li">|</Nav.Link>
             <Nav.Link as="li">
               <a href="/docs"><HiOutlineServerStack size="1.3em"/> API</a>
             </Nav.Link>

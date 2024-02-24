@@ -5,6 +5,8 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { AiOutlineSave } from "react-icons/ai";
+import { MdInfoOutline } from "react-icons/md";
 
 function Edit() {
 
@@ -21,7 +23,7 @@ function Edit() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -97,7 +99,7 @@ function Edit() {
               <Form.Control type="text" ref={classnameForm} defaultValue={data.class_name ? data.class_name : ""} />
             </Form.Group>
             <Form.Group as={Col} controlId="formGridType">
-              <Form.Label>Privacy<Link title="LLM privacy. Pick public for public cloud, private if the LLM is local.">ℹ️</Link></Form.Label>
+              <Form.Label>Privacy<Link title="LLM privacy. Pick public for public cloud, private if the LLM is local."><MdInfoOutline size="1.4em"/></Link></Form.Label>
               <Form.Select ref={privacyForm}>
                 <option>Choose...</option>
                 <option key="public">public</option>
@@ -105,7 +107,7 @@ function Edit() {
               </Form.Select>
             </Form.Group>
             <Form.Group as={Col} controlId="formGridType">
-              <Form.Label>Type<Link title="LLM type. QA for question/answer only, chat if it supports chat mode additionally to qa. Vision for image based LLMs.">ℹ️</Link></Form.Label>
+              <Form.Label>Type<Link title="LLM type. QA for question/answer only, chat if it supports chat mode additionally to qa. Vision for image based LLMs."><MdInfoOutline size="1.4em"/></Link></Form.Label>
               <Form.Select ref={typeForm}>
                 <option>Choose...</option>
                 <option key="qa">qa</option>
@@ -126,7 +128,7 @@ function Edit() {
               <Form.Control type="text" ref={descriptionForm} defaultValue={data.description ? data.description : ""} />
             </Form.Group>
           </Row>
-          <Button variant="dark" type="submit" className="mb-2">💾 Save</Button>
+          <Button variant="dark" type="submit" className="mb-2"><AiOutlineSave size="1.3em" /> Save</Button>
           <NavLink to={"/llms/" + llmname} >
             <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
           </NavLink>
