@@ -58,10 +58,14 @@ function LLM() {
             </Row>
             <Row style={{ marginBottom: "10px" }}>
               <Col sm={12}>
-                <NavLink to={"/llms/" + llmname + "/edit"} >
-                  {user.admin && <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>}
-                </NavLink>
-                <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}><MdOutlineDelete size="1.3em" /> Delete</Button>
+                {user.admin &&
+                  <NavLink to={"/llms/" + llmname + "/edit"} >
+                    <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>
+                  </NavLink>
+                }
+                {user.admin &&
+                  <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}><MdOutlineDelete size="1.3em" /> Delete</Button>
+                }
               </Col>
             </Row>
             <Row>

@@ -108,7 +108,7 @@ function LLMs() {
     fetchLLMS();
   }, []);
 
-  return user.admin ? (
+  return (
     <>
       <Container style={{ marginTop: "20px" }}>
         <Row>
@@ -200,9 +200,11 @@ function LLMs() {
                                 <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
                               </NavLink>
                             </Col>
-                            <Col sm={6} style={{ textAlign: "right" }}>
-                              <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
-                            </Col>
+                            {user.admin &&
+                              <Col sm={6} style={{ textAlign: "right" }}>
+                                <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                              </Col>
+                            }
                           </Row>
                         </td>
                       </tr>
@@ -274,8 +276,6 @@ function LLMs() {
         </Modal.Footer>
       </Modal>
     </>
-  ) : (
-    <Navigate to="/" />
   );
 }
 
