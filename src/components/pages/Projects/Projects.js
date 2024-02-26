@@ -12,6 +12,7 @@ import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 import { PiGraph } from "react-icons/pi";
 import { FiFilePlus } from "react-icons/fi";
+import { AiOutlineCrown } from "react-icons/ai";
 
 function Projects() {
 
@@ -296,7 +297,14 @@ function Projects() {
                               if (users[project.name].length - 1 === index)
                                 return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
                               return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
-                            })}><Badge bg="secondary">{users[project.name].length}</Badge></Link>
+                            })}>
+                              {users[project.name].length === 1 && users[project.name][0] === user.username && (
+                                <AiOutlineCrown size="1.5em" />
+                              )}
+                              {(users[project.name].length !== 1 || (users[project.name].length === 1 && users[project.name][0] !== user.username)) && (
+                                <Badge bg="secondary">{users[project.name].length}</Badge>
+                              )}
+                            </Link>
                           )}
                         </td>
                       }
