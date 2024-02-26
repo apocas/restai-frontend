@@ -5,6 +5,8 @@ import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { AiOutlineSave } from "react-icons/ai";
+import { MdInfoOutline } from "react-icons/md";
 
 function Edit() {
 
@@ -92,7 +94,7 @@ function Edit() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Edit User {username}</h1>
+        <h1>Edit User ({username})</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridUserName">
@@ -108,20 +110,17 @@ function Edit() {
             {user.admin &&
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isadminForm} type="checkbox" label="Admin" />
-                <Link title="Admins have access to all projects and can edit all users">ℹ️</Link>
+                <Link title="Admins have access to all projects and can edit all users"><MdInfoOutline size="1.4em" /></Link>
               </Form.Group>
             }
             {user.admin &&
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isprivateForm} type="checkbox" label="Private models only" />
-                <Link title="Can only use private/local models">ℹ️</Link>
+                <Link title="Can only use private/local models"><MdInfoOutline size="1.4em" /></Link>
               </Form.Group>
             }
           </Row>
-          <Button variant="dark" type="submit" className="mb-2">💾 Save</Button>
-          <NavLink to={"/users/" + username} >
-            <Button variant="danger" style={{ marginLeft: "10px", marginTop: "-8px" }}>Cancel</Button>{' '}
-          </NavLink>
+          <Button variant="dark" type="submit" className="mb-2"><AiOutlineSave size="1.3em" /> Save</Button>
         </Form>
       </Container>
     </>

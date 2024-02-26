@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { toast } from 'react-toastify';
+import { MdInfoOutline } from "react-icons/md";
 
 function Inference() {
 
@@ -25,7 +26,7 @@ function Inference() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -98,8 +99,15 @@ function Inference() {
           }
         },
         onmessage(event) {
-          if (event.event === "close") {
-            setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+          if (event.event === "close" || event.event === "error") {
+            if (event.event === "error") {
+              toast.error(event.data);
+              setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
+              setCanSubmit(true);
+            } else {
+              setAnswert((answert) => [...answert, event.data]);
+              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+            }
           } else if (event.data === "") {
             setAnswert((answert) => [...answert, "\n"]);
           } else {
@@ -216,9 +224,9 @@ function Inference() {
         <h1>Inference - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>

@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Accordion, Badge } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -28,7 +28,7 @@ function Chat() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -108,9 +108,15 @@ function Chat() {
           }
         },
         onmessage(event) {
-          if (event.event === "close") {
-            setAnswert((answert) => [...answert, event.data]);
-            setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+          if (event.event === "close" || event.event === "error") {
+            if (event.event === "error") {
+              toast.error(event.data);
+              setMessages([...messages, { id: id, question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
+              setCanSubmit(true);
+            } else {
+              setAnswert((answert) => [...answert, event.data]);
+              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+            }
           } else if (event.data === "") {
             setAnswert((answert) => [...answert, "\n"]);
           } else {

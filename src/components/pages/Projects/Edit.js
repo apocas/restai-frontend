@@ -1,10 +1,13 @@
-import { Container, Row, Form, Col, Button, Alert, InputGroup } from 'react-bootstrap';
+import { Container, Row, Form, Col, Button, InputGroup } from 'react-bootstrap';
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { MdInfoOutline } from "react-icons/md";
+import { AiOutlineSave } from "react-icons/ai";
+
 
 function Edit() {
 
@@ -19,14 +22,15 @@ function Edit() {
   const kForm = useRef(null);
   const censorshipForm = useRef(null)
   const llmForm = useRef(null)
-  const sandboxedForm = useRef(null)
+  const colbertRerankForm = useRef(null)
+  const llmRerankForm = useRef(null)
   var { projectName } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -63,7 +67,8 @@ function Edit() {
         setData(d)
       }
       ).catch(err => {
-        toast.error(err.toString());
+        console.log(err.toString());
+        //toast.error(err.toString());
       });
   }
 
@@ -105,11 +110,11 @@ function Edit() {
     }
 
     if (data.type === "rag") {
-      opts.sandboxed = sandboxedForm.current.checked
+      opts.colbert_rerank = colbertRerankForm.current.checked
+      opts.llm_rerank = llmRerankForm.current.checked
       opts.censorship = censorshipForm.current.value
       opts.score = parseFloat(scoreForm.current.value)
       opts.k = parseInt(kForm.current.value)
-
 
       if (opts.censorship.trim() === "") {
         delete opts.censorship;
@@ -154,6 +159,13 @@ function Edit() {
     } else if (data.type === "vision") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
     }
+
+    if (data.type === "rag" && data.llm_rerank) {
+      llmRerankForm.current.checked = true;
+    }
+    if (data.type === "rag" && data.colbert_rerank) {
+      colbertRerankForm.current.checked = true;
+    }
   }, [data]);
 
   useEffect(() => {
@@ -164,7 +176,7 @@ function Edit() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Edit Project {projectName}</h1>
+        <h1>Edit Project ({projectName})</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridLLM">
@@ -177,7 +189,7 @@ function Edit() {
           {(data.type === "rag" || data.type === "inference" || data.type === "ragsql") &&
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridSystem">
-                <Form.Label>System Message<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>
+                <Form.Label>System Message<Link title="Instructions for the LLM know how to behave"><MdInfoOutline size="1.4em" /></Link></Form.Label>
                 <Form.Control rows="2" as="textarea" ref={systemForm} defaultValue={data.system ? data.system : ""} />
               </Form.Group>
               <hr style={{ marginTop: "20px" }} />
@@ -188,7 +200,7 @@ function Edit() {
             <Row className="mb-3">
               <Col sm={10}>
                 <Form.Group as={Col} controlId="formGridSystem">
-                  <Form.Label>Connection<Link title="Connection string">ℹ️</Link></Form.Label>
+                  <Form.Label>Connection<Link title="Connection string"><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Control rows="1" as="input" ref={connectionForm} defaultValue={data.connection ? data.connection : ""} />
                 </Form.Group>
               </Col>
@@ -209,7 +221,7 @@ function Edit() {
             <Row className="mb-3">
               <Col sm={12}>
                 <Form.Group as={Col} controlId="formGridSystem">
-                  <Form.Label>Tables<Link title="Connection string">ℹ️</Link></Form.Label>
+                  <Form.Label>Tables<Link title="Connection string"><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Control rows="1" as="input" ref={tablesForm} defaultValue={data.tables ? data.tables : ""} />
                 </Form.Group>
               </Col>
@@ -219,13 +231,24 @@ function Edit() {
           {data.type === "rag" &&
             <Form.Group as={Col} controlId="formGridCensorship">
               <Row className="mb-3">
-                <Col sm={6}>
-                  <Form.Check ref={sandboxedForm} type="checkbox" label="Sandboxed" /><Link title="In sandbox mode, answers will be stricked to the ingested knowledge.">ℹ️</Link>
+                <Col sm={2}>
+                  <Form.Check ref={llmRerankForm} type="checkbox" label="LLM Rerank" />
+                </Col>
+                <Col sm={2}>
+                  <Link title="Rerank retrieval process using the LLM itself, doesn't with some LLMs."><MdInfoOutline size="1.4em" /></Link>
+                </Col>
+              </Row>
+              <Row className="mb-3">
+                <Col sm={2}>
+                  <Form.Check ref={colbertRerankForm} type="checkbox" label="Colbert Rerank" />
+                </Col>
+                <Col sm={2}>
+                  <Link title="Colbert Rerank"><MdInfoOutline size="1.4em" /></Link>
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col sm={8}>
-                  <Form.Label>Censorship Message<Link title="When sandboxed, if a censorship message is set it will be used on questions that miss ingested knowledge.">ℹ️</Link></Form.Label>
+                  <Form.Label>Censorship Message<Link title="Message that may be returned when not data is found during the retrieval process."><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
                 </Col>
               </Row>
@@ -237,19 +260,19 @@ function Edit() {
             <Row>
               <Col sm={6}>
                 <InputGroup>
-                  <InputGroup.Text>Score Threshold<Link title="Minimum score acceptable to match with ingested knowledge (embeddings)">ℹ️</Link></InputGroup.Text>
+                  <InputGroup.Text>Score Threshold<Link title="Minimum score acceptable to match with ingested knowledge (embeddings)"><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
                   <Form.Control ref={scoreForm} defaultValue={data.score} />
                 </InputGroup>
               </Col>
               <Col sm={6}>
                 <InputGroup>
-                  <InputGroup.Text>k<Link title="Number of embeddings used to compute an answer">ℹ️</Link></InputGroup.Text>
+                  <InputGroup.Text>k<Link title="Number of embeddings used to compute an answer"><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
                   <Form.Control ref={kForm} defaultValue={data.k} />
                 </InputGroup>
               </Col>
             </Row>
           }
-          <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}>💾 Save</Button>
+          <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}><AiOutlineSave size="1.3em" /> Save</Button>
         </Form>
       </Container>
     </>

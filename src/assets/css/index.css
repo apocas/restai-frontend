@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.react-icons {
+  vertical-align: middle;
+}
+
 .json {
   white-space: pre-wrap;
   /* Since CSS 2.1 */

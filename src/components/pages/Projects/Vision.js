@@ -10,13 +10,14 @@ import { FileUploader } from "react-drag-drop-files";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { MdInfoOutline } from "react-icons/md";
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
 function Vision() {
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -279,7 +280,7 @@ function Vision() {
             <Col sm={10} style={{display: "inline-flex"}}>
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isEnableBoostForm} type="checkbox" label="Enable Prompt Booster" />
-                <Link title="Enable prompt booster. Uses AI to boost user's prompt with more details and content.">ℹ️</Link>
+                <Link title="Enable prompt booster. Uses AI to boost user's prompt with more details and content."><MdInfoOutline size="1.4em"/></Link>
               </Form.Group>
             </Col>
             <Col sm={2}>

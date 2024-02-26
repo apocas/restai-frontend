@@ -1,10 +1,17 @@
-import { Container, Table, Row, Form, Col, Button, Alert } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { MdOutlineImage, MdOutlineChat, MdInfoOutline } from "react-icons/md";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { PiMagnifyingGlassPlus } from "react-icons/pi";
+import Modal from 'react-bootstrap/Modal';
+import Badge from 'react-bootstrap/Badge';
+import { PiGraph } from "react-icons/pi";
+import { FiFilePlus } from "react-icons/fi";
 
 function Projects() {
 
@@ -20,18 +27,25 @@ function Projects() {
   const [availableLLMs, setAvailableLLMs] = useState([]);
   const [type, setType] = useState("");
   const vectorForm = useRef(null)
-  const embbeddingFilter = useRef(null)
   const llmFilter = useRef(null)
-  const vectorFilter = useRef(null)
   const typeFilter = useRef(null)
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
+  const [show, setShow] = useState(false);
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleCreate = () => {
+    onSubmitHandler();
+    handleClose();
+  }
 
   const fetchProjects = () => {
     return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
@@ -106,22 +120,20 @@ function Projects() {
 
   const handleFilterChange = () => {
     var newData = [];
-    var embFilterValue = embbeddingFilter.current.value;
     var llmFilterValue = llmFilter.current.value;
-    var vectorFilterValue = vectorFilter.current.value;
     var typeFilterValue = typeFilter.current.value;
-    if (embFilterValue === "All" && llmFilterValue === "All" && vectorFilterValue === "All" && typeFilterValue === "All") {
+    if (llmFilterValue === "All" && typeFilterValue === "All") {
       newData = [...data];
       setDisplayData(newData);
     } else {
-      newData = data.filter(element => element.embeddings === embFilterValue || element.llm === llmFilterValue || element.vectorstore === vectorFilterValue || element.type === typeFilterValue)
+      newData = data.filter(element => element.llm === llmFilterValue || element.type === typeFilterValue)
       setDisplayData(newData);
     }
   }
 
-  // TODO: response handling
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if (event)
+      event.preventDefault();
 
     var opts = {
       "name": projectNameForm.current.value,
@@ -191,7 +203,7 @@ function Projects() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Projects</h1>
+        <h1><PiGraph size="1.3em" /> Projects</h1>
         <Row style={{ marginBottom: "10px" }}>
           <Col sm={3}>
             <Form.Group as={Col} controlId="formGridLLM">
@@ -224,46 +236,20 @@ function Projects() {
               </Form.Select>
             </Form.Group>
           </Col>
-          <Col sm={3}>
-            <Form.Group as={Col} controlId="formGridEmbeddings">
-              <Form.Label>Embeddings</Form.Label>
-              <Form.Select ref={embbeddingFilter} onChange={handleFilterChange} defaultValue="All">
-                <option>All</option>
-                {
-                  info.embeddings.map((embbedding, index) => {
-                    return (
-                      <option key={index}>{embbedding.name}</option>
-                    )
-                  }
-                  )
-                }
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          <Col sm={3}>
-            <Form.Group as={Col} controlId="formGridVector">
-              <Form.Label>Vectorstore</Form.Label>
-              <Form.Select ref={vectorFilter} onChange={handleFilterChange} defaultValue="All">
-                <option>All</option>
-                <option>chroma</option>
-                <option>redis</option>
-              </Form.Select>
-            </Form.Group>
+          <Col sm={6} style={{ paddingTop: "32px", textAlign: "right" }}>
+            <Button variant="primary" onClick={handleShow}>
+            <FiFilePlus size="1.3em" /> New Project
+            </Button>
           </Col>
         </Row>
         <Row>
           <Table striped bordered hover responsive>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Project Name</th>
+                <th>Name</th>
                 <th>Type</th>
-                <th>Model</th>
-                <th>Actions</th>
-                <th>Inference<Link title="Chat has memory. Question doesn't">ℹ️</Link></th>
-                {user.admin &&
-                  <th>Used by</th>
-                }
+                <th>LLM</th>
+                <th style={{ width: "370px" }}>Actions<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
               </tr>
             </thead>
             <tbody>
@@ -271,7 +257,6 @@ function Projects() {
                 displayData.map((project, index) => {
                   return (
                     <tr key={index}>
-                      <td>{index}</td>
                       <td>
                         <NavLink
                           to={"/projects/" + project.name}
@@ -280,68 +265,74 @@ function Projects() {
                         </NavLink>
                       </td>
                       <td>
-                        {project.type}
+                        {
+                          (() => {
+                            switch (project.type) {
+                              case 'rag':
+                                return <Badge bg="primary">{project.type}</Badge>;
+                              case 'ragsql':
+                                return <Badge bg="secondary">{project.type}</Badge>;
+                              case 'vision':
+                                return <Badge bg="success">{project.type}</Badge>;
+                              case 'inference':
+                                return <Badge bg="warning">{project.type}</Badge>;
+                              default:
+                                return <Badge bg="dark">{project.type}</Badge>;
+                            }
+                          })()
+                        }
                       </td>
                       <td>
                         {project.llm}
                       </td>
                       <td>
-                        <NavLink
-                          to={"/projects/" + project.name}
-                        >
-                          <Button variant="dark">🔎 View</Button>{' '}
-                        </NavLink>
+                        <Row>
+                          <Col sm={4} style={{ textAlign: "left" }}>
+                            <NavLink
+                              to={"/projects/" + project.name}
+                            >
+                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
+                            </NavLink>
+                          </Col>
+                          <Col sm={8} style={{ textAlign: "right" }}>
+                            {project.type === "vision" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/vision"}
+                              >
+                                <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "rag" && project.llm_type === "chat" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/chat"}
+                              >
+                                <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "rag" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/question"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "ragsql" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/questionsql"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                            {project.type === "inference" &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/inference"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                          </Col>
+                        </Row>
                       </td>
-                      <td>
-                        {project.type === "vision" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/vision"}
-                          >
-                            <Button variant="success">🖼️ Vision</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "rag" && project.llm_type === "chat" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/chat"}
-                          >
-                            <Button variant="success">💬 Chat</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "rag" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/question"}
-                          >
-                            <Button variant="success">✉️ Question</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "ragsql" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/questionsql"}
-                          >
-                            <Button variant="success">✉️ Question</Button>{' '}
-                          </NavLink>
-                        }
-                        {project.type === "inference" &&
-                          <NavLink
-                            to={"/projects/" + project.name + "/inference"}
-                          >
-                            <Button variant="success">✉️ Question</Button>{' '}
-                          </NavLink>
-                        }
-                      </td>
-                      {
-                        user.admin &&
-                        <td>
-                          {typeof users[project.name] !== "undefined" && (
-                            users[project.name].map((user, index) => {
-                              if (users[project.name].length - 1 === index)
-                                return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
-                              return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
-                            })
-                          )
-                          }
-                        </td>
-                      }
                     </tr>
                   )
                 })
@@ -349,64 +340,85 @@ function Projects() {
             </tbody>
           </Table>
         </Row>
-        <hr />
-        <Row>
-          <h1>Create Project</h1>
+      </Container >
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title><FiFilePlus size="1.3em" /> New Project</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           <Form onSubmit={onSubmitHandler}>
             <Row className="mb-3">
-              <Form.Group as={Col} controlId="formGridProjectName">
-                <Form.Label>Project Name</Form.Label>
-                <Form.Control ref={projectNameForm} />
+              <Form.Group as={Row} className="mb-3" controlId="formGridProjectName">
+                <Form.Label column sm={4}>Name</Form.Label>
+                <Col sm={8}>
+                  <Form.Control ref={projectNameForm} />
+                </Col>
               </Form.Group>
-              <Form.Group as={Col} controlId="formGridType">
-                <Form.Label>Project Type<Link title="Project type. RAG for text retrieval augmented generation. RAGSQL for SQL retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference.">ℹ️</Link></Form.Label>
-                <Form.Select ref={typeForm} onChange={typeChange}>
-                  <option>Choose...</option>
-                  <option key="rag">rag</option>
-                  <option key="ragsql">ragsql</option>
-                  <option key="inference">inference</option>
-                  <option key="vision">vision</option>
-                </Form.Select>
+              <Form.Group as={Row} className="mb-3" controlId="formGridType">
+                <Form.Label column sm={4}>Type<Link title="Project type. RAG for text retrieval augmented generation. RAGSQL for SQL retrieval augmented generation. Inference for pure inference without embedddings. Vision for image based models/inference."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                <Col sm={8}>
+                  <Form.Select ref={typeForm} onChange={typeChange}>
+                    <option>Choose...</option>
+                    <option key="rag">rag</option>
+                    <option key="ragsql">ragsql</option>
+                    <option key="inference">inference</option>
+                    <option key="vision">vision</option>
+                  </Form.Select>
+                </Col>
               </Form.Group>
               {type === "rag" &&
-                <Form.Group as={Col} controlId="formGridEmbeddings">
-                  <Form.Label>Embeddings<Link title="Model used to compute embeddings">ℹ️</Link></Form.Label>
-                  <Form.Select ref={embbeddingForm} defaultValue="">
-                    <option>Choose...</option>
-                    {
-                      info.embeddings.map((embbedding, index) => {
-                        return (
-                          <option key={index}>{embbedding.name}</option>
-                        )
-                      })
-                    }
-                  </Form.Select>
+                <Form.Group as={Row} className="mb-3" controlId="formGridEmbeddings">
+                  <Form.Label column sm={4}>Embeddings<Link title="Model used to compute embeddings"><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                  <Col sm={8}>
+                    <Form.Select ref={embbeddingForm} defaultValue="">
+                      <option>Choose...</option>
+                      {
+                        info.embeddings.map((embbedding, index) => {
+                          return (
+                            <option key={index}>{embbedding.name}</option>
+                          )
+                        })
+                      }
+                    </Form.Select>
+                  </Col>
                 </Form.Group>
               }
 
-              <Form.Group as={Col} controlId="formGridLLM">
-                <Form.Label>LLM</Form.Label>
-                <Form.Select ref={llmForm} defaultValue="">
-                  {createSelectItems()}
-                </Form.Select>
-              </Form.Group>
+              {type && type !== "Choose..." &&
+                <Form.Group as={Row} className="mb-3" controlId="formGridLLM">
+                  <Form.Label column sm={4}>LLM</Form.Label>
+                  <Col sm={8}>
+                    <Form.Select ref={llmForm} defaultValue="">
+                      {createSelectItems()}
+                    </Form.Select>
+                  </Col>
+                </Form.Group>
+              }
 
               {type === "rag" &&
-                <Form.Group as={Col} controlId="formGridVector">
-                  <Form.Label>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed.">ℹ️</Link></Form.Label>
-                  <Form.Select ref={vectorForm} defaultValue="redis">
-                    <option>redis</option>
-                    <option>chroma</option>
-                  </Form.Select>
+                <Form.Group className="mb-3" as={Row} controlId="formGridVector">
+                  <Form.Label column sm={4}>Vectorstore<Link title="Chroma is monolithic and only recommended for testing. Redis is distributed."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                  <Col sm={8}>
+                    <Form.Select ref={vectorForm} defaultValue="redis">
+                      <option>redis</option>
+                      <option>chroma</option>
+                    </Form.Select>
+                  </Col>
                 </Form.Group>
               }
             </Row>
-            <Button variant="dark" type="submit" className="mb-2">
-              Create
-            </Button>
           </Form>
-        </Row>
-      </Container >
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCreate}>
+            Create
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

@@ -1,10 +1,10 @@
-import { Container, Table, Row, Form, Col, Button, ListGroup, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
 import { useParams, NavLink } from "react-router-dom";
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
+import { PiPencilLight, PiBrain } from "react-icons/pi";
+import { MdOutlineDelete } from "react-icons/md";
 
 function LLM() {
 
@@ -13,12 +13,6 @@ function LLM() {
   var { llmname } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth() || { username: null, admin: null };
-
-  const Link = ({ id, children, title }) => (
-    <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
-    </OverlayTrigger>
-  );
 
   const deleteClick = () => {
     if (window.confirm("Delete " + llmname + "?")) {
@@ -30,7 +24,7 @@ function LLM() {
       }
       ).catch(err => {
         console.log(err.toString());
-        toast.error("Error deleting LLM"); 
+        toast.error("Error deleting LLM");
       });
     }
   }
@@ -55,22 +49,31 @@ function LLM() {
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>
-            <h1>
-              Details
-              <NavLink to={"/llms/" + llmname + "/edit"} >
-                {user.admin && <Button variant="dark" style={{ marginLeft: "5px" }}>✏️ Edit</Button>}
-              </NavLink>
-              <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}>🗑️ Delete</Button>
-            </h1>
-
-            <ListGroup>
-              <ListGroup.Item><b>Name:</b> {data.name}</ListGroup.Item>
-              <ListGroup.Item><b>Class Name:</b> {data.class_name}</ListGroup.Item>
-              <ListGroup.Item><b>Options:</b> {data.options}</ListGroup.Item>
-              <ListGroup.Item><b>Privacy:</b> {data.privacy}</ListGroup.Item>
-              <ListGroup.Item><b>Type:</b> {data.type}</ListGroup.Item>
-              <ListGroup.Item><b>Description:</b> {data.description}</ListGroup.Item>
-            </ListGroup>
+            <Row>
+              <Col sm={12}>
+                <h1>
+                  <PiBrain size="1.3em" /> LLM Details ({data.name})
+                </h1>
+              </Col>
+            </Row>
+            <Row style={{ marginBottom: "10px" }}>
+              <Col sm={12}>
+                <NavLink to={"/llms/" + llmname + "/edit"} >
+                  {user.admin && <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>}
+                </NavLink>
+                <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}><MdOutlineDelete size="1.3em" /> Delete</Button>
+              </Col>
+            </Row>
+            <Row>
+              <ListGroup>
+                <ListGroup.Item><b>Name:</b> {data.name}</ListGroup.Item>
+                <ListGroup.Item><b>Class Name:</b> {data.class_name}</ListGroup.Item>
+                <ListGroup.Item><b>Options:</b> {data.options}</ListGroup.Item>
+                <ListGroup.Item><b>Privacy:</b> {data.privacy}</ListGroup.Item>
+                <ListGroup.Item><b>Type:</b> {data.type}</ListGroup.Item>
+                <ListGroup.Item><b>Description:</b> {data.description}</ListGroup.Item>
+              </ListGroup>
+            </Row>
           </Col>
         </Row>
       </Container >

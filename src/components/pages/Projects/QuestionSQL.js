@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Accordion, Badge } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -8,6 +8,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
+import { MdInfoOutline } from "react-icons/md";
 
 function Inference() {
 
@@ -23,7 +24,7 @@ function Inference() {
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <a href="#" style={{ fontSize: "small", margin: "3px" }}>{children}</a>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
 
@@ -139,9 +140,9 @@ function Inference() {
         <h1>Question (SQL) - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
@@ -201,7 +202,7 @@ function Inference() {
           </Row>
           <Row style={{ marginTop: "20px" }}>
             <Col sm={1}>
-              <Form.Label>Tables:<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope.">ℹ️</Link></Form.Label>
+              <Form.Label>Tables:<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope."><MdInfoOutline size="1.4em"/></Link></Form.Label>
             </Col>
             <Col sm={9}>
               <ReactTags

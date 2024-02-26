@@ -7,6 +7,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { toast } from 'react-toastify';
+import { MdOutlineImage, MdOutlineChat, MdInfoOutline, MdOutlineDelete, MdOutlineCheck } from "react-icons/md";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { PiMagnifyingGlassPlus, PiFileArrowUpLight, PiPencilLight } from "react-icons/pi";
+import { GrPowerReset } from "react-icons/gr";
+import { RxCross2 } from "react-icons/rx";
+import Modal from 'react-bootstrap/Modal';
 
 function Project() {
 
@@ -20,7 +26,6 @@ function Project() {
   const contentNameForm = useRef(null)
   const [embedding, setEmbedding] = useState(null);
   const [chunk, setChunk] = useState(null);
-  const [uploadResponse, setUploadResponse] = useState(null);
   const [canSubmit, setCanSubmit] = useState(true);
   const urlForm = useRef(null);
   const ref = useRef(null);
@@ -35,13 +40,28 @@ function Project() {
   const searchForm = useRef(null)
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
-  const [fileDetails, setfileDetails] = useState(null);
+  const [show, setShow] = useState(false);
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
       <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
     </OverlayTrigger>
   );
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleCreate = () => {
+    onSubmitHandler();
+  }
+
+  const showResponse = (uploadResponse) => {
+    var perc = parseFloat((data.k * 100) / uploadResponse.chunks).toFixed(1);
+    if (perc > 100) perc = 100;
+
+    var details = uploadResponse.chunks + " chunks created. With K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.";
+    toast.success(details);
+  }
 
   const onSubmitSearchHandler = (event) => {
     event.preventDefault();
@@ -197,7 +217,6 @@ function Project() {
   const resetFileInput = () => {
     setFile(null);
     fileForm.current.value = null;
-    setfileDetails(null);
   };
 
   const handleDelete = i => {
@@ -210,7 +229,9 @@ function Project() {
 
 
   const onSubmitHandler = (event) => {
-    event.preventDefault();
+    if (event)
+      event.preventDefault();
+
     if (canSubmit) {
       setCanSubmit(false);
       if (file) {
@@ -236,13 +257,15 @@ function Project() {
           })
           .then((response) => {
             resetFileInput();
-            setUploadResponse(response);
+            showResponse(response);
             fetchProject(projectName);
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
             toast.error(err.toString());
             setCanSubmit(true);
+          }).finally(() => {
+            handleClose();
           });
       } else if (urlForm.current.value !== "") {
         var ingestUrl = urlForm.current.value;
@@ -271,13 +294,15 @@ function Project() {
           })
           .then((response) => {
             urlForm.current.value = "";
-            setUploadResponse(response);
+            showResponse(response);
             fetchProject(projectName);
             fetchEmbeddings(projectName);
             setCanSubmit(true);
           }).catch(err => {
             toast.error(err.toString());
             setCanSubmit(true);
+          }).finally(() => {
+            handleClose();
           });
       } else if (contentForm.current.value !== "") {
         var body = {
@@ -307,7 +332,7 @@ function Project() {
             }
           })
           .then((response) => {
-            setUploadResponse(response);
+            showResponse(response);
             fetchProject(projectName);
             fetchEmbeddings(projectName);
             setCanSubmit(true);
@@ -317,6 +342,8 @@ function Project() {
           }).catch(err => {
             toast.error(err.toString());
             setCanSubmit(true);
+          }).finally(() => {
+            handleClose();
           });
       }
     }
@@ -363,74 +390,79 @@ function Project() {
     fetchEmbeddings(projectName);
   }, [data])
 
-  useEffect(() => {
-    if (uploadResponse) {
-      var perc = parseFloat((data.k * 100) / uploadResponse.chunks).toFixed(1);
-      if (perc > 100) perc = 100;
-
-      setfileDetails(uploadResponse.chunks + " chunks created. This project has a default K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.");
-    }
-  }, [uploadResponse])
-
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
         <Row style={{ marginTop: "20px" }}>
-          <Col sm={6}>
-            <h1>Details{' '}
-              <NavLink
-                to={"/projects/" + data.name + "/edit"}
+          <Col sm={12}>
+            <h1><PiMagnifyingGlassPlus size="1.2em" /> Project Details ({data.name})</h1>
+          </Col>
+        </Row>
+        <Row style={{marginBottom: "10px"}}>
+          <Col sm={6} style={{ textAlign: "left" }}>
+            <NavLink
+              to={"/projects/" + data.name + "/edit"}
+            >
+              <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>
+            </NavLink>
+            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}><MdOutlineDelete size="1.3em" /> Delete</Button>
+          </Col>
+          <Col sm={6} style={{ textAlign: "right" }}>
+            {data.type === "rag" &&
+              <Button variant="primary" onClick={handleShow}>
+                <PiFileArrowUpLight size="1.3em" /> Ingest Data
+              </Button>
+            }
+            {data.type === "vision" &&
+              < NavLink
+                to={"/projects/" + data.name + "/vision"}
+                style={{ marginLeft: "5px" }}
               >
-                <Button variant="dark">✏️ Edit</Button>
+                <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>
               </NavLink>
-              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px", marginRight: "40px" }}>🗑️ Delete</Button>
-              {data.type === "vision" &&
-                < NavLink
-                  to={"/projects/" + data.name + "/vision"}
-                  style={{ marginLeft: "5px" }}
-                >
-                  <Button variant="success">🖼️ Vision</Button>
-                </NavLink>
-              }
-              {data.type === "inference" &&
-                < NavLink
-                  to={"/projects/" + data.name + "/inference"}
-                  style={{ marginLeft: "5px" }}
-                >
-                  <Button variant="success">✉️ Question</Button>
-                </NavLink>
-              }
-              {data.type === "rag" && data.llm_type === "chat" &&
-                <NavLink
-                  to={"/projects/" + data.name + "/chat"}
-                  style={{ marginLeft: "5px" }}
-                >
-                  <Button variant="success">💬 Chat</Button>
-                </NavLink>
-              }
-              {data.type === "rag" &&
-                <NavLink
-                  to={"/projects/" + data.name + "/question"}
-                  style={{ marginLeft: "5px" }}
-                >
-                  <Button variant="success">✉️ Question</Button>
-                </NavLink>
-              }
-              {data.type === "ragsql" &&
-                <NavLink
-                  to={"/projects/" + data.name + "/questionsql"}
-                  style={{ marginLeft: "5px" }}
-                >
-                  <Button variant="success">✉️ Question</Button>
-                </NavLink>
-              }
-            </h1>
+            }
+            {data.type === "inference" &&
+              < NavLink
+                to={"/projects/" + data.name + "/inference"}
+                style={{ marginLeft: "5px" }}
+              >
+                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
+              </NavLink>
+            }
+            {data.type === "rag" && data.llm_type === "chat" &&
+              <NavLink
+                to={"/projects/" + data.name + "/chat"}
+                style={{ marginLeft: "5px" }}
+              >
+                <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
+              </NavLink>
+            }
+            {data.type === "rag" &&
+              <NavLink
+                to={"/projects/" + data.name + "/question"}
+                style={{ marginLeft: "5px" }}
+              >
+                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
+              </NavLink>
+            }
+            {data.type === "ragsql" &&
+              <NavLink
+                to={"/projects/" + data.name + "/questionsql"}
+                style={{ marginLeft: "5px" }}
+              >
+                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
+              </NavLink>
+            }
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
             <ListGroup>
               <ListGroup.Item><b>Privacy: </b>
                 {checkPrivacy() ?
-                  <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+                  <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
                   :
-                  <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+                  <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
                 }
               </ListGroup.Item>
               <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
@@ -452,122 +484,30 @@ function Project() {
                 <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger">Reset</Button></ListGroup.Item>
+                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger"><GrPowerReset size="1.3em" /> Reset</Button></ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>K:</b> {data.k}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Score:</b> {data.score}</ListGroup.Item>
+                <ListGroup.Item><b>Score Cutoff:</b> {data.score}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Sandboxed:</b> {data.sandboxed ? (<span>✅</span>) : (<span>❌</span>)}</ListGroup.Item>
+                <ListGroup.Item><b>Colbert Rerank:</b> {data.colbert_rerank ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>LLM Rerank:</b> {data.llm_rerank ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
               }
             </ListGroup>
           </Col>
-          <Col sm={6}>
-            {data.type === "rag" &&
-              <Form onSubmit={onSubmitHandler}>
-                <h1>Ingest<Link title="Ingest a file or an URL">ℹ️</Link></h1>
-                <Row>
-                  <Tabs
-                    defaultActiveKey="file"
-                    id="ingestTabs"
-                  >
-                    <Tab eventKey="file" title="File">
-                      <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail" style={{ marginTop: "20px" }}>
-                        <Col sm={12}>
-                          <Form.Control ref={fileForm} onChange={handleFileChange} type="file" />
-                        </Col>
-                      </Form.Group>
-                    </Tab>
-                    <Tab eventKey="url" title="URL">
-                      <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail" style={{ marginTop: "20px" }}>
-                        <Col sm={12}>
-                          <Form.Control ref={urlForm} type="url" placeholder="Enter url" />
-                        </Col>
-                      </Form.Group>
-                    </Tab>
-                    <Tab eventKey="text" title="Text">
-                      <Form.Group as={Col} controlId="formGridSystem" style={{ marginTop: "20px" }}>
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control ref={contentNameForm} />
-                        <Form.Label>Keywords<Link title="Optional, if not provided system will automatically calculate them.">ℹ️</Link></Form.Label>
-                        <ReactTags
-                          tags={tags}
-                          suggestions={[]}
-                          delimiters={[188, 13]}
-                          handleDelete={handleDelete}
-                          handleAddition={handleAddition}
-                          handleDrag={function () { }}
-                          handleTagClick={function () { }}
-                          inputFieldPosition="bottom"
-                          autocomplete
-                        />
-                        <Form.Label>Content<Link title="Instructions for the LLM know how to behave">ℹ️</Link></Form.Label>
-                        <Form.Control rows="4" as="textarea" ref={contentForm} defaultValue={""} />
-                      </Form.Group>
-                    </Tab>
-                  </Tabs>
-                </Row>
-                <Row style={{ marginTop: "20px" }}>
-                  <Col sm={2}>
-                    <Form.Label>Splitter<Link title="Sentence should work better in human readable text.">ℹ️</Link></Form.Label>
-                  </Col>
-                  <Col sm={3}>
-                    <Form.Select ref={splitterForm}>
-                      <option value="sentence">sentence</option>
-                      <option value="token">token</option>
-                    </Form.Select>
-                  </Col>
-                  <Col sm={2}>
-                    <Form.Label>Chunk Size</Form.Label>
-                  </Col>
-                  <Col sm={3}>
-                    <Form.Select ref={chunksForm} defaultValue={512}>
-                      <option value="128">128</option>
-                      <option value="256">256</option>
-                      <option value="512">512</option>
-                      <option value="1024">1024</option>
-                      <option value="2048">2048</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
-                <Col sm={2}>
-                  <Button variant="dark" type="submit">
-                    {
-                      canSubmit ? <span>Ingest</span> : <Spinner animation="border" />
-                    }
-                  </Button>
-                </Col>
-                <hr />
-              </Form>
-            }
-            {
-              (
-                uploadResponse &&
-                <Row>
-                  <Col sm={12}>
-                    <h5>Ingest Result:</h5>
-                    <Row><Col><span style={{ whiteSpace: "pre-line" }}>{fileDetails}</span></Col></Row>
-                    <ListGroup>
-                      <ListGroup.Item>Source: {uploadResponse.source}</ListGroup.Item>
-                      <ListGroup.Item>Documents: {uploadResponse.documents}</ListGroup.Item>
-                      <ListGroup.Item>Chunks: {uploadResponse.chunks}</ListGroup.Item>
-                    </ListGroup>
-                  </Col>
-                </Row>
-              )
-            }
-          </Col>
         </Row>
         {data.type === "rag" &&
           <Row style={{ marginTop: "20px" }}>
             <hr />
-            <h1>Embeddings<Link title="Ingested files and URLs">ℹ️</Link></h1>
+            <h1>Embeddings<Link title="Ingested files and URLs"><MdInfoOutline size="1.4em" /></Link></h1>
 
             <Tabs
               defaultActiveKey="documents"
@@ -585,7 +525,6 @@ function Project() {
                         <Table striped bordered hover>
                           <thead>
                             <tr>
-                              <th>#</th>
                               <th>Source</th>
                               <th>Actions</th>
                             </tr>
@@ -595,13 +534,12 @@ function Project() {
                               embeddings.embeddings.map((emb, index) => {
                                 return (
                                   <tr key={index}>
-                                    <td>{index}</td>
                                     <td>
                                       {emb}
                                     </td>
                                     <td>
-                                      <Button onClick={() => handleViewClick(emb)} variant="dark">View</Button>{' '}
-                                      <Button onClick={() => handleDeleteClick(emb)} variant="danger">Delete</Button>
+                                      <Button onClick={() => handleViewClick(emb)} variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
+                                      <Button onClick={() => handleDeleteClick(emb)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
                                     </td>
                                   </tr>
                                 )
@@ -673,7 +611,6 @@ function Project() {
                       <Table striped bordered hover>
                         <thead>
                           <tr>
-                            <th>#</th>
                             <th>ID</th>
                             <th>Source</th>
                             <th>Score</th>
@@ -685,7 +622,6 @@ function Project() {
                             chunks.map((chunk, index) => {
                               return (
                                 <tr key={index}>
-                                  <td>{index}</td>
                                   <td>
                                     {chunk.id}
                                   </td>
@@ -724,6 +660,92 @@ function Project() {
           </Row>
         }
       </Container >
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title><PiFileArrowUpLight size="1.3em" /> Ingest<Link title="Ingest a file or an URL"><MdInfoOutline size="1.4em" /></Link></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={onSubmitHandler}>
+            <Row>
+              <Tabs
+                defaultActiveKey="file"
+                id="ingestTabs"
+              >
+                <Tab eventKey="file" title="File">
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail" style={{ marginTop: "20px" }}>
+                    <Col sm={12}>
+                      <Form.Control ref={fileForm} onChange={handleFileChange} type="file" />
+                    </Col>
+                  </Form.Group>
+                </Tab>
+                <Tab eventKey="url" title="URL">
+                  <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail" style={{ marginTop: "20px" }}>
+                    <Col sm={12}>
+                      <Form.Control ref={urlForm} type="url" placeholder="Enter url" />
+                    </Col>
+                  </Form.Group>
+                </Tab>
+                <Tab eventKey="text" title="Text">
+                  <Form.Group as={Col} controlId="formGridSystem" style={{ marginTop: "20px" }}>
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control ref={contentNameForm} />
+                    <Form.Label>Keywords<Link title="Optional, if not provided system will automatically calculate them."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                    <ReactTags
+                      tags={tags}
+                      suggestions={[]}
+                      delimiters={[188, 13]}
+                      handleDelete={handleDelete}
+                      handleAddition={handleAddition}
+                      handleDrag={function () { }}
+                      handleTagClick={function () { }}
+                      inputFieldPosition="bottom"
+                      autocomplete
+                    />
+                    <Form.Label>Content<Link title="Instructions for the LLM know how to behave"><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                    <Form.Control rows="4" as="textarea" ref={contentForm} defaultValue={""} />
+                  </Form.Group>
+                </Tab>
+              </Tabs>
+            </Row>
+            <Row style={{ marginTop: "20px" }}>
+              <Col sm={6}>
+                <Form.Label>Splitter<Link title="Sentence should work better in human readable text."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+              </Col>
+              <Col sm={6}>
+                <Form.Select ref={splitterForm}>
+                  <option value="sentence">sentence</option>
+                  <option value="token">token</option>
+                </Form.Select>
+              </Col>
+            </Row>
+            <Row style={{ marginTop: "20px" }}>
+              <Col sm={6}>
+                <Form.Label>Chunk Size</Form.Label>
+              </Col>
+              <Col sm={6}>
+                <Form.Select ref={chunksForm} defaultValue={512}>
+                  <option value="128">128</option>
+                  <option value="256">256</option>
+                  <option value="512">512</option>
+                  <option value="1024">1024</option>
+                  <option value="2048">2048</option>
+                </Form.Select>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCreate}>
+            {
+              canSubmit ? <span>Send</span> : <Spinner animation="border" />
+            }
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
