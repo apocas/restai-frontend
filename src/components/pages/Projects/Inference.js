@@ -99,8 +99,15 @@ function Inference() {
           }
         },
         onmessage(event) {
-          if (event.event === "close") {
-            setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+          if (event.event === "close" || event.event === "error") {
+            if (event.event === "error") {
+              toast.error(event.data);
+              setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
+              setCanSubmit(true);
+            } else {
+              setAnswert((answert) => [...answert, event.data]);
+              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+            }
           } else if (event.data === "") {
             setAnswert((answert) => [...answert, "\n"]);
           } else {

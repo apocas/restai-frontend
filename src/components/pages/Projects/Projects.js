@@ -238,7 +238,7 @@ function Projects() {
           </Col>
           <Col sm={6} style={{ paddingTop: "32px", textAlign: "right" }}>
             <Button variant="primary" onClick={handleShow}>
-              New Project
+            <FiFilePlus size="1.3em" /> New Project
             </Button>
           </Col>
         </Row>
@@ -249,9 +249,6 @@ function Projects() {
                 <th>Name</th>
                 <th>Type</th>
                 <th>LLM</th>
-                {user.admin &&
-                  <th>Users</th>
-                }
                 <th style={{ width: "370px" }}>Actions<Link title="Chat has memory. Question doesn't"><MdInfoOutline size="1.4em" /></Link></th>
               </tr>
             </thead>
@@ -288,19 +285,6 @@ function Projects() {
                       <td>
                         {project.llm}
                       </td>
-                      {
-                        user.admin &&
-                        <td>
-                          {typeof users[project.name] !== "undefined" && (
-                            users[project.name].map((user, index) => {
-                              if (users[project.name].length - 1 === index)
-                                return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
-                              return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
-                            })
-                          )
-                          }
-                        </td>
-                      }
                       <td>
                         <Row>
                           <Col sm={4} style={{ textAlign: "left" }}>

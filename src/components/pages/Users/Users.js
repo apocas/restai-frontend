@@ -118,7 +118,7 @@ function Users() {
             </Col>
             <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
               <Button variant="primary" onClick={handleShow}>
-                New User
+                <PiUserPlus size="1.3em" /> New User
               </Button>
             </Col>
           </Row>
@@ -128,6 +128,7 @@ function Users() {
                 <th>Username</th>
                 <th>Auth</th>
                 <th>Permissions</th>
+                <th>Projects</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -150,12 +151,21 @@ function Users() {
                         {user.is_admin ? "Admin" : "User"}
                       </td>
                       <td>
-                        <NavLink
-                          to={"/users/" + user.username}
-                        >
-                          <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
-                        </NavLink>
-                        <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                        {user.projects.length}
+                      </td>
+                      <td>
+                        <Row>
+                          <Col sm={6} style={{ textAlign: "left" }}>
+                            <NavLink
+                              to={"/users/" + user.username}
+                            >
+                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
+                            </NavLink>
+                          </Col>
+                          <Col sm={6} style={{ textAlign: "right" }}>
+                            <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                          </Col>
+                        </Row>
                       </td>
                     </tr>
                   )

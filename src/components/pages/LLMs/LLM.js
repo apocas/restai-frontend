@@ -3,7 +3,7 @@ import { useParams, NavLink } from "react-router-dom";
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import { toast } from 'react-toastify';
-import { PiPencilLight } from "react-icons/pi";
+import { PiPencilLight, PiBrain } from "react-icons/pi";
 import { MdOutlineDelete } from "react-icons/md";
 
 function LLM() {
@@ -50,14 +50,16 @@ function LLM() {
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>
             <Row>
-              <Col sm={6}>
+              <Col sm={12}>
                 <h1>
-                  Details
+                  <PiBrain size="1.3em" /> LLM Details ({data.name})
                 </h1>
               </Col>
-              <Col sm={6} style={{ paddingTop: "5px", textAlign: "right" }}>
+            </Row>
+            <Row style={{ marginBottom: "10px" }}>
+              <Col sm={12}>
                 <NavLink to={"/llms/" + llmname + "/edit"} >
-                  {user.admin && <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>}
+                  {user.admin && <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>}
                 </NavLink>
                 <Button variant="danger" style={{ marginLeft: "5px" }} onClick={() => deleteClick()}><MdOutlineDelete size="1.3em" /> Delete</Button>
               </Col>

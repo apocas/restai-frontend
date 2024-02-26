@@ -10,7 +10,7 @@ import { MdOutlineDelete, MdInfoOutline } from "react-icons/md";
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import { PiBrain } from "react-icons/pi";
-import { FiFilePlus } from "react-icons/fi";
+import { FiFilePlus, FiPlus } from "react-icons/fi";
 
 function LLMs() {
 
@@ -112,7 +112,7 @@ function LLMs() {
     <>
       <Container style={{ marginTop: "20px" }}>
         <Row>
-          <h1><PiBrain size="1.3em"/> LLMs</h1>
+          <h1><PiBrain size="1.3em" /> LLMs</h1>
           <Row style={{ marginBottom: "10px" }}>
             <Col sm={3}>
               <Form.Group as={Col} controlId="formGridLLM">
@@ -131,7 +131,7 @@ function LLMs() {
             </Col>
             <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
               <Button variant="primary" onClick={handleShow}>
-                New LLM
+                <FiPlus size="1.3em" /> New LLM
               </Button>
             </Col>
           </Row>
@@ -192,12 +192,18 @@ function LLMs() {
                           }
                         </td>
                         <td>
-                          <NavLink
-                            to={"/llms/" + llm.name}
-                          >
-                            <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>{' '}
-                          </NavLink>
-                          <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                          <Row>
+                            <Col sm={6} style={{ textAlign: "left" }}>
+                              <NavLink
+                                to={"/llms/" + llm.name}
+                              >
+                                <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
+                              </NavLink>
+                            </Col>
+                            <Col sm={6} style={{ textAlign: "right" }}>
+                              <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                            </Col>
+                          </Row>
                         </td>
                       </tr>
                     )
@@ -227,7 +233,7 @@ function LLMs() {
             </Row>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridType">
-                <Form.Label>Privacy<Link title="LLM privacy. Pick public for public cloud, private if the LLM is local."><MdInfoOutline size="1.4em"/></Link></Form.Label>
+                <Form.Label>Privacy<Link title="LLM privacy. Pick public for public cloud, private if the LLM is local."><MdInfoOutline size="1.4em" /></Link></Form.Label>
                 <Form.Select ref={privacyForm}>
                   <option>Choose...</option>
                   <option key="public">public</option>
@@ -235,7 +241,7 @@ function LLMs() {
                 </Form.Select>
               </Form.Group>
               <Form.Group as={Col} controlId="formGridType">
-                <Form.Label>Type<Link title="LLM type. QA for question/answer only, chat if it supports chat mode additionally to qa. Vision for image based LLMs."><MdInfoOutline size="1.4em"/></Link></Form.Label>
+                <Form.Label>Type<Link title="LLM type. QA for question/answer only, chat if it supports chat mode additionally to qa. Vision for image based LLMs."><MdInfoOutline size="1.4em" /></Link></Form.Label>
                 <Form.Select ref={typeForm}>
                   <option>Choose...</option>
                   <option key="qa">qa</option>

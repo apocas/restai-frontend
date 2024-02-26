@@ -25,6 +25,8 @@ function Question() {
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
   const isStream = useRef(null)
+  const isColbertRerank = useRef(null)
+  const isLLMRerank = useRef(null)
   const [answert, setAnswert] = useState([]);
 
   const Link = ({ id, children, title }) => (
@@ -55,6 +57,11 @@ function Question() {
   }
 
   const onSubmitHandler = (event) => {
+    if (data.chunks === 0) {
+      toast.error('No data. Ingest some data first.');
+      return;
+    }
+
     if (isStream.current.checked) {
       handlerStream(event);
     } else {
@@ -62,33 +69,36 @@ function Question() {
     }
   }
 
-  const handlerStream = (event) => {
-    if (event)
-      event.preventDefault();
-
+  const buildBody = () => {
     var system = systemForm.current.value;
     var question = questionForm.current.value;
     var k = parseInt(kForm.current.value);
     var score = parseFloat(scoreForm.current.value);
+    var colbert_rerank = isColbertRerank.current.checked;
+    var llm_rerank = isLLMRerank.current.checked;
 
-    var body = {};
-    var submit = false;
-    if (system === "" && question !== "") {
-      body = {
-        "question": question,
-        "k": k,
-        "score": score
-      }
-      submit = true;
-    } else if (system !== "" && question !== "") {
-      body = {
-        "question": question,
-        "system": system,
-        "k": k,
-        "score": score
-      }
-      submit = true;
+    var body = {
+      "question": question,
+      "k": k,
+      "score": score,
+      "colbert_rerank": colbert_rerank,
+      "llm_rerank": llm_rerank
     }
+
+    if (system !== "" && question !== "") {
+      body.systems = system;
+    }
+    
+    return body;
+  }
+
+  const handlerStream = (event) => {
+    if (event)
+      event.preventDefault();
+
+    var question = questionForm.current.value;
+    var submit = true;
+    var body = buildBody();
 
     body.stream = true;
     setAnswert([]);
@@ -107,9 +117,15 @@ function Question() {
           }
         },
         onmessage(event) {
-          if (event.event === "close") {
-            setAnswert((answert) => [...answert, event.data]);
-            setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+          if (event.event === "close" || event.event === "error") {
+            if (event.event === "error") {
+              toast.error(event.data);
+              setAnswers([...answers, { question: question, answer: "Error, something went wrong with my transistors.", sources: [] }]);
+              setCanSubmit(true);
+            } else {
+              setAnswert((answert) => [...answert, event.data]);
+              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
+            }
           } else if (event.data === "") {
             setAnswert((answert) => [...answert, "\n"]);
           } else {
@@ -131,34 +147,9 @@ function Question() {
     if (event)
       event.preventDefault();
 
-    if (data.chunks === 0) {
-      toast.error('No data. Ingest some data first.');
-      return;
-    }
-
-    var system = systemForm.current.value;
     var question = questionForm.current.value;
-    var k = parseInt(kForm.current.value);
-    var score = parseFloat(scoreForm.current.value);
-
-    var body = {};
-    var submit = false;
-    if (system === "" && question !== "") {
-      body = {
-        "question": question,
-        "k": k,
-        "score": score
-      }
-      submit = true;
-    } else if (system !== "" && question !== "") {
-      body = {
-        "question": question,
-        "system": system,
-        "k": k,
-        "score": score
-      }
-      submit = true;
-    }
+    var submit = true;
+    var body = buildBody();
 
     if (submit && canSubmit) {
       setCanSubmit(false);
@@ -183,7 +174,7 @@ function Question() {
           questionForm.current.value = "";
           setCanSubmit(true);
           if (response.sources.length === 0) {
-            toast.error('No sources found for this question. Decrease the score cutoff parameter.');
+            toast.warning('No sources found for this question. Decrease the score cutoff parameter.');
           }
         }).catch(err => {
           toast.error(err.toString());
@@ -257,7 +248,7 @@ function Question() {
       questionForm.current.value = "";
       setCanSubmit(true);
       if (info.sources.length === 0) {
-        toast.error('No sources found for this question. Decrease the score cutoff parameter.');
+        toast.warning('No sources found for this question. Decrease the score cutoff parameter.');
       }
     }
   }, [answert]);
@@ -268,9 +259,9 @@ function Question() {
         <h1>Question - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
@@ -346,22 +337,32 @@ function Question() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required."><MdInfoOutline size="1.4em"/></Link></InputGroup.Text>
+                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
                 <Form.Control ref={scoreForm} defaultValue={data.score} />
               </InputGroup>
             </Col>
             <Col sm={6}>
               <InputGroup>
-                <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used."><MdInfoOutline size="1.4em"/></Link></InputGroup.Text>
+                <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
                 <Form.Control ref={kForm} defaultValue={data.k} />
               </InputGroup>
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={9}>
+            <Col sm={7}>
             </Col>
             <Col sm={1}>
-              <Form.Group as={Col} controlId="formGridAdmin">
+              <Form.Group as={Col} controlId="formGridAdmin1">
+                <Form.Check ref={isLLMRerank} type="checkbox" label="LLM Rerank" />
+              </Form.Group>
+            </Col>
+            <Col sm={1}>
+              <Form.Group as={Col} controlId="formGridAdmin2">
+                <Form.Check ref={isColbertRerank} type="checkbox" label="Colbert Rerank" />
+              </Form.Group>
+            </Col>
+            <Col sm={1}>
+              <Form.Group as={Col} controlId="formGridAdmin3">
                 <Form.Check ref={isStream} type="checkbox" label="Stream" />
               </Form.Group>
             </Col>

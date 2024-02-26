@@ -1,4 +1,4 @@
-import { Container, Table, Row, Form, Col, Button, ListGroup, Alert } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button, ListGroup } from 'react-bootstrap';
 import { useParams, NavLink } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
@@ -7,8 +7,9 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
 import { AiOutlineDisconnect } from "react-icons/ai";
 import { PiPencilLight } from "react-icons/pi";
-import { MdInfoOutline, MdOutlineCheck } from "react-icons/md";
+import { MdInfoOutline, MdOutlineCheck, MdOutlinePerson } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
+import { HiOutlineServerStack } from "react-icons/hi2";
 
 
 function User() {
@@ -131,13 +132,20 @@ function User() {
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>
             <h1>
-              Details
-              <NavLink to={"/users/" + data.username + "/edit"} >
-                <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
-              </NavLink>
-              <Button variant="dark" style={{ marginLeft: "5px" }} onClick={() => apikeyClick()}>Generate API Key</Button>
+              <MdOutlinePerson size="1.5em" /> User Details ({data.username})
             </h1>
-
+          </Col>
+        </Row>
+        <Row style={{marginBottom: "10px"}}>
+          <Col sm={12}>
+            <NavLink to={"/users/" + data.username + "/edit"} >
+              <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
+            </NavLink>
+            <Button variant="dark" style={{ marginLeft: "5px" }} onClick={() => apikeyClick()}><HiOutlineServerStack size="1.3em"/> Generate API Key</Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
             <ListGroup>
               <ListGroup.Item><b>Id:</b> {data.id}</ListGroup.Item>
               <ListGroup.Item><b>Username:</b> {data.username}</ListGroup.Item>

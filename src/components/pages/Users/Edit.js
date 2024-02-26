@@ -94,7 +94,7 @@ function Edit() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Edit User {username}</h1>
+        <h1>Edit User ({username})</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridUserName">
