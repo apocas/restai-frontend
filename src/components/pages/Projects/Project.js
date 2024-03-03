@@ -6,6 +6,7 @@ import ReactJson from '@microlink/react-json-view';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { WithContext as ReactTags } from 'react-tag-input';
+import Card from 'react-bootstrap/Card';
 import { toast } from 'react-toastify';
 import { MdOutlineImage, MdOutlineChat, MdInfoOutline, MdOutlineDelete, MdOutlineCheck } from "react-icons/md";
 import { FaRegPaperPlane } from "react-icons/fa";
@@ -41,6 +42,11 @@ function Project() {
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
   const [show, setShow] = useState(false);
+  const [showRoute, setShowRoute] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const routeProjectForm = useRef(null)
+  const routeNameForm = useRef(null)
+  const routeDescriptionForm = useRef(null)
 
   const Link = ({ id, children, title }) => (
     <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
@@ -51,8 +57,60 @@ function Project() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const handleCloseRoute = () => setShowRoute(false);
+  const handleShowRoute = () => setShowRoute(true);
+
   const handleCreate = () => {
     onSubmitHandler();
+  }
+
+  const deleteRouteClick = (routeName) => {
+    if (window.confirm("Delete " + routeName + "?")) {
+      data.entrances = data.entrances.filter((entrance) => entrance.name !== routeName);
+      saveEntrances();
+    }
+  }
+
+
+  const handleCreateEntrance = () => {
+    data.entrances.push({
+      "name": routeNameForm.current.value,
+      "description": routeDescriptionForm.current.value,
+      "destination": routeProjectForm.current.value
+    });
+    saveEntrances();
+  }
+
+  const saveEntrances = () => {
+    if (canSubmit) {
+      setCanSubmit(false);
+      var opts = {
+        "entrances": data.entrances
+      }
+
+      fetch(url + "/projects/" + projectName, {
+        method: 'PATCH',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
+        body: JSON.stringify(opts),
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              toast.error(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
+        .then(() => {
+          setCanSubmit(true);
+          window.location.href = "/admin/projects/" + projectName;
+        }).catch(err => {
+          setCanSubmit(true);
+          toast.error(err.toString());
+        });
+    }
   }
 
   const showResponse = (uploadResponse) => {
@@ -61,6 +119,16 @@ function Project() {
 
     var details = uploadResponse.chunks + " chunks created. With K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.";
     toast.success(details);
+  }
+
+  const fetchProjects = () => {
+    return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
+      .then((res) => res.json())
+      .then((d) => setProjects(d)
+      ).catch(err => {
+        console.log(err.toString())
+        toast.error("Error fetching projects");
+      });
   }
 
   const onSubmitSearchHandler = (event) => {
@@ -388,6 +456,7 @@ function Project() {
 
   useEffect(() => {
     fetchEmbeddings(projectName);
+    fetchProjects();
   }, [data])
 
   return (
@@ -398,7 +467,7 @@ function Project() {
             <h1><PiMagnifyingGlassPlus size="1.2em" /> Project Details ({data.name})</h1>
           </Col>
         </Row>
-        <Row style={{marginBottom: "10px"}}>
+        <Row style={{ marginBottom: "10px" }}>
           <Col sm={6} style={{ textAlign: "left" }}>
             <NavLink
               to={"/projects/" + data.name + "/edit"}
@@ -408,10 +477,23 @@ function Project() {
             <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}><MdOutlineDelete size="1.3em" /> Delete</Button>
           </Col>
           <Col sm={6} style={{ textAlign: "right" }}>
+            {data.type === "router" &&
+              <Button variant="primary" onClick={handleShowRoute}>
+                <PiFileArrowUpLight size="1.3em" /> Add Route
+              </Button>
+            }
             {data.type === "rag" &&
               <Button variant="primary" onClick={handleShow}>
                 <PiFileArrowUpLight size="1.3em" /> Ingest Data
               </Button>
+            }
+            {data.type === "router" &&
+              < NavLink
+                to={"/projects/" + data.name + "/multimodal"}
+                style={{ marginLeft: "5px" }}
+              >
+                <Button variant="success"><MdOutlineImage size="1.3em" /> Multimodal</Button>
+              </NavLink>
             }
             {data.type === "vision" &&
               < NavLink
@@ -504,6 +586,32 @@ function Project() {
             </ListGroup>
           </Col>
         </Row>
+        {data.type === "router" &&
+          <Row style={{ marginTop: "20px" }}>
+            <hr />
+            <h1>Routes<Link title="Ingested files and URLs"><MdInfoOutline size="1.4em" /></Link></h1>
+            {
+              data.entrances.map((entrance, index) => {
+                return (
+                  <Card style={{ width: '25rem', paddingLeft: '0px', paddingRight: '0px', marginLeft: '5px', marginTop: '5px' }}>
+                    <Card.Header><b>Name: {entrance.name}</b></Card.Header>
+                    <Card.Body>
+                      <Card.Text>
+                        {entrance.description}
+                      </Card.Text>
+                    </Card.Body>
+                    <ListGroup className="list-group-flush">
+                      <ListGroup.Item><b>Destination:</b> {entrance.destination}</ListGroup.Item>
+                    </ListGroup>
+                    <Card.Footer className="text-muted">
+                      <Button onClick={() => deleteRouteClick(entrance.name)} variant="danger" style={{ marginLeft: '5px' }}>Delete</Button>
+                    </Card.Footer>
+                  </Card>
+                )
+              })
+            }
+          </Row>
+        }
         {data.type === "rag" &&
           <Row style={{ marginTop: "20px" }}>
             <hr />
@@ -742,6 +850,55 @@ function Project() {
           <Button variant="primary" onClick={handleCreate}>
             {
               canSubmit ? <span>Send</span> : <Spinner animation="border" />
+            }
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
+      <Modal show={showRoute} onHide={handleCloseRoute}>
+        <Modal.Header closeButton>
+          <Modal.Title><PiFileArrowUpLight size="1.3em" /> Add route</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row className="mb-3">
+            <Form.Group as={Row} className="mb-3" controlId="formGridProjectName">
+              <Form.Label column sm={4}>Name</Form.Label>
+              <Col sm={8}>
+                <Form.Control ref={routeNameForm} />
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formGridProjectName">
+              <Form.Label column sm={4}>Description</Form.Label>
+              <Col sm={8}>
+                <Form.Control rows="4" as="textarea" ref={routeDescriptionForm} />
+                <Button variant="link" onClick={function () { routeDescriptionForm.current.value = "this question is about everything else not mentioned on the other choices" }}>Default Route</Button>
+              </Col>
+            </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="formGridProjectName">
+              <Form.Label column sm={4}>Destination</Form.Label>
+              <Col sm={8}>
+                <Form.Select ref={routeProjectForm} defaultValue="">
+                  <option>Choose...</option>
+                  {
+                    projects.map((project, index) => {
+                      return (
+                        <option key={index}>{project.name}</option>
+                      )
+                    })
+                  }
+                </Form.Select>
+              </Col>
+            </Form.Group>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseRoute}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCreateEntrance}>
+            {
+              canSubmit ? <span>Create</span> : <Spinner animation="border" />
             }
           </Button>
         </Modal.Footer>

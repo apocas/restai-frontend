@@ -228,7 +228,7 @@ function Projects() {
               <Form.Select ref={typeFilter} onChange={handleFilterChange} defaultValue="All">
                 <option>All</option>
                 {
-                  ["rag", "ragsql", "vision", "inference"].map((type, index) => {
+                  ["rag", "ragsql", "vision", "inference", "router"].map((type, index) => {
                     return (
                       <option key={index}>{type}</option>
                     )
@@ -346,11 +346,18 @@ function Projects() {
                                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
                               </NavLink>
                             }
-                            {project.type === "inference" &&
+                            {(project.type === "inference") &&
                               <NavLink
                                 to={"/projects/" + project.name + "/inference"}
                               >
                                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                              </NavLink>
+                            }
+                            {(project.type === "router") &&
+                              <NavLink
+                                to={"/projects/" + project.name + "/multimodal"}
+                              >
+                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Multimodal</Button>{' '}
                               </NavLink>
                             }
                           </Col>

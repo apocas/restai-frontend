@@ -154,7 +154,7 @@ function Edit() {
   }, [info]);
 
   useEffect(() => {
-    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
+    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "router") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
     } else if (data.type === "vision") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));

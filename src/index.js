@@ -9,6 +9,7 @@ import Chat from './components/pages/Projects/Chat.js';
 import Question from './components/pages/Projects/Question.js';
 import QuestionSQL from './components/pages/Projects/QuestionSQL.js';
 import Vision from './components/pages/Projects/Vision.js';
+import Multimodal from './components/pages/Projects/Multimodal.js';
 import Inference from './components/pages/Projects/Inference.js';
 import Users from './components/pages/Users/Users.js';
 import User from './components/pages/Users/User.js';
@@ -46,6 +47,7 @@ function Root() {
               <Route path={`/projects/:projectName/chat`} element={<Chat />} />
               <Route path={`/projects/:projectName/vision`} element={<Vision />} />
               <Route path={`/projects/:projectName/inference`} element={<Inference />} />
+              <Route path={`/projects/:projectName/multimodal`} element={<Multimodal />} />
               <Route path={`/users`} element={<Users />} />
               <Route path={`/users/:username`} element={<User />} />
               <Route path={`/users/:username/edit`} element={<UsersEdit />} />
