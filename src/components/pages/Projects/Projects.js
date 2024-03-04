@@ -394,6 +394,7 @@ function Projects() {
                     <option key="ragsql">ragsql</option>
                     <option key="inference">inference</option>
                     <option key="vision">vision</option>
+                    <option key="router">router</option>
                   </Form.Select>
                 </Col>
               </Form.Group>
