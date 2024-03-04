@@ -183,7 +183,7 @@ function Projects() {
   const typeChange = () => {
     var type = typeForm.current.value;
     setType(type);
-    if (type === "rag" || type === "inference" || type === "ragsql") {
+    if (type === "rag" || type === "inference" || type === "ragsql" || type === "router") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
 
     } else if (type === "vision") {
