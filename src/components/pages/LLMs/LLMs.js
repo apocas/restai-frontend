@@ -111,109 +111,107 @@ function LLMs() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <Row>
-          <h1><PiBrain size="1.3em" /> LLMs</h1>
-          <Row style={{ marginBottom: "10px" }}>
-            <Col sm={3}>
-              <Form.Group as={Col} controlId="formGridLLM">
-                <Form.Label>Privacy</Form.Label>
-                <Form.Select ref={privacyFilter} onChange={handleFilterChange} defaultValue="All">
-                  <option>All</option>
-                  {
-                    ["public", "private"].map((type, index) => {
-                      return (
-                        <option key={index}>{type}</option>
-                      )
-                    })
-                  }
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
-              <Button variant="primary" onClick={handleShow}>
-                <FiPlus size="1.3em" /> New LLM
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Class</th>
-                  <th>Privacy</th>
-                  <th>Type</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+        <h1><PiBrain size="1.3em" /> LLMs</h1>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col sm={3}>
+            <Form.Group as={Col} controlId="formGridLLM">
+              <Form.Label>Privacy</Form.Label>
+              <Form.Select ref={privacyFilter} onChange={handleFilterChange} defaultValue="All">
+                <option>All</option>
                 {
-                  displayData.map((llm, index) => {
+                  ["public", "private"].map((type, index) => {
                     return (
-                      <tr key={index}>
-                        <td>
-                          <NavLink
-                            to={"/llms/" + llm.username}
-                          >
-                            {llm.name}
-                          </NavLink>
-                        </td>
-                        <td>
-                          {llm.class_name}
-                        </td>
-                        <td>
-                          {
-                            (() => {
-                              switch (llm.privacy) {
-                                case 'public':
-                                  return <Badge bg="danger">{llm.privacy}</Badge>;
-                                case 'private':
-                                  return <Badge bg="success">{llm.privacy}</Badge>;
-                                default:
-                                  return <Badge bg="dark">{llm.privacy}</Badge>;
-                              }
-                            })()
-                          }
-                        </td>
-                        <td>
-                          {
-                            (() => {
-                              switch (llm.type) {
-                                case 'chat':
-                                  return <Badge bg="primary">{llm.type}</Badge>;
-                                case 'qa':
-                                  return <Badge bg="secondary">{llm.type}</Badge>;
-                                case 'vision':
-                                  return <Badge bg="success">{llm.type}</Badge>;
-                                default:
-                                  return <Badge bg="dark">{llm.type}</Badge>;
-                              }
-                            })()
-                          }
-                        </td>
-                        <td>
-                          <Row>
-                            <Col sm={6} style={{ textAlign: "left" }}>
-                              <NavLink
-                                to={"/llms/" + llm.name}
-                              >
-                                <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
-                              </NavLink>
-                            </Col>
-                            {user.admin &&
-                              <Col sm={6} style={{ textAlign: "right" }}>
-                                <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
-                              </Col>
-                            }
-                          </Row>
-                        </td>
-                      </tr>
+                      <option key={index}>{type}</option>
                     )
                   })
                 }
-              </tbody>
-            </Table>
-          </Row>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
+            <Button variant="primary" onClick={handleShow}>
+              <FiPlus size="1.3em" /> New LLM
+            </Button>
+          </Col>
+        </Row>
+        <Row>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Privacy</th>
+                <th>Type</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                displayData.map((llm, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <NavLink
+                          to={"/llms/" + llm.username}
+                        >
+                          {llm.name}
+                        </NavLink>
+                      </td>
+                      <td>
+                        {llm.class_name}
+                      </td>
+                      <td>
+                        {
+                          (() => {
+                            switch (llm.privacy) {
+                              case 'public':
+                                return <Badge bg="danger">{llm.privacy}</Badge>;
+                              case 'private':
+                                return <Badge bg="success">{llm.privacy}</Badge>;
+                              default:
+                                return <Badge bg="dark">{llm.privacy}</Badge>;
+                            }
+                          })()
+                        }
+                      </td>
+                      <td>
+                        {
+                          (() => {
+                            switch (llm.type) {
+                              case 'chat':
+                                return <Badge bg="primary">{llm.type}</Badge>;
+                              case 'qa':
+                                return <Badge bg="secondary">{llm.type}</Badge>;
+                              case 'vision':
+                                return <Badge bg="success">{llm.type}</Badge>;
+                              default:
+                                return <Badge bg="dark">{llm.type}</Badge>;
+                            }
+                          })()
+                        }
+                      </td>
+                      <td>
+                        <Row>
+                          <Col sm={6} style={{ textAlign: "left" }}>
+                            <NavLink
+                              to={"/llms/" + llm.name}
+                            >
+                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
+                            </NavLink>
+                          </Col>
+                          {user.admin &&
+                            <Col sm={6} style={{ textAlign: "right" }}>
+                              <Button onClick={() => handleDeleteClick(llm.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                            </Col>
+                          }
+                        </Row>
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </Table>
         </Row>
       </Container>
 

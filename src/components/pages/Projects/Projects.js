@@ -301,8 +301,11 @@ function Projects() {
                               {users[project.name].length === 1 && users[project.name][0] === user.username && (
                                 <AiOutlineCrown size="1.5em" />
                               )}
-                              {(users[project.name].length !== 1 || (users[project.name].length === 1 && users[project.name][0] !== user.username)) && (
+                              {(users[project.name].length > 1 || (users[project.name].length === 1 && users[project.name][0] !== user.username)) && (
                                 <Badge bg="secondary">{users[project.name].length}</Badge>
+                              )}
+                              {users[project.name].length === 0 && (
+                                <Badge bg="danger">{users[project.name].length}</Badge>
                               )}
                             </Link>
                           )}

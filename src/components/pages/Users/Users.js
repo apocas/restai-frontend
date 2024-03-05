@@ -98,82 +98,80 @@ function Users() {
   return user.admin ? (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <Row>
-          <h1><PiUsersThree size="1.3em" /> Users</h1>
-          <Row style={{ marginBottom: "10px" }}>
-            <Col sm={3}>
-              <Form.Group as={Col} controlId="formGridLLM">
-                <Form.Label>Auth</Form.Label>
-                <Form.Select ref={authFilter} onChange={handleFilterChange} defaultValue="All">
-                  <option>All</option>
-                  {
-                    ["Local", "SSO"].map((type, index) => {
-                      return (
-                        <option key={index}>{type}</option>
-                      )
-                    })
-                  }
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
-              <Button variant="primary" onClick={handleShow}>
-                <PiUserPlus size="1.3em" /> New User
-              </Button>
-            </Col>
-          </Row>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Username</th>
-                <th>Auth</th>
-                <th>Permissions</th>
-                <th>Projects</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                displayData.map((user, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>
-                        <NavLink
-                          to={"/users/" + user.username}
-                        >
-                          {user.username}
-                        </NavLink>
-                      </td>
-                      <td>
-                        {user.sso ? "SSO" : "Local"}
-                      </td>
-                      <td>
-                        {user.is_admin ? "Admin" : "User"}
-                      </td>
-                      <td>
-                        {user.projects.length}
-                      </td>
-                      <td>
-                        <Row>
-                          <Col sm={6} style={{ textAlign: "left" }}>
-                            <NavLink
-                              to={"/users/" + user.username}
-                            >
-                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
-                            </NavLink>
-                          </Col>
-                          <Col sm={6} style={{ textAlign: "right" }}>
-                            <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
-                          </Col>
-                        </Row>
-                      </td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </Table>
+        <h1><PiUsersThree size="1.3em" /> Users</h1>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col sm={3}>
+            <Form.Group as={Col} controlId="formGridLLM">
+              <Form.Label>Auth</Form.Label>
+              <Form.Select ref={authFilter} onChange={handleFilterChange} defaultValue="All">
+                <option>All</option>
+                {
+                  ["Local", "SSO"].map((type, index) => {
+                    return (
+                      <option key={index}>{type}</option>
+                    )
+                  })
+                }
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col sm={9} style={{ paddingTop: "32px", textAlign: "right" }}>
+            <Button variant="primary" onClick={handleShow}>
+              <PiUserPlus size="1.3em" /> New User
+            </Button>
+          </Col>
         </Row>
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Auth</th>
+              <th>Permissions</th>
+              <th>Projects</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              displayData.map((user, index) => {
+                return (
+                  <tr key={index}>
+                    <td>
+                      <NavLink
+                        to={"/users/" + user.username}
+                      >
+                        {user.username}
+                      </NavLink>
+                    </td>
+                    <td>
+                      {user.sso ? "SSO" : "Local"}
+                    </td>
+                    <td>
+                      {user.is_admin ? "Admin" : "User"}
+                    </td>
+                    <td>
+                      {user.projects.length}
+                    </td>
+                    <td>
+                      <Row>
+                        <Col sm={6} style={{ textAlign: "left" }}>
+                          <NavLink
+                            to={"/users/" + user.username}
+                          >
+                            <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
+                          </NavLink>
+                        </Col>
+                        <Col sm={6} style={{ textAlign: "right" }}>
+                          <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                        </Col>
+                      </Row>
+                    </td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </Table>
       </Container>
 
       <Modal show={show} onHide={handleClose}>

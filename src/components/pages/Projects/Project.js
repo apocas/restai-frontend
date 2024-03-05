@@ -469,12 +469,12 @@ function Project() {
         </Row>
         <Row style={{ marginBottom: "10px" }}>
           <Col sm={6} style={{ textAlign: "left" }}>
+            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
             <NavLink
               to={"/projects/" + data.name + "/edit"}
             >
-              <Button variant="dark"><PiPencilLight size="1.3em" /> Edit</Button>
+              <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
             </NavLink>
-            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger" style={{ marginLeft: "5px" }}><MdOutlineDelete size="1.3em" /> Delete</Button>
           </Col>
           <Col sm={6} style={{ textAlign: "right" }}>
             {data.type === "router" &&
@@ -872,7 +872,7 @@ function Project() {
               <Form.Label column sm={4}>Description</Form.Label>
               <Col sm={8}>
                 <Form.Control rows="4" as="textarea" ref={routeDescriptionForm} />
-                <Button variant="link" onClick={function () { routeDescriptionForm.current.value = "this question is about everything else not mentioned on the other choices" }}>Default Route</Button>
+                <Button variant="link" onClick={function () { routeDescriptionForm.current.value = "This question is about everything else not mentioned on the other choices" }}>Default Route</Button>
               </Col>
             </Form.Group>
             <Form.Group as={Row} className="mb-3" controlId="formGridProjectName">
