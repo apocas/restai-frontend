@@ -159,12 +159,11 @@ function Project() {
         }
       })
       .then((response) => {
-        clearButton();
+        setChunk(null);
         if (response.embeddings.length === 0) {
           toast.warning("No embeddings found for this query. Decrease the score cutoff parameter.");
-        } else {
-          setChunks(response.embeddings);
-        }
+        } 
+        setChunks(response.embeddings);
       }).catch(err => {
         toast.error(err.toString());
       });
