@@ -1,4 +1,4 @@
-import { Container, Table, Row, Form, Col, Button, ListGroup, Alert, Badge, Tab, Tabs, Spinner } from 'react-bootstrap';
+import { Container, Table, Row, Form, Col, Button, ListGroup, Badge, Tab, Tabs, Spinner } from 'react-bootstrap';
 import { NavLink, useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
@@ -159,7 +159,12 @@ function Project() {
         }
       })
       .then((response) => {
-        setChunks(response.embeddings)
+        clearButton();
+        if (response.embeddings.length === 0) {
+          toast.warning("No embeddings found for this query. Decrease the score cutoff parameter.");
+        } else {
+          setChunks(response.embeddings);
+        }
       }).catch(err => {
         toast.error(err.toString());
       });
