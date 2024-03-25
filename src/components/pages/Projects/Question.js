@@ -9,6 +9,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { toast } from 'react-toastify';
 import { MdInfoOutline } from "react-icons/md";
+import { Rating } from '@smastrom/react-rating'
+import '@smastrom/react-rating/style.css'
 
 function Question() {
 
@@ -25,6 +27,7 @@ function Question() {
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
   const isStream = useRef(null)
+  const isEval = useRef(null)
   const isColbertRerank = useRef(null)
   const isLLMRerank = useRef(null)
   const [answert, setAnswert] = useState([]);
@@ -57,8 +60,21 @@ function Question() {
   }
 
   const onSubmitHandler = (event) => {
+    if (event)
+      event.preventDefault();
+
     if (data.chunks === 0) {
       toast.error('No data. Ingest some data first.');
+      return;
+    }
+
+    if (isEval.current.checked && isStream.current.checked) {
+      toast.error('Evaluate and Stream cannot be used together for now.');
+      return;
+    }
+
+    if (isColbertRerank.current.checked && isLLMRerank.current.checked) {
+      toast.error('Colbert Rerank and LLM Rerank cannot be used together for now.');
       return;
     }
 
@@ -76,19 +92,21 @@ function Question() {
     var score = parseFloat(scoreForm.current.value);
     var colbert_rerank = isColbertRerank.current.checked;
     var llm_rerank = isLLMRerank.current.checked;
+    var llm_eval = isEval.current.checked;
 
     var body = {
       "question": question,
       "k": k,
       "score": score,
       "colbert_rerank": colbert_rerank,
-      "llm_rerank": llm_rerank
+      "llm_rerank": llm_rerank,
+      "eval": llm_eval,
     }
 
     if (system !== "" && question !== "") {
-      body.systems = system;
+      body.system = system;
     }
-    
+
     return body;
   }
 
@@ -170,7 +188,7 @@ function Question() {
           }
         })
         .then((response) => {
-          setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources }]);
+          setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources, evaluation: response.evaluation }]);
           questionForm.current.value = "";
           setCanSubmit(true);
           if (response.sources.length === 0) {
@@ -243,7 +261,7 @@ function Question() {
     if (answert[answert.length - 1] === "RESTAICLOSED") {
       answert.pop()
       var info = JSON.parse(answert.pop());
-      setAnswers([...answers, { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources }]);
+      setAnswers([...answers, { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources, evaluation: info.evaluation }]);
       setAnswert([]);
       questionForm.current.value = "";
       setCanSubmit(true);
@@ -298,17 +316,31 @@ function Question() {
                               🧑<span className='highlight'>QUESTION:</span> {answer.question} <br />
                               🤖<span className='highlight'>ANSWER:</span> {(answer.answer == null ? <Spinner animation="grow" size="sm" /> : answer.answer)}
                             </div>
-                            <div style={{ marginBottom: "0px" }}>
-                              <Accordion>
+
+                            {answer.evaluation != null && answer.evaluation !== undefined &&
+                              <div>
+                                <hr style={{ borderStyle: "dashed" }} />
                                 <div style={{ textAlign: "right", marginBottom: "0px" }}>
-                                  <CustomToggle title="Details" eventKey="0" >🔎</CustomToggle>
-                                  <span title="Repeat" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => repeatClick(answer)}>🔁</span>
+                                  <Rating value={(answer.evaluation.score * 5) / 1} style={{ maxWidth: 100 }} readOnly />
                                 </div>
-                                <Accordion.Collapse eventKey="0">
-                                  <Card.Body><ReactJson src={answer} enableClipboard={false} /></Card.Body>
-                                </Accordion.Collapse>
-                              </Accordion>
-                            </div>
+                                <div>
+                                  👮<span className='highlight'>EVALUATOR:</span> {answer.evaluation.reason}
+                                </div>
+                              </div>
+                            }
+                            {answer.answer != null &&
+                              <div style={{ marginBottom: "0px" }}>
+                                <Accordion>
+                                  <div style={{ textAlign: "right", marginBottom: "0px" }}>
+                                    <CustomToggle title="Details" eventKey="0" >🔎</CustomToggle>
+                                    <span title="Repeat" style={{ marginLeft: "10px", cursor: "pointer" }} onClick={() => repeatClick(answer)}>🔁</span>
+                                  </div>
+                                  <Accordion.Collapse eventKey="0">
+                                    <Card.Body><ReactJson src={answer} enableClipboard={false} /></Card.Body>
+                                  </Accordion.Collapse>
+                                </Accordion>
+                              </div>
+                            }
                             <hr />
                           </div>
                         )
@@ -349,7 +381,7 @@ function Question() {
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={7}>
+            <Col sm={6}>
             </Col>
             <Col sm={1}>
               <Form.Group as={Col} controlId="formGridAdmin1">
@@ -364,6 +396,11 @@ function Question() {
             <Col sm={1}>
               <Form.Group as={Col} controlId="formGridAdmin3">
                 <Form.Check ref={isStream} type="checkbox" label="Stream" />
+              </Form.Group>
+            </Col>
+            <Col sm={1}>
+              <Form.Group as={Col} controlId="formGridAdmin4">
+                <Form.Check ref={isEval} type="checkbox" label="Evaluate" />
               </Form.Group>
             </Col>
             <Col sm={2}>
