@@ -221,7 +221,7 @@ function Edit() {
             <Row className="mb-3">
               <Col sm={12}>
                 <Form.Group as={Col} controlId="formGridSystem">
-                  <Form.Label>Tables<Link title="Connection string"><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                  <Form.Label>Tables<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope. Comma separated."><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Control rows="1" as="input" ref={tablesForm} defaultValue={data.tables ? data.tables : ""} />
                 </Form.Group>
               </Col>

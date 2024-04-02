@@ -705,6 +705,7 @@ function Project() {
                           <Col sm={10}>
                             <Form.Control
                               ref={searchForm}
+                              defaultValue={"search for something..."}
                             />
                           </Col>
                           <Col sm={1}>

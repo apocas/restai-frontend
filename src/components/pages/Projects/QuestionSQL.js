@@ -57,6 +57,11 @@ function Inference() {
     if (event)
       event.preventDefault();
 
+    if (data.connection === "" || !data.connection) {
+      toast.error("Please edit the project and set the database connection.");
+      return;
+    }
+
     var question = questionForm.current.value;
 
     var body = {};
@@ -140,9 +145,9 @@ function Inference() {
         <h1>Question (SQL) - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
@@ -201,8 +206,16 @@ function Inference() {
             </Col>
           </Row>
           <Row style={{ marginTop: "20px" }}>
+            <Col sm={2}>
+              <Form.Label>Connection:<Link title="Edit the project to change it's database connection."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+            </Col>
+            <Col sm={10}>
+              {data.connection}
+            </Col>
+          </Row>
+          <Row style={{ marginTop: "20px" }}>
             <Col sm={1}>
-              <Form.Label>Tables:<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope."><MdInfoOutline size="1.4em"/></Link></Form.Label>
+              <Form.Label>Tables:<Link title="Leave empty to use all tables in context, may not fit in model's context windows. Specify tables if you want to reduce the scope."><MdInfoOutline size="1.4em" /></Link></Form.Label>
             </Col>
             <Col sm={9}>
               <ReactTags
