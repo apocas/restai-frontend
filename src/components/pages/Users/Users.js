@@ -59,8 +59,8 @@ function Users() {
     return fetch(url + "/users", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then((res) => res.json())
       .then((d) => {
-        setData(d.users)
-        setDisplayData(d.users)
+        setData(d)
+        setDisplayData(d)
       }).catch(err => {
         console.log(err.toString());
         toast.error("Error fetching users");
