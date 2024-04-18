@@ -61,8 +61,8 @@ function Projects() {
         }
       })
       .then((d) => {
-        setData(d)
-        setDisplayData(d)
+        setData(d.projects)
+        setDisplayData(d.projects)
         if (user.admin)
           fetchUsers(d);
       }

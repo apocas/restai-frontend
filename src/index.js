@@ -24,7 +24,7 @@ import AuthProvider from './components/common/AuthProvider.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import './assets/css/index.css';
 import { Container, Row, Col } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

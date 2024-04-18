@@ -34,7 +34,7 @@ function Vision() {
   const user = getBasicAuth();
 
   function sdTemplate() {
-    questionForm.current.value = "Using stable diffusion generate a picture of a happy cat."
+    questionForm.current.value = "Using stable diffusion, create an image that captures the essence of a happy cat in a whimsical and playful way. The cat should have a big, wide smile on its face, with its eyes bright and gleaming with joy. It should be in a relaxed and content pose, possibly lounging in the sun or playing with a favorite toy. The background should be colorful and vibrant, adding to the overall sense of happiness and cheerfulness in the scene. The image should evoke a sense of warmth and joy, making the viewer smile and feel uplifted. Be sure to focus on capturing the unique personality and charm of the cat, showcasing its playful and lovable nature."
   }
 
   function dalleTemplate() {

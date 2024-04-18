@@ -59,8 +59,8 @@ function Users() {
     return fetch(url + "/users", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then((res) => res.json())
       .then((d) => {
-        setData(d)
-        setDisplayData(d)
+        setData(d.users)
+        setDisplayData(d.users)
       }).catch(err => {
         console.log(err.toString());
         toast.error("Error fetching users");
@@ -121,57 +121,59 @@ function Users() {
             </Button>
           </Col>
         </Row>
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Auth</th>
-              <th>Permissions</th>
-              <th>Projects</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              displayData.map((user, index) => {
-                return (
-                  <tr key={index}>
-                    <td>
-                      <NavLink
-                        to={"/users/" + user.username}
-                      >
-                        {user.username}
-                      </NavLink>
-                    </td>
-                    <td>
-                      {user.sso ? "SSO" : "Local"}
-                    </td>
-                    <td>
-                      {user.is_admin ? "Admin" : "User"}
-                    </td>
-                    <td>
-                      {user.projects.length}
-                    </td>
-                    <td>
-                      <Row>
-                        <Col sm={6} style={{ textAlign: "left" }}>
-                          <NavLink
-                            to={"/users/" + user.username}
-                          >
-                            <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
-                          </NavLink>
-                        </Col>
-                        <Col sm={6} style={{ textAlign: "right" }}>
-                          <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
-                        </Col>
-                      </Row>
-                    </td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </Table>
+        <Row>
+          <Table striped bordered hover responsive>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Auth</th>
+                <th>Permissions</th>
+                <th>Projects</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                displayData.map((user, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <NavLink
+                          to={"/users/" + user.username}
+                        >
+                          {user.username}
+                        </NavLink>
+                      </td>
+                      <td>
+                        {user.sso ? "SSO" : "Local"}
+                      </td>
+                      <td>
+                        {user.is_admin ? "Admin" : "User"}
+                      </td>
+                      <td>
+                        {user.projects.length}
+                      </td>
+                      <td>
+                        <Row>
+                          <Col sm={6} style={{ textAlign: "left" }}>
+                            <NavLink
+                              to={"/users/" + user.username}
+                            >
+                              <Button variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> Details</Button>
+                            </NavLink>
+                          </Col>
+                          <Col sm={6} style={{ textAlign: "right" }}>
+                            <Button onClick={() => handleDeleteClick(user.username)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                          </Col>
+                        </Row>
+                      </td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </Table>
+        </Row>
       </Container>
 
       <Modal show={show} onHide={handleClose}>
