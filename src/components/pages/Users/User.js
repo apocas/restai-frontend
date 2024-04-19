@@ -41,7 +41,7 @@ function User() {
   const fetchProjects = () => {
     return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
       .then((res) => res.json())
-      .then((d) => setProjects(d)
+      .then((d) => setProjects(d.projects)
       ).catch(err => {
         console.log(err.toString())
         toast.error("Error fetching projects");
