@@ -112,7 +112,7 @@ function Projects() {
             }
           }
         }
-        setUsers(arr)
+        setUsers(arr.users)
       }
       ).catch(err => {
         toast.error(err.toString());
@@ -292,20 +292,20 @@ function Projects() {
                       {
                         user.admin &&
                         <td>
-                          {typeof users[project.name] !== "undefined" && (
-                            <Link title={users[project.name].map((user, index) => {
-                              if (users[project.name].length - 1 === index)
-                                return <NavLink key={index} to={"/users/" + user}>{user}</NavLink>
-                              return <NavLink key={index} to={"/users/" + user}>{user + ", "}</NavLink>
+                          {typeof project.users !== "undefined" && (
+                            <Link title={project.users.map((user, index) => {
+                              if (project.users.length - 1 === index)
+                                return <NavLink key={index} to={"/users/" + user.username}>{user.username}</NavLink>
+                              return <NavLink key={index} to={"/users/" + user.username}>{user.username + ", "}</NavLink>
                             })}>
-                              {users[project.name].length === 1 && users[project.name][0] === user.username && (
+                              {project.users.length === 1 && project.users[0].username === user.username && (
                                 <AiOutlineCrown size="1.5em" />
                               )}
-                              {(users[project.name].length > 1 || (users[project.name].length === 1 && users[project.name][0] !== user.username)) && (
-                                <Badge bg="secondary">{users[project.name].length}</Badge>
+                              {(project.users.length > 1 || (project.users.length === 1 && project.users[0].username !== user.username)) && (
+                                <Badge bg="secondary">{project.users.length}</Badge>
                               )}
-                              {users[project.name].length === 0 && (
-                                <Badge bg="danger">{users[project.name].length}</Badge>
+                              {project.users.length === 0 && (
+                                <Badge bg="danger">{project.users.length}</Badge>
                               )}
                             </Link>
                           )}
