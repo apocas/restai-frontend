@@ -188,7 +188,11 @@ function Question() {
           }
         })
         .then((response) => {
-          setAnswers([...answers, { question: question, answer: response.answer, sources: response.sources, evaluation: response.evaluation }]);
+          var aux = { question: question, answer: response.answer, sources: response.sources, cached: response.cached }
+          if(response.evaluation != null && response.evaluation !== undefined){
+            aux.evaluation = response.evaluation;
+          }
+          setAnswers([...answers, aux]);
           questionForm.current.value = "";
           setCanSubmit(true);
           if (response.sources.length === 0) {
@@ -261,7 +265,11 @@ function Question() {
     if (answert[answert.length - 1] === "RESTAICLOSED") {
       answert.pop()
       var info = JSON.parse(answert.pop());
-      setAnswers([...answers, { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources, evaluation: info.evaluation }]);
+      var aux = { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources, cached: info.cached }
+      if(info.evaluation != null && info.evaluation !== undefined){
+        aux.evaluation = info.evaluation;
+      }
+      setAnswers([...answers, aux]);
       setAnswert([]);
       questionForm.current.value = "";
       setCanSubmit(true);

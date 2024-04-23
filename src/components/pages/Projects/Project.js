@@ -587,6 +587,9 @@ function Project() {
               {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
               }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>Cache:</b> {data.cache ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}({data.cache_threshold})</ListGroup.Item>
+              }
             </ListGroup>
           </Col>
         </Row>
@@ -827,8 +830,8 @@ function Project() {
               </Col>
               <Col sm={6}>
                 <Form.Select ref={splitterForm}>
-                  <option value="sentence">sentence</option>
                   <option value="token">token</option>
+                  <option value="sentence">sentence</option>
                 </Form.Select>
               </Col>
             </Row>
@@ -837,7 +840,7 @@ function Project() {
                 <Form.Label>Chunk Size</Form.Label>
               </Col>
               <Col sm={6}>
-                <Form.Select ref={chunksForm} defaultValue={512}>
+                <Form.Select ref={chunksForm} defaultValue={1024}>
                   <option value="128">128</option>
                   <option value="256">256</option>
                   <option value="512">512</option>

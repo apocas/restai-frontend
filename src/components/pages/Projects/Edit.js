@@ -23,6 +23,8 @@ function Edit() {
   const censorshipForm = useRef(null)
   const llmForm = useRef(null)
   const colbertRerankForm = useRef(null)
+  const cacheForm = useRef(null)
+  const cache_thresholdForm = useRef(null)
   const llmRerankForm = useRef(null)
   var { projectName } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
@@ -115,6 +117,8 @@ function Edit() {
       opts.censorship = censorshipForm.current.value
       opts.score = parseFloat(scoreForm.current.value)
       opts.k = parseInt(kForm.current.value)
+      opts.cache = cacheForm.current.checked
+      opts.cache_threshold = parseFloat(cache_thresholdForm.current.value)
 
       if (opts.censorship.trim() === "") {
         delete opts.censorship;
@@ -165,6 +169,9 @@ function Edit() {
     }
     if (data.type === "rag" && data.colbert_rerank) {
       colbertRerankForm.current.checked = true;
+    }
+    if (data.type === "rag" && data.cache) {
+      cacheForm.current.checked = true;
     }
   }, [data]);
 
@@ -257,7 +264,7 @@ function Edit() {
           }
 
           {data.type === "rag" &&
-            <Row>
+            <Row className="mb-3">
               <Col sm={6}>
                 <InputGroup>
                   <InputGroup.Text>Score Threshold<Link title="Minimum score acceptable to match with ingested knowledge (embeddings)"><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
@@ -271,6 +278,25 @@ function Edit() {
                 </InputGroup>
               </Col>
             </Row>
+          }
+          {data.type === "rag" &&
+            <Row className="mb-3">
+            <hr />
+            <Col sm={6}>
+                <Col sm={2}>
+                  <Form.Check ref={cacheForm} type="checkbox" label="Cache" />
+                </Col>
+                <Col sm={2}>
+                  <Link title="Cache"><MdInfoOutline size="1.4em" /></Link>
+                </Col>
+            </Col>
+            <Col sm={6}>
+              <InputGroup>
+                <InputGroup.Text>Cache threshold<Link title="Cache similiarity threshold."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
+                <Form.Control ref={cache_thresholdForm} defaultValue={data.cache_threshold} />
+              </InputGroup>
+            </Col>
+          </Row>
           }
           <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}><AiOutlineSave size="1.3em" /> Save</Button>
         </Form>
