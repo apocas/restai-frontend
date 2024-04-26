@@ -555,7 +555,7 @@ function Project() {
               <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
 
               {(data.type === "inference" || data.type === "rag" || data.type === "ragsql") &&
-                <ListGroup.Item><b>System:</b> {data.system}</ListGroup.Item>
+                <ListGroup.Item><b>System:</b> <span style={{whiteSpace: "pre-line"}}>{data.system}</span></ListGroup.Item>
               }
               {data.type === "ragsql" &&
                 <ListGroup.Item><b>Connection:</b> {data.connection}</ListGroup.Item>
