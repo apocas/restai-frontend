@@ -515,7 +515,7 @@ function Project() {
                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
               </NavLink>
             }
-            {data.type === "rag" && data.llm_type === "chat" &&
+            {data.type === "rag" &&
               <NavLink
                 to={"/projects/" + data.name + "/chat"}
                 style={{ marginLeft: "5px" }}

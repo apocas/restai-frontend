@@ -328,7 +328,7 @@ function Projects() {
                                 <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
                               </NavLink>
                             }
-                            {project.type === "rag" && project.llm_type === "chat" &&
+                            {project.type === "rag" &&
                               <NavLink
                                 to={"/projects/" + project.name + "/chat"}
                               >
