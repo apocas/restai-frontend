@@ -39,6 +39,7 @@ function Project() {
   const splitterForm = useRef(null)
   const chunksForm = useRef(null)
   const searchForm = useRef(null)
+  const guardForm = useRef(null)
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
   const [show, setShow] = useState(false);
@@ -586,6 +587,9 @@ function Project() {
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
+              }
+              {data.type === "rag" &&
+                <ListGroup.Item><b>Guardian:</b> {data.guard}</ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Cache:</b> {data.cache ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}({data.cache_threshold})</ListGroup.Item>
