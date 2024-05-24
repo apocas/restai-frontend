@@ -26,6 +26,8 @@ function Edit() {
   const cacheForm = useRef(null)
   const cache_thresholdForm = useRef(null)
   const guardForm = useRef(null)
+  const hnameForm = useRef(null)
+  const hdescriptionForm = useRef(null)
   const llmRerankForm = useRef(null)
   var { projectName } = useParams();
   const { getBasicAuth } = useContext(AuthContext);
@@ -100,7 +102,9 @@ function Edit() {
 
     var opts = {
       "name": projectName,
-      "llm": llmForm.current.value
+      "llm": llmForm.current.value,
+      "human_description": hdescriptionForm.current.value,
+      "human_name": hnameForm.current.value
     }
 
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
@@ -188,6 +192,20 @@ function Edit() {
         <h1>Edit Project ({projectName})</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row className="mb-3">
+            <Col sm={12}>
+              <InputGroup>
+                <InputGroup.Text>Name</InputGroup.Text>
+                <Form.Control ref={hnameForm} defaultValue={data.human_name ? data.human_name : ""} />
+              </InputGroup>
+            </Col>
+          </Row>
+          <Row className="mb-3">
+            <Col sm={8}>
+              <Form.Label>Description</Form.Label>
+              <Form.Control rows="2" as="textarea" ref={hdescriptionForm} defaultValue={data.human_description ? data.human_description : ""} />
+            </Col>
+          </Row>
+          <Row className="mb-3">
             <Form.Group as={Col} controlId="formGridLLM">
               <Form.Label>LLM</Form.Label>
               <Form.Select ref={llmForm}>
@@ -262,13 +280,13 @@ function Edit() {
                 </Col>
               </Row>
               <Row className="mb-3">
-              <Col sm={12}>
-                <InputGroup>
-                  <InputGroup.Text>Guardian<Link title="Project's name that should be used for prompt guard, should return GOOD or BAD only."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
-                  <Form.Control ref={guardForm} defaultValue={data.guard} />
-                </InputGroup>
-              </Col>
-            </Row>
+                <Col sm={12}>
+                  <InputGroup>
+                    <InputGroup.Text>Guardian<Link title="Project's name that should be used for prompt guard, should return GOOD or BAD only."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
+                    <Form.Control ref={guardForm} defaultValue={data.guard} />
+                  </InputGroup>
+                </Col>
+              </Row>
               <hr />
             </Form.Group>
           }
@@ -291,22 +309,22 @@ function Edit() {
           }
           {data.type === "rag" &&
             <Row className="mb-3">
-            <hr />
-            <Col sm={6}>
+              <hr />
+              <Col sm={6}>
                 <Col sm={2}>
                   <Form.Check ref={cacheForm} type="checkbox" label="Cache" />
                 </Col>
                 <Col sm={2}>
                   <Link title="Cache"><MdInfoOutline size="1.4em" /></Link>
                 </Col>
-            </Col>
-            <Col sm={6}>
-              <InputGroup>
-                <InputGroup.Text>Cache threshold<Link title="Cache similiarity threshold."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
-                <Form.Control ref={cache_thresholdForm} defaultValue={data.cache_threshold} />
-              </InputGroup>
-            </Col>
-          </Row>
+              </Col>
+              <Col sm={6}>
+                <InputGroup>
+                  <InputGroup.Text>Cache threshold<Link title="Cache similiarity threshold."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
+                  <Form.Control ref={cache_thresholdForm} defaultValue={data.cache_threshold} />
+                </InputGroup>
+              </Col>
+            </Row>
           }
           <Button variant="dark" type="submit" className="mb-2" style={{ marginTop: "20px" }}><AiOutlineSave size="1.3em" /> Save</Button>
         </Form>

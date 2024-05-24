@@ -39,7 +39,6 @@ function Project() {
   const splitterForm = useRef(null)
   const chunksForm = useRef(null)
   const searchForm = useRef(null)
-  const guardForm = useRef(null)
   const kSearchForm = useRef(null)
   const thresholdSearchForm = useRef(null)
   const [show, setShow] = useState(false);
@@ -554,6 +553,8 @@ function Project() {
               </ListGroup.Item>
               <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
               <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
+              <ListGroup.Item><b>Name:</b> {data.human_name}</ListGroup.Item>
+              <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>
 
               {(data.type === "inference" || data.type === "rag" || data.type === "ragsql") &&
                 <ListGroup.Item><b>System:</b> <span style={{whiteSpace: "pre-line"}}>{data.system}</span></ListGroup.Item>
