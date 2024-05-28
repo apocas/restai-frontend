@@ -216,8 +216,8 @@ function Edit() {
           {(data.type === "rag" || data.type === "inference" || data.type === "ragsql") &&
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridSystem">
-                <Form.Label>System Message<Link title="Instructions for the LLM know how to behave"><MdInfoOutline size="1.4em" /></Link></Form.Label>
-                <Form.Control rows="2" as="textarea" ref={systemForm} defaultValue={data.system ? data.system : ""} />
+                <Form.Label>System Message<Link title="LLM System message. How the LLM should behave."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                <Form.Control rows="10" as="textarea" ref={systemForm} defaultValue={data.system ? data.system : ""} />
               </Form.Group>
               <hr style={{ marginTop: "20px" }} />
             </Row>
