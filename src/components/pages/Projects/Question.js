@@ -188,15 +188,17 @@ function Question() {
           }
         })
         .then((response) => {
-          var aux = { question: question, answer: response.answer, sources: response.sources, cached: response.cached }
+          var aux = { question: question, answer: response.answer, sources: response.sources, cached: response.cached, guard: response.guard }
           if(response.evaluation != null && response.evaluation !== undefined){
             aux.evaluation = response.evaluation;
           }
           setAnswers([...answers, aux]);
           questionForm.current.value = "";
           setCanSubmit(true);
-          if (response.sources.length === 0) {
-            toast.warning('No sources found for this question. Decrease the score cutoff parameter.');
+          if (response.guard === true) {
+            toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000 , position: 'top-right' });
+          } else if (response.sources.length === 0) {
+            toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
           }
         }).catch(err => {
           toast.error(err.toString());
@@ -273,8 +275,10 @@ function Question() {
       setAnswert([]);
       questionForm.current.value = "";
       setCanSubmit(true);
-      if (info.sources.length === 0) {
-        toast.warning('No sources found for this question. Decrease the score cutoff parameter.');
+      if (info.guard === true) {
+        toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000 , position: 'top-right' });
+      } else if (info.sources.length === 0) {
+        toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
       }
     }
   }, [answert]);
