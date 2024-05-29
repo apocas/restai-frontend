@@ -117,7 +117,7 @@ function Project() {
     var perc = parseFloat((data.k * 100) / uploadResponse.chunks).toFixed(1);
     if (perc > 100) perc = 100;
 
-    var details = uploadResponse.chunks + " chunks created. With K value of " + data.k + ", a maximum of " + perc + "% of this file's content is going to be used in each question.";
+    var details = uploadResponse.chunks + " chunks and " + uploadResponse.documents + " documents created.";
     toast.success(details);
   }
 
