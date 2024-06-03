@@ -191,9 +191,9 @@ function Chat() {
           messageForm.current.value = "";
           setCanSubmit(true);
           if (response.guard === true) {
-            toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000 , position: 'top-right' });
-          } else if (response.sources.length === 0) {
-            toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
+            toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000, position: 'top-right' });
+          } else if (data.type === "rag" && response.sources.length === 0) {
+            toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
           }
         }).catch(err => {
           toast.error(err.toString());
@@ -267,9 +267,9 @@ function Chat() {
       messageForm.current.value = "";
       setCanSubmit(true);
       if (info.guard === true) {
-        toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000 , position: 'top-right' });
-      } else if (info.sources.length === 0) {
-        toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000 , position: 'top-right' });
+        toast.warning('This question hit the prompt guard. Sandbox message sent.', { duration: 6000, position: 'top-right' });
+      } else if (data.type === "rag" && info.sources.length === 0) {
+        toast.warning('No sources found for this question. Decrease the score cutoff parameter.', { duration: 6000, position: 'top-right' });
       }
     }
   }, [answert]);
@@ -347,20 +347,22 @@ function Chat() {
               </InputGroup>
             </Col>
           </Row>
-          <Row style={{ marginTop: "20px" }}>
-            <Col sm={6}>
-              <InputGroup>
-                <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
-                <Form.Control ref={scoreForm} defaultValue={data.score} />
-              </InputGroup>
-            </Col>
-            <Col sm={6}>
-              <InputGroup>
-                <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used.">ℹ️</Link></InputGroup.Text>
-                <Form.Control ref={kForm} defaultValue={data.k} />
-              </InputGroup>
-            </Col>
-          </Row>
+          {(data.type === "rag") &&
+            <Row style={{ marginTop: "20px" }}>
+              <Col sm={6}>
+                <InputGroup>
+                  <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
+                  <Form.Control ref={scoreForm} defaultValue={data.score} />
+                </InputGroup>
+              </Col>
+              <Col sm={6}>
+                <InputGroup>
+                  <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used.">ℹ️</Link></InputGroup.Text>
+                  <Form.Control ref={kForm} defaultValue={data.k} />
+                </InputGroup>
+              </Col>
+            </Row>
+          }
           <Row style={{ marginTop: "20px" }}>
             <Col sm={9}>
             </Col>

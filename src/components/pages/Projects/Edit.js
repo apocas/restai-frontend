@@ -17,6 +17,7 @@ function Edit() {
   const systemForm = useRef(null);
   const connectionForm = useRef(null);
   const tablesForm = useRef(null);
+  const toolsForm = useRef(null);
   const scoreForm = useRef(null);
   const [availableLLMs, setAvailableLLMs] = useState([]);
   const kForm = useRef(null);
@@ -107,13 +108,17 @@ function Edit() {
       "human_name": hnameForm.current.value
     }
 
-    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql") {
+    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") {
       opts.system = systemForm.current.value
     }
 
     if (data.type === "ragsql") {
       opts.connection = connectionForm.current.value
       opts.tables = tablesForm.current.value
+    }
+
+    if (data.type === "agent") {
+      opts.tools = toolsForm.current.value
     }
 
     if (data.type === "rag") {
@@ -164,7 +169,7 @@ function Edit() {
   }, [info]);
 
   useEffect(() => {
-    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "router") {
+    if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "router" || data.type === "agent") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
     } else if (data.type === "vision") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
@@ -213,7 +218,7 @@ function Edit() {
               </Form.Select>
             </Form.Group>
           </Row>
-          {(data.type === "rag" || data.type === "inference" || data.type === "ragsql") &&
+          {(data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") &&
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridSystem">
                 <Form.Label>System Message<Link title="LLM System message. How the LLM should behave."><MdInfoOutline size="1.4em" /></Link></Form.Label>
@@ -240,6 +245,17 @@ function Edit() {
                 <InputGroup style={{ marginTop: "36px" }}>
                   <Button variant="dark" onClick={pgsqlTemplate} size="sm">PostgreSQL</Button>
                 </InputGroup>
+              </Col>
+            </Row>
+          }
+
+          {(data.type === "agent") &&
+            <Row className="mb-3">
+              <Col sm={12}>
+                <Form.Group as={Col} controlId="formGridSystem">
+                  <Form.Label>Tools<Link title="Agent tools."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+                  <Form.Control rows="1" as="input" ref={toolsForm} defaultValue={data.tools ? data.tools : ""} />
+                </Form.Group>
               </Col>
             </Row>
           }

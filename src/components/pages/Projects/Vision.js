@@ -126,7 +126,7 @@ function Vision() {
     if (submit && canSubmit) {
       setCanSubmit(false);
       setAnswers([...answers, { question: question, answer: null, sources: [] }]);
-      fetch(url + "/projects/" + projectName + "/vision", {
+      fetch(url + "/projects/" + projectName + "/question", {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + user.basicAuth }),
         body: JSON.stringify(body),

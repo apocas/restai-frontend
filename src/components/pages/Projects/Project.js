@@ -162,7 +162,7 @@ function Project() {
         setChunk(null);
         if (response.embeddings.length === 0) {
           toast.warning("No embeddings found for this query. Decrease the score cutoff parameter.");
-        } 
+        }
         setChunks(response.embeddings);
       }).catch(err => {
         toast.error(err.toString());
@@ -491,7 +491,7 @@ function Project() {
                 <PiFileArrowUpLight size="1.3em" /> Ingest Data
               </Button>
             }
-            {data.type === "router" &&
+            {(data.type === "router") &&
               < NavLink
                 to={"/projects/" + data.name + "/multimodal"}
                 style={{ marginLeft: "5px" }}
@@ -507,7 +507,7 @@ function Project() {
                 <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>
               </NavLink>
             }
-            {data.type === "inference" &&
+            {(data.type === "inference" || data.type === "agent") &&
               < NavLink
                 to={"/projects/" + data.name + "/inference"}
                 style={{ marginLeft: "5px" }}
@@ -515,7 +515,7 @@ function Project() {
                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
               </NavLink>
             }
-            {data.type === "rag" &&
+            {(data.type === "rag" || data.type === "agent") &&
               <NavLink
                 to={"/projects/" + data.name + "/chat"}
                 style={{ marginLeft: "5px" }}
@@ -523,17 +523,9 @@ function Project() {
                 <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
               </NavLink>
             }
-            {data.type === "rag" &&
+            {(data.type === "rag" || data.type === "ragsql" || data.type === "inference" || data.type === "vision") &&
               <NavLink
                 to={"/projects/" + data.name + "/question"}
-                style={{ marginLeft: "5px" }}
-              >
-                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
-              </NavLink>
-            }
-            {data.type === "ragsql" &&
-              <NavLink
-                to={"/projects/" + data.name + "/questionsql"}
                 style={{ marginLeft: "5px" }}
               >
                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
@@ -556,8 +548,11 @@ function Project() {
               <ListGroup.Item><b>Name:</b> {data.human_name}</ListGroup.Item>
               <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>
 
-              {(data.type === "inference" || data.type === "rag" || data.type === "ragsql") &&
-                <ListGroup.Item><b>System:</b> <span style={{whiteSpace: "pre-line"}}>{data.system}</span></ListGroup.Item>
+              {(data.type === "inference" || data.type === "rag" || data.type === "ragsql" || data.type === "agent") &&
+                <ListGroup.Item><b>System:</b> <span style={{ whiteSpace: "pre-line" }}>{data.system}</span></ListGroup.Item>
+              }
+              {data.type === "agent" &&
+                <ListGroup.Item><b>Tools:</b> {data.tools}</ListGroup.Item>
               }
               {data.type === "ragsql" &&
                 <ListGroup.Item><b>Connection:</b> {data.connection}</ListGroup.Item>

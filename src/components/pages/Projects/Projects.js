@@ -183,7 +183,7 @@ function Projects() {
   const typeChange = () => {
     var type = typeForm.current.value;
     setType(type);
-    if (type === "rag" || type === "inference" || type === "ragsql" || type === "router") {
+    if (type === "rag" || type === "inference" || type === "ragsql" || type === "router" || type === "agent") {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "qa" || llm.type === "chat").map(llm => llm.name));
 
     } else if (type === "vision") {
@@ -228,7 +228,7 @@ function Projects() {
               <Form.Select ref={typeFilter} onChange={handleFilterChange} defaultValue="All">
                 <option>All</option>
                 {
-                  ["rag", "ragsql", "vision", "inference", "router"].map((type, index) => {
+                  ["rag", "ragsql", "vision", "inference", "router", "agent"].map((type, index) => {
                     return (
                       <option key={index}>{type}</option>
                     )
@@ -328,7 +328,7 @@ function Projects() {
                                 <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>{' '}
                               </NavLink>
                             }
-                            {project.type === "rag" &&
+                            {(project.type === "rag" || project.type === "agent") &&
                               <NavLink
                                 to={"/projects/" + project.name + "/chat"}
                               >
@@ -349,7 +349,7 @@ function Projects() {
                                 <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
                               </NavLink>
                             }
-                            {(project.type === "inference") &&
+                            {(project.type === "inference" || project.type === "agent") &&
                               <NavLink
                                 to={"/projects/" + project.name + "/inference"}
                               >
@@ -398,6 +398,7 @@ function Projects() {
                     <option key="inference">inference</option>
                     <option key="vision">vision</option>
                     <option key="router">router</option>
+                    <option key="agent">agent</option>
                   </Form.Select>
                 </Col>
               </Form.Group>

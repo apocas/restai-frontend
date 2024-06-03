@@ -5,22 +5,12 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import ReactJson from '@microlink/react-json-view';
 import ModalImage from "react-modal-image";
-import NoImage from '../../../assets/img/no-image.jpg'
 import { FileUploader } from "react-drag-drop-files";
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
-import { MdInfoOutline } from "react-icons/md";
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
 function Multimodal() {
-  const Link = ({ id, children, title }) => (
-    <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
-      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
-    </OverlayTrigger>
-  );
-
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
   const questionForm = useRef(null);
