@@ -106,7 +106,8 @@ function Edit() {
       "llm": llmForm.current.value,
       "human_description": hdescriptionForm.current.value,
       "human_name": hnameForm.current.value,
-      "guard": guardForm.current.value
+      "guard": guardForm.current.value,
+      "censorship": censorshipForm.current.value
     }
 
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") {
@@ -125,7 +126,6 @@ function Edit() {
     if (data.type === "rag") {
       opts.colbert_rerank = colbertRerankForm.current.checked
       opts.llm_rerank = llmRerankForm.current.checked
-      opts.censorship = censorshipForm.current.value
       opts.score = parseFloat(scoreForm.current.value)
       opts.k = parseInt(kForm.current.value)
       opts.cache = cacheForm.current.checked
@@ -237,6 +237,13 @@ function Edit() {
             </Col>
           </Row>
 
+          <Row className="mb-3">
+            <Col sm={8}>
+              <Form.Label>Censorship Message<Link title="Message that will returned when the sandbox is hit."><MdInfoOutline size="1.4em" /></Link></Form.Label>
+              <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
+            </Col>
+          </Row>
+
           {(data.type === "ragsql") &&
             <Row className="mb-3">
               <Col sm={10}>
@@ -296,12 +303,6 @@ function Edit() {
                 </Col>
                 <Col sm={2}>
                   <Link title="Colbert Rerank"><MdInfoOutline size="1.4em" /></Link>
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col sm={8}>
-                  <Form.Label>Censorship Message<Link title="Message that may be returned when not data is found during the retrieval process."><MdInfoOutline size="1.4em" /></Link></Form.Label>
-                  <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
                 </Col>
               </Row>
               <hr />

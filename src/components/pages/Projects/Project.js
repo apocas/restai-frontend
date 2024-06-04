@@ -548,6 +548,7 @@ function Project() {
               <ListGroup.Item><b>Name:</b> {data.human_name}</ListGroup.Item>
               <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>
               <ListGroup.Item><b>Guardian:</b> {data.guard}</ListGroup.Item>
+              <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
 
               {(data.type === "inference" || data.type === "rag" || data.type === "ragsql" || data.type === "agent") &&
                 <ListGroup.Item><b>System:</b> <span style={{ whiteSpace: "pre-line" }}>{data.system}</span></ListGroup.Item>
@@ -581,9 +582,6 @@ function Project() {
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>LLM Rerank:</b> {data.llm_rerank ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}</ListGroup.Item>
-              }
-              {data.type === "rag" &&
-                <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>Cache:</b> {data.cache ? (<span><MdOutlineCheck size="1.3em" /></span>) : (<span><RxCross2 size="1.3em" /></span>)}({data.cache_threshold})</ListGroup.Item>
