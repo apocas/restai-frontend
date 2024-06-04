@@ -140,9 +140,7 @@ function Chat() {
 
     var question = messageForm.current.value;
     var id = "";
-    var k = parseInt(kForm.current.value);
-    var score = parseFloat(scoreForm.current.value);
-
+    
     if (messages.length === 0) {
       id = "";
     } else {
@@ -153,19 +151,20 @@ function Chat() {
     var submit = false;
     if (question !== "" && id === "") {
       body = {
-        "question": question,
-        "k": k,
-        "score": score
+        "question": question
       }
       submit = true;
     } else if (question !== "" && id !== "") {
       body = {
         "question": question,
-        "id": id,
-        "k": k,
-        "score": score
+        "id": id
       }
       submit = true;
+    }
+
+    if(data.type === "rag"){
+      body.score = parseFloat(scoreForm.current.value);
+      body.k = parseInt(kForm.current.value);
     }
 
     if (submit && canSubmit) {
