@@ -105,7 +105,8 @@ function Edit() {
       "name": projectName,
       "llm": llmForm.current.value,
       "human_description": hdescriptionForm.current.value,
-      "human_name": hnameForm.current.value
+      "human_name": hnameForm.current.value,
+      "guard": guardForm.current.value
     }
 
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") {
@@ -129,7 +130,6 @@ function Edit() {
       opts.k = parseInt(kForm.current.value)
       opts.cache = cacheForm.current.checked
       opts.cache_threshold = parseFloat(cache_thresholdForm.current.value)
-      opts.guard = guardForm.current.value
 
       if (opts.censorship.trim() === "") {
         delete opts.censorship;
@@ -228,6 +228,15 @@ function Edit() {
             </Row>
           }
 
+          <Row className="mb-3">
+            <Col sm={12}>
+              <InputGroup>
+                <InputGroup.Text>Guardian<Link title="Project's name that should be used for prompt guard, should return GOOD or BAD only."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
+                <Form.Control ref={guardForm} defaultValue={data.guard} />
+              </InputGroup>
+            </Col>
+          </Row>
+
           {(data.type === "ragsql") &&
             <Row className="mb-3">
               <Col sm={10}>
@@ -293,14 +302,6 @@ function Edit() {
                 <Col sm={8}>
                   <Form.Label>Censorship Message<Link title="Message that may be returned when not data is found during the retrieval process."><MdInfoOutline size="1.4em" /></Link></Form.Label>
                   <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
-                </Col>
-              </Row>
-              <Row className="mb-3">
-                <Col sm={12}>
-                  <InputGroup>
-                    <InputGroup.Text>Guardian<Link title="Project's name that should be used for prompt guard, should return GOOD or BAD only."><MdInfoOutline size="1.4em" /></Link></InputGroup.Text>
-                    <Form.Control ref={guardForm} defaultValue={data.guard} />
-                  </InputGroup>
                 </Col>
               </Row>
               <hr />
