@@ -523,7 +523,7 @@ function Project() {
                 <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
               </NavLink>
             }
-            {(data.type === "rag" || data.type === "ragsql" || data.type === "inference" || data.type === "vision") &&
+            {(data.type === "rag" || data.type === "ragsql") &&
               <NavLink
                 to={"/projects/" + data.name + "/question"}
                 style={{ marginLeft: "5px" }}
