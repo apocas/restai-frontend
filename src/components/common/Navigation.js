@@ -6,7 +6,7 @@ import restaiLogo from '../../assets/img/restai-logo.png';
 import { MdOutlinePerson, MdLogout } from "react-icons/md";
 import { PiBrain, PiUsersThree, PiGraph } from "react-icons/pi";
 import { HiOutlineServerStack } from "react-icons/hi2";
-
+import { HiOutlineWrench } from "react-icons/hi2";
 
 
 function Navigation() {
@@ -52,6 +52,13 @@ function Navigation() {
                 to="/llms"
               >
                 <PiBrain size="1.3em"/> LLMs
+              </NavLink>
+            </Nav.Link>
+            <Nav.Link as="li">
+              <NavLink
+                to="/tools"
+              >
+                <HiOutlineWrench size="1.3em"/> Tools
               </NavLink>
             </Nav.Link>
             <Nav.Link as="li">|</Nav.Link>
