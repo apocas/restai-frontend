@@ -106,10 +106,7 @@ function Inference() {
               setCanSubmit(true);
             } else {
               setAnswert((answert) => [...answert, event.data]);
-              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
             }
-          } else if (event.data === "") {
-            setAnswert((answert) => [...answert, "\n"]);
           } else {
             setAnswert((answert) => [...answert, event.data]);
           }
@@ -209,9 +206,9 @@ function Inference() {
   }, [projectName]);
 
   useEffect(() => {
-    if (answert[answert.length - 1] === "RESTAICLOSED") {
-      answert.pop();
-      setAnswers([...answers, { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n') }]);
+    if (answert[answert.length - 1] && JSON.parse(answert[answert.length - 1]).answer !== undefined) {
+      var info = JSON.parse(answert.pop());
+      setAnswers([...answers, { question: questionForm.current.value, answer: info.answer }]);
       setAnswert([]);
       questionForm.current.value = "";
       setCanSubmit(true);
@@ -224,9 +221,9 @@ function Inference() {
         <h1>Inference - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
             :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em"/></Link></Badge>
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
           }
         </h5>
         <Row style={{ marginBottom: "15px" }}>
@@ -282,7 +279,10 @@ function Inference() {
                     {answert.length > 0 &&
                       <div className='lineBreaks' style={{ marginTop: "10px" }}>
                         🧑<span className='highlight'>QUESTION:</span> {questionForm.current.value} <br />
-                        🤖<span className='highlight'>ANSWER:</span> {answert}
+                        🤖<span className='highlight'>ANSWER:</span> {answert.map(answer => {
+                          const parsedAnswer = JSON.parse(answer);
+                          return parsedAnswer.text !== undefined ? parsedAnswer.text : '';
+                        }).join('')}
                         <hr />
                       </div>
                     }

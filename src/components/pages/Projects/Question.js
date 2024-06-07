@@ -142,10 +142,7 @@ function Question() {
               setCanSubmit(true);
             } else {
               setAnswert((answert) => [...answert, event.data]);
-              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
             }
-          } else if (event.data === "") {
-            setAnswert((answert) => [...answert, "\n"]);
           } else {
             setAnswert((answert) => [...answert, event.data]);
           }
@@ -264,10 +261,9 @@ function Question() {
   }, [projectName]);
 
   useEffect(() => {
-    if (answert[answert.length - 1] === "RESTAICLOSED") {
-      answert.pop()
+    if (answert[answert.length - 1] && JSON.parse(answert[answert.length - 1]).answer !== undefined) {
       var info = JSON.parse(answert.pop());
-      var aux = { question: questionForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources, cached: info.cached }
+      var aux = { question: questionForm.current.value, answer: info.answer, sources: info.sources, cached: info.cached }
       if (info.evaluation != null && info.evaluation !== undefined) {
         aux.evaluation = info.evaluation;
       }
@@ -361,7 +357,10 @@ function Question() {
                     {answert.length > 0 &&
                       <div className='lineBreaks' style={{ marginTop: "10px" }}>
                         🧑<span className='highlight'>QUESTION:</span> {questionForm.current.value} <br />
-                        🤖<span className='highlight'>ANSWER:</span> {answert}
+                        🤖<span className='highlight'>ANSWER:</span> {answert.map(answer => {
+                          const parsedAnswer = JSON.parse(answer);
+                          return parsedAnswer.text !== undefined ? parsedAnswer.text : '';
+                        }).join('')}
                         <hr />
                       </div>
                     }
