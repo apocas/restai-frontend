@@ -16,9 +16,7 @@ function Chat() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
   const messageForm = useRef(null);
-  const scoreForm = useRef(null);
   const systemForm = useRef(null);
-  const kForm = useRef(null);
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const [messages, setMessages] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
@@ -80,13 +78,6 @@ function Chat() {
     } else if (question !== "" && id !== "") {
       body.id = id;
       submit = true;
-    }
-
-    if (data.type === "rag") {
-      var k = parseInt(kForm.current.value);
-      var score = parseFloat(scoreForm.current.value);
-      body.k = k;
-      body.score = score;
     }
 
     body.stream = true;
@@ -155,11 +146,6 @@ function Chat() {
         "id": id
       }
       submit = true;
-    }
-
-    if (data.type === "rag") {
-      body.score = parseFloat(scoreForm.current.value);
-      body.k = parseInt(kForm.current.value);
     }
 
     if (submit && canSubmit) {
