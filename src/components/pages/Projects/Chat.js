@@ -279,6 +279,14 @@ function Chat() {
     <>
       <Container style={{ marginTop: "20px" }}>
         <h1><MdOutlineChat size="1.3em" /> Chat - {projectName}</h1>
+        <Row>
+          {data.human_description &&
+            <Col sm={12}>
+              <b>Project description:</b><br />
+              {data.human_description}
+            </Col>
+          }
+        </Row>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>

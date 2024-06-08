@@ -10,7 +10,7 @@ import { FileUploader } from "react-drag-drop-files";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
-import { MdInfoOutline, MdOutlineImage  } from "react-icons/md";
+import { MdInfoOutline, MdOutlineImage } from "react-icons/md";
 import { FaRegPaperPlane } from "react-icons/fa";
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
@@ -33,6 +33,25 @@ function Vision() {
   const { getBasicAuth } = useContext(AuthContext);
   const isEnableBoostForm = useRef(null)
   const user = getBasicAuth();
+  const [data, setData] = useState({});
+
+  const fetchProject = (projectName) => {
+    return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => setData(d)
+      ).catch(err => {
+        toast.error(err.toString());
+      });
+  }
 
   function sdTemplate() {
     questionForm.current.value = "Using stable diffusion, create an image that captures the essence of a happy cat in a whimsical and playful way. The cat should have a big, wide smile on its face, with its eyes bright and gleaming with joy. It should be in a relaxed and content pose, possibly lounging in the sun or playing with a favorite toy. The background should be colorful and vibrant, adding to the overall sense of happiness and cheerfulness in the scene. The image should evoke a sense of warmth and joy, making the viewer smile and feel uplifted. Be sure to focus on capturing the unique personality and charm of the cat, showcasing its playful and lovable nature."
@@ -174,12 +193,21 @@ function Vision() {
 
   useEffect(() => {
     document.title = 'RESTAI - Vision - ' + projectName;
+    fetchProject(projectName);
   }, [projectName]);
 
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
         <h1><MdOutlineImage size="1.3em" /> Vision - {projectName}</h1>
+        <Row>
+          {data.human_description &&
+            <Col sm={12}>
+              <b>Project description:</b><br />
+              {data.human_description}
+            </Col>
+          }
+        </Row>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>
           (For generation remember to specify if you want to use Dall-e or Stable Diffusion in plain english)
         </Row>
@@ -246,7 +274,7 @@ function Vision() {
               </InputGroup>
               <InputGroup>
                 <InputGroup.Text>{"Negative Prompt"}</InputGroup.Text>
-                <Form.Control ref={negativePromptForm} rows="4" as="textarea" aria-label="Negative Prompt textarea" defaultValue={"(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"}/>
+                <Form.Control ref={negativePromptForm} rows="4" as="textarea" aria-label="Negative Prompt textarea" defaultValue={"(lowres, low quality, worst quality:1.2), (text:1.2), watermark, (frame:1.2), deformed, ugly, deformed eyes, blur, out of focus, blurry, deformed cat, deformed, photo, anthropomorphic cat, monochrome, photo, pet collar, gun, weapon, blue, 3d, drones, drone, buildings in background, green"} />
               </InputGroup>
             </Col>
             <Col sm={4}>
@@ -278,10 +306,10 @@ function Vision() {
           </Row>
           <hr />
           <Row style={{ marginTop: "20px" }}>
-            <Col sm={10} style={{display: "inline-flex"}}>
+            <Col sm={10} style={{ display: "inline-flex" }}>
               <Form.Group as={Col} controlId="formGridAdmin">
                 <Form.Check ref={isEnableBoostForm} type="checkbox" label="Enable Prompt Booster" />
-                <Link title="Enable prompt booster. Uses AI to boost user's prompt with more details and content."><MdInfoOutline size="1.4em"/></Link>
+                <Link title="Enable prompt booster. Uses AI to boost user's prompt with more details and content."><MdInfoOutline size="1.4em" /></Link>
               </Form.Group>
             </Col>
             <Col sm={2}>
