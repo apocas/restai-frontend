@@ -65,8 +65,6 @@ function Chat() {
 
     var question = messageForm.current.value;
     var id = "";
-    var k = parseInt(kForm.current.value);
-    var score = parseFloat(scoreForm.current.value);
 
     if (messages.length === 0) {
       id = "";
@@ -74,23 +72,21 @@ function Chat() {
       id = messages[messages.length - 1].id
     }
 
-    var body = {};
+    var body = { "question": question };
     var submit = false;
+    
     if (question !== "" && id === "") {
-      body = {
-        "question": question,
-        "k": k,
-        "score": score
-      }
       submit = true;
     } else if (question !== "" && id !== "") {
-      body = {
-        "question": question,
-        "id": id,
-        "k": k,
-        "score": score
-      }
+      body.id = id;
       submit = true;
+    }
+
+    if (data.type === "rag") {
+      var k = parseInt(kForm.current.value);
+      var score = parseFloat(scoreForm.current.value);
+      body.k = k;
+      body.score = score;
     }
 
     body.stream = true;
