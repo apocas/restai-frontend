@@ -189,7 +189,7 @@ function Multimodal() {
           {data.human_description &&
             <Col sm={12}>
               <b>Project description:</b><br />
-              {data.human_description}
+              <span style={{ whiteSpace: "pre-line" }}>{data.human_description}</span>
             </Col>
           }
         </Row>

@@ -62,7 +62,7 @@ function Library() {
             Public library, projects shared with all logged-in users.
           </Col>
         </Row>
-        <Row style={{marginTop:"10px"}}>
+        <Row style={{ marginTop: "10px" }}>
           <Table striped bordered hover responsive>
             <thead>
               <tr>
@@ -100,7 +100,7 @@ function Library() {
                         </NavLink>
                       </td>
                       <td>
-                        {project.human_description}
+                        <span style={{ whiteSpace: "pre-line" }}>{project.human_description}</span>
                       </td>
                       <td>
                         <Row>
