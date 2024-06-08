@@ -14,6 +14,8 @@ function Multimodal() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   var { projectName } = useParams();
   const questionForm = useRef(null);
+  const systemForm = useRef(null);
+  const [data, setData] = useState({});
   const [uploadForm, setUploadForm] = useState(null);
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
@@ -36,6 +38,24 @@ function Multimodal() {
   const repeatClick = (answer) => {
     questionForm.current.value = answer.question;
     onSubmitHandler();
+  }
+
+  const fetchProject = (projectName) => {
+    return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => setData(d)
+      ).catch(err => {
+        toast.error(err.toString());
+      });
   }
 
   const onSubmitHandler = (event) => {
@@ -107,7 +127,8 @@ function Multimodal() {
   };
 
   useEffect(() => {
-    document.title = 'Multimodal - ' + projectName;
+    document.title = 'RESTAI - Multimodal - ' + projectName;
+    fetchProject(projectName);
   }, [projectName]);
 
   return (
@@ -116,6 +137,14 @@ function Multimodal() {
         <h1>Multimodal - {projectName}</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row>
+            {(data.system !== "") &&
+              <Col sm={12}>
+                <InputGroup>
+                  <InputGroup.Text>System</InputGroup.Text>
+                  <Form.Control disabled ref={systemForm} rows="5" as="textarea" aria-label="With textarea" defaultValue={data.system ? data.system : ""} />
+                </InputGroup>
+              </Col>
+            }
             {answers.length > 0 &&
               <Col sm={12} style={{ marginTop: "20px" }}>
                 <Card>
@@ -171,16 +200,18 @@ function Multimodal() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={12}>
               <InputGroup>
-                <InputGroup.Text>{file ? "Question" : "Prompt"}</InputGroup.Text>
-                <Form.Control ref={questionForm} rows="7" as="textarea" aria-label="Question textarea" />
+                <InputGroup.Text>{"🧑 Message"}</InputGroup.Text>
+                <Form.Control ref={questionForm} rows="2" as="textarea" aria-label="Question textarea" />
               </InputGroup>
             </Col>
           </Row>
-          <Row>
-            <Col sm={12}>
-              <FileUploader fileOrFiles={uploadForm} classes="dragging" handleChange={handleFileUpload} name="file" types={fileTypes} />
-            </Col>
-          </Row>
+          {(data.type === "vision") &&
+            <Row>
+              <Col sm={12}>
+                <FileUploader fileOrFiles={uploadForm} classes="dragging" handleChange={handleFileUpload} name="file" types={fileTypes} />
+              </Col>
+            </Row>
+          }
           <hr />
           <Row style={{ marginTop: "20px" }}>
             <Col sm={10}>

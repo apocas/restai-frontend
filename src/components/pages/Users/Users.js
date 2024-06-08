@@ -91,7 +91,7 @@ function Users() {
   }
 
   useEffect(() => {
-    document.title = 'Users';
+    document.title = 'RESTAI - Users';
     fetchUsers();
   }, []);
 

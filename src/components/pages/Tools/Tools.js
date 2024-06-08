@@ -1,4 +1,4 @@
-import { Container, Table, Row } from 'react-bootstrap';
+import { Container, Table, Row, Col } from 'react-bootstrap';
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { AuthContext } from '../../common/AuthProvider.js';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ function Tools() {
 
 
   useEffect(() => {
-    document.title = 'Tools';
+    document.title = 'RESTAI - Tools';
     fetchTools();
   }, []);
 
@@ -34,6 +34,11 @@ function Tools() {
       <Container style={{ marginTop: "20px" }}>
         <h1><HiOutlineWrench size="1.3em" /> Tools</h1>
         <Row>
+          <Col sm={12}>
+            Tools library, available to be used in Agents.
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "10px" }}>
           <Table striped bordered hover responsive>
             <thead>
               <tr>

@@ -140,7 +140,7 @@ function Chat() {
 
     var question = messageForm.current.value;
     var id = "";
-    
+
     if (messages.length === 0) {
       id = "";
     } else {
@@ -162,7 +162,7 @@ function Chat() {
       submit = true;
     }
 
-    if(data.type === "rag"){
+    if (data.type === "rag") {
       body.score = parseFloat(scoreForm.current.value);
       body.k = parseInt(kForm.current.value);
     }
@@ -252,7 +252,7 @@ function Chat() {
   }
 
   useEffect(() => {
-    document.title = 'Chat - ' + projectName;
+    document.title = 'RESTAI - Chat - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -291,12 +291,14 @@ function Chat() {
         </Row>
         <Form onSubmit={onSubmitHandler}>
           <Row>
-            <Col sm={12}>
-              <InputGroup>
-                <InputGroup.Text>System</InputGroup.Text>
-                <Form.Control disabled ref={systemForm} rows="5" as="textarea" aria-label="With textarea" defaultValue={data.system ? data.system : ""} />
-              </InputGroup>
-            </Col>
+            {(data.system !== "") &&
+              <Col sm={12}>
+                <InputGroup>
+                  <InputGroup.Text>System</InputGroup.Text>
+                  <Form.Control disabled ref={systemForm} rows="5" as="textarea" aria-label="With textarea" defaultValue={data.system ? data.system : ""} />
+                </InputGroup>
+              </Col>
+            }
             {(messages.length > 0 || answert.length > 0) &&
               <Col sm={12}>
                 <Card>
@@ -341,27 +343,11 @@ function Chat() {
           <Row style={{ marginTop: "20px" }}>
             <Col sm={12}>
               <InputGroup>
-                <InputGroup.Text>Message</InputGroup.Text>
+                <InputGroup.Text>🧑 Message</InputGroup.Text>
                 <Form.Control ref={messageForm} rows="5" as="textarea" aria-label="With textarea" />
               </InputGroup>
             </Col>
           </Row>
-          {(data.type === "rag") &&
-            <Row style={{ marginTop: "20px" }}>
-              <Col sm={6}>
-                <InputGroup>
-                  <InputGroup.Text>Score Cutoff<Link title="Value between 0 and 1. Larger equals more similarity required from embeddings during retrieval process. Smaller less similarity required.">ℹ️</Link></InputGroup.Text>
-                  <Form.Control ref={scoreForm} defaultValue={data.score} />
-                </InputGroup>
-              </Col>
-              <Col sm={6}>
-                <InputGroup>
-                  <InputGroup.Text>k<Link title="Bigger value slower results but more data from embeddings will be used.">ℹ️</Link></InputGroup.Text>
-                  <Form.Control ref={kForm} defaultValue={data.k} />
-                </InputGroup>
-              </Col>
-            </Row>
-          }
           <Row style={{ marginTop: "20px" }}>
             <Col sm={9}>
             </Col>

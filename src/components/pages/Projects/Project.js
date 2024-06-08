@@ -453,7 +453,7 @@ function Project() {
   }
 
   useEffect(() => {
-    document.title = 'Project - ' + projectName;
+    document.title = 'RESTAI - Project - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -471,68 +471,71 @@ function Project() {
             <h1><PiMagnifyingGlassPlus size="1.2em" /> Project Details ({data.name})</h1>
           </Col>
         </Row>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col sm={6} style={{ textAlign: "left" }}>
-            <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
-            <NavLink
-              to={"/projects/" + data.name + "/edit"}
-            >
-              <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
-            </NavLink>
-          </Col>
-          <Col sm={6} style={{ textAlign: "right" }}>
-            {data.type === "router" &&
-              <Button variant="primary" onClick={handleShowRoute}>
-                <PiFileArrowUpLight size="1.3em" /> Add Route
-              </Button>
-            }
-            {data.type === "rag" &&
-              <Button variant="primary" onClick={handleShow}>
-                <PiFileArrowUpLight size="1.3em" /> Ingest Data
-              </Button>
-            }
-            {(data.type === "router") &&
-              < NavLink
-                to={"/projects/" + data.name + "/multimodal"}
-                style={{ marginLeft: "5px" }}
-              >
-                <Button variant="success"><MdOutlineImage size="1.3em" /> Multimodal</Button>
-              </NavLink>
-            }
-            {data.type === "vision" &&
-              < NavLink
-                to={"/projects/" + data.name + "/vision"}
-                style={{ marginLeft: "5px" }}
-              >
-                <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>
-              </NavLink>
-            }
-            {(data.type === "inference" || data.type === "agent") &&
-              < NavLink
-                to={"/projects/" + data.name + "/inference"}
-                style={{ marginLeft: "5px" }}
-              >
-                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
-              </NavLink>
-            }
-            {(data.type === "rag" || data.type === "agent") &&
+        {(data.level === "own") &&
+          <Row style={{ marginBottom: "10px" }}>
+
+            <Col sm={6} style={{ textAlign: "left" }}>
+              <Button onClick={() => handleDeleteProjectClick(data.name)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
               <NavLink
-                to={"/projects/" + data.name + "/chat"}
-                style={{ marginLeft: "5px" }}
+                to={"/projects/" + data.name + "/edit"}
               >
-                <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
+                <Button variant="dark" style={{ marginLeft: "5px" }}><PiPencilLight size="1.3em" /> Edit</Button>
               </NavLink>
-            }
-            {(data.type === "rag" || data.type === "ragsql") &&
-              <NavLink
-                to={"/projects/" + data.name + "/question"}
-                style={{ marginLeft: "5px" }}
-              >
-                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
-              </NavLink>
-            }
-          </Col>
-        </Row>
+            </Col>
+            <Col sm={6} style={{ textAlign: "right" }}>
+              {data.type === "router" &&
+                <Button variant="primary" onClick={handleShowRoute}>
+                  <PiFileArrowUpLight size="1.3em" /> Add Route
+                </Button>
+              }
+              {data.type === "rag" &&
+                <Button variant="primary" onClick={handleShow}>
+                  <PiFileArrowUpLight size="1.3em" /> Ingest Data
+                </Button>
+              }
+              {(data.type === "router") &&
+                < NavLink
+                  to={"/projects/" + data.name + "/multimodal"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="success"><MdOutlineImage size="1.3em" /> Multimodal</Button>
+                </NavLink>
+              }
+              {data.type === "vision" &&
+                < NavLink
+                  to={"/projects/" + data.name + "/vision"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="success"><MdOutlineImage size="1.3em" /> Vision</Button>
+                </NavLink>
+              }
+              {(data.type === "inference" || data.type === "agent") &&
+                < NavLink
+                  to={"/projects/" + data.name + "/inference"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
+                </NavLink>
+              }
+              {(data.type === "rag" || data.type === "agent") &&
+                <NavLink
+                  to={"/projects/" + data.name + "/chat"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="success"><MdOutlineChat size="1.3em" /> Chat</Button>
+                </NavLink>
+              }
+              {(data.type === "rag" || data.type === "ragsql") &&
+                <NavLink
+                  to={"/projects/" + data.name + "/question"}
+                  style={{ marginLeft: "5px" }}
+                >
+                  <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>
+                </NavLink>
+              }
+            </Col>
+          </Row>
+        }
         <Row>
           <Col sm={12}>
             <ListGroup>
@@ -569,7 +572,7 @@ function Project() {
                 <ListGroup.Item><b>Vectorstore:</b> {data.vectorstore}</ListGroup.Item>
               }
               {data.type === "rag" &&
-                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} <Button onClick={() => handleResetEmbeddingsClick()} variant="danger"><GrPowerReset size="1.3em" /> Reset</Button></ListGroup.Item>
+                <ListGroup.Item><b>Embeddings:</b> {data.embeddings} {(data.level === "own") && <Button onClick={() => handleResetEmbeddingsClick()} variant="danger"><GrPowerReset size="1.3em" /> Reset</Button>}</ListGroup.Item>
               }
               {data.type === "rag" &&
                 <ListGroup.Item><b>K:</b> {data.k}</ListGroup.Item>
@@ -607,7 +610,9 @@ function Project() {
                       <ListGroup.Item><b>Destination:</b> {entrance.destination}</ListGroup.Item>
                     </ListGroup>
                     <Card.Footer className="text-muted">
-                      <Button onClick={() => deleteRouteClick(entrance.name)} variant="danger" style={{ marginLeft: '5px' }}>Delete</Button>
+                      {(data.level === "own") &&
+                        <Button onClick={() => deleteRouteClick(entrance.name)} variant="danger" style={{ marginLeft: '5px' }}>Delete</Button>
+                      }
                     </Card.Footer>
                   </Card>
                 )
@@ -650,7 +655,9 @@ function Project() {
                                     </td>
                                     <td>
                                       <Button onClick={() => handleViewClick(emb)} variant="dark"><PiMagnifyingGlassPlus size="1.2em" /> View</Button>{' '}
-                                      <Button onClick={() => handleDeleteClick(emb)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                                      {(data.level === "own") &&
+                                        <Button onClick={() => handleDeleteClick(emb)} variant="danger"><MdOutlineDelete size="1.3em" /> Delete</Button>
+                                      }
                                     </td>
                                   </tr>
                                 )

@@ -255,7 +255,7 @@ function Question() {
   }
 
   useEffect(() => {
-    document.title = 'Question - ' + projectName;
+    document.title = 'RESTAI - Question - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);

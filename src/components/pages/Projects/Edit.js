@@ -24,6 +24,7 @@ function Edit() {
   const censorshipForm = useRef(null)
   const llmForm = useRef(null)
   const colbertRerankForm = useRef(null)
+  const publicForm = useRef(null)
   const cacheForm = useRef(null)
   const cache_thresholdForm = useRef(null)
   const guardForm = useRef(null)
@@ -107,7 +108,8 @@ function Edit() {
       "human_description": hdescriptionForm.current.value,
       "human_name": hnameForm.current.value,
       "guard": guardForm.current.value,
-      "censorship": censorshipForm.current.value
+      "censorship": censorshipForm.current.value,
+      "public": publicForm.current.checked
     }
 
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") {
@@ -160,7 +162,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'Edit - ' + projectName;
+    document.title = 'RESTAI - Edit - ' + projectName;
     fetchInfo();
   }, [projectName]);
 
@@ -175,6 +177,9 @@ function Edit() {
       setAvailableLLMs(info.llms.filter(llm => llm.type === "vision").map(llm => llm.name));
     }
 
+    if (data.public) {
+      publicForm.current.checked = true;
+    }
     if (data.type === "rag" && data.llm_rerank) {
       llmRerankForm.current.checked = true;
     }
@@ -241,6 +246,15 @@ function Edit() {
             <Col sm={8}>
               <Form.Label>Censorship Message<Link title="Message that will returned when the sandbox is hit."><MdInfoOutline size="1.4em" /></Link></Form.Label>
               <Form.Control rows="2" as="textarea" ref={censorshipForm} defaultValue={data.censorship ? data.censorship : ""} />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col sm={2}>
+              <Form.Check ref={publicForm} type="checkbox" label="Public" />
+            </Col>
+            <Col sm={2}>
+              <Link title="Make this project available in the project library. Library is available for all logged in users."><MdInfoOutline size="1.4em" /></Link>
             </Col>
           </Row>
 

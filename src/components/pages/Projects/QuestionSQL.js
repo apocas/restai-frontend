@@ -135,7 +135,7 @@ function Inference() {
   }
 
   useEffect(() => {
-    document.title = 'QuestionSQL - ' + projectName;
+    document.title = 'RESTAI - QuestionSQL - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 

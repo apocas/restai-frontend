@@ -104,7 +104,7 @@ function LLMs() {
   }
 
   useEffect(() => {
-    document.title = 'LLMs';
+    document.title = 'RESTAI - LLMs';
     fetchLLMS();
   }, []);
 
@@ -152,7 +152,7 @@ function LLMs() {
                     <tr key={index}>
                       <td>
                         <NavLink
-                          to={"/llms/" + llm.username}
+                          to={"/llms/" + llm.name}
                         >
                           {llm.name}
                         </NavLink>

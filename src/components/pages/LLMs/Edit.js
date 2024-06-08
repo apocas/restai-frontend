@@ -79,7 +79,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'Edit - ' + llmname;
+    document.title = 'RESTAI - Edit - ' + llmname;
     fetchLLM(llmname);
   }, [llmname]);
 

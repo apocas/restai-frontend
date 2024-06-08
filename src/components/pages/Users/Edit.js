@@ -86,7 +86,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'Edit - ' + username;
+    document.title = 'RESTAI - Edit - ' + username;
     fetchUser(username);
   }, []);
 

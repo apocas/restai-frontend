@@ -192,7 +192,7 @@ function Projects() {
   }
 
   useEffect(() => {
-    document.title = 'Projects';
+    document.title = 'RESTAI - Projects';
     fetchProjects();
     fetchInfo();
   }, []);
@@ -204,7 +204,7 @@ function Projects() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1><PiGraph size="1.3em" /> Projects</h1>
+        <h1><PiGraph size="1.3em" /> My Projects</h1>
         <Row style={{ marginBottom: "10px" }}>
           <Col sm={3}>
             <Form.Group as={Col} controlId="formGridLLM">

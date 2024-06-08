@@ -172,7 +172,7 @@ function Vision() {
   };
 
   useEffect(() => {
-    document.title = 'Vision - ' + projectName;
+    document.title = 'RESTAI - Vision - ' + projectName;
   }, [projectName]);
 
   return (

@@ -67,6 +67,7 @@ function Login() {
   }
 
   useEffect(() => {
+    document.title = 'RESTAI - Login';
     if (remember && remember.username) {
       rememberForm.current.checked = true;
       setInputUsername(remember.username);

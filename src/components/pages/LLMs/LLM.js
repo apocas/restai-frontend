@@ -40,7 +40,7 @@ function LLM() {
   }
 
   useEffect(() => {
-    document.title = 'LLM - ' + llmname;
+    document.title = 'RESTAI - LLM - ' + llmname;
     fetchLLM(llmname);
   }, [llmname]);
 

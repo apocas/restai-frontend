@@ -121,7 +121,7 @@ function User() {
   }
 
   useEffect(() => {
-    document.title = 'User - ' + username;
+    document.title = 'RESTAI - User - ' + username;
     fetchUser(username);
     fetchProjects();
   }, [username]);

@@ -7,7 +7,7 @@ import { MdOutlinePerson, MdLogout } from "react-icons/md";
 import { PiBrain, PiUsersThree, PiGraph } from "react-icons/pi";
 import { HiOutlineServerStack } from "react-icons/hi2";
 import { HiOutlineWrench } from "react-icons/hi2";
-
+import { IoLibraryOutline } from "react-icons/io5";
 
 function Navigation() {
   const { logout, getBasicAuth } = useContext(AuthContext);
@@ -35,15 +35,23 @@ function Navigation() {
               <NavLink
                 to="/"
               >
-                <PiGraph size="1.3em"/> Projects
+                <PiGraph size="1.3em" /> My Projects
               </NavLink>
             </Nav.Link>
+            <Nav.Link as="li">
+              <NavLink
+                to="/library"
+              >
+                <IoLibraryOutline size="1.3em" /> Library
+              </NavLink>
+            </Nav.Link>
+            <Nav.Link as="li">|</Nav.Link>
             {user.admin && (
               <Nav.Link as="li">
                 <NavLink
                   to="/users"
                 >
-                  <PiUsersThree size="1.3em"/> Users
+                  <PiUsersThree size="1.3em" /> Users
                 </NavLink>
               </Nav.Link>
             )}
@@ -51,19 +59,19 @@ function Navigation() {
               <NavLink
                 to="/llms"
               >
-                <PiBrain size="1.3em"/> LLMs
+                <PiBrain size="1.3em" /> LLMs
               </NavLink>
             </Nav.Link>
             <Nav.Link as="li">
               <NavLink
                 to="/tools"
               >
-                <HiOutlineWrench size="1.3em"/> Tools
+                <HiOutlineWrench size="1.3em" /> Tools
               </NavLink>
             </Nav.Link>
             <Nav.Link as="li">|</Nav.Link>
             <Nav.Link as="li">
-              <a href="/docs"><HiOutlineServerStack size="1.3em"/> API</a>
+              <a href="/docs"><HiOutlineServerStack size="1.3em" /> API</a>
             </Nav.Link>
           </Nav>
           {user.username && (
@@ -73,10 +81,10 @@ function Navigation() {
                 <NavLink
                   to={"/users/" + user.username}
                 >
-                  <MdOutlinePerson size="1.5em"/> {user.username}{' | '}
+                  <MdOutlinePerson size="1.5em" /> {user.username}{' | '}
                 </NavLink>
                 <Button style={{ textDecoration: "none", color: "black", padding: "0px", verticalAlign: "0px" }} variant="link" onClick={logout}>
-                <MdLogout size="1.5em"/> Logout
+                  <MdLogout size="1.5em" /> Logout
                 </Button>
               </Navbar.Text>
             </Nav>

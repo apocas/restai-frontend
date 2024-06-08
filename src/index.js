@@ -15,6 +15,7 @@ import Users from './components/pages/Users/Users.js';
 import User from './components/pages/Users/User.js';
 import UsersEdit from './components/pages/Users/Edit.js';
 import Tools from './components/pages/Tools/Tools.js';
+import Library from './components/pages/Library/Library.js';
 import LLMs from './components/pages/LLMs/LLMs.js';
 import LLM from './components/pages/LLMs/LLM.js';
 import LLMsEdit from './components/pages/LLMs/Edit.js';
@@ -56,6 +57,7 @@ function Root() {
               <Route path={`/llms/:llmname`} element={<LLM />} />
               <Route path={`/llms/:llmname/edit`} element={<LLMsEdit />} />
               <Route path={`/tools`} element={<Tools />} />
+              <Route path={`/library`} element={<Library />} />
             </Route>
             {/* Public Routes */}
             <Route
