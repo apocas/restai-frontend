@@ -10,7 +10,8 @@ import { FileUploader } from "react-drag-drop-files";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
-import { MdInfoOutline } from "react-icons/md";
+import { MdInfoOutline, MdOutlineImage  } from "react-icons/md";
+import { FaRegPaperPlane } from "react-icons/fa";
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
@@ -178,7 +179,7 @@ function Vision() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Vision - {projectName}</h1>
+        <h1><MdOutlineImage size="1.3em" /> Vision - {projectName}</h1>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>
           (For generation remember to specify if you want to use Dall-e or Stable Diffusion in plain english)
         </Row>
@@ -287,7 +288,7 @@ function Vision() {
               <div className="d-grid gap-2">
                 <Button variant="dark" type="submit" size="lg">
                   {
-                    canSubmit ? <span>Ask</span> : <Spinner animation="border" />
+                    canSubmit ? <span><FaRegPaperPlane size="0.9em" /> Ask</span> : <Spinner animation="border" />
                   }
                 </Button>
               </div>

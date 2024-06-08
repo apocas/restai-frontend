@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import { MdInfoOutline } from "react-icons/md";
 import { Rating } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
+import { FaRegPaperPlane } from "react-icons/fa";
+import { RiQuestionnaireLine } from "react-icons/ri";
 
 function Question() {
 
@@ -282,7 +284,7 @@ function Question() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Question - {projectName}</h1>
+        <h1><RiQuestionnaireLine size="1.3em" /> Question - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
@@ -420,7 +422,7 @@ function Question() {
               <div className="d-grid gap-2">
                 <Button variant="dark" type="submit" size="lg">
                   {
-                    canSubmit ? <span>Ask</span> : <Spinner animation="border" />
+                    canSubmit ? <span><FaRegPaperPlane size="0.9em" /> Ask</span> : <Spinner animation="border" />
                   }
                 </Button>
               </div>

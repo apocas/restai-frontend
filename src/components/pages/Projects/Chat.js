@@ -8,6 +8,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { toast } from 'react-toastify';
+import { FaRegPaperPlane } from "react-icons/fa";
+import { MdOutlineChat } from "react-icons/md";
 
 function Chat() {
 
@@ -276,7 +278,7 @@ function Chat() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Chat - {projectName}</h1>
+        <h1><MdOutlineChat size="1.3em" /> Chat - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
@@ -284,11 +286,6 @@ function Chat() {
             <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
           }
         </h5>
-        <Row style={{ marginBottom: "15px", marginTop: "-9px" }}>
-          <Col sm={12}>
-            (Remember that the LLM needs to support Chat mode for this to work, unstable otherwise)
-          </Col>
-        </Row>
         <Form onSubmit={onSubmitHandler}>
           <Row>
             {(data.system !== "") &&
@@ -344,7 +341,7 @@ function Chat() {
             <Col sm={12}>
               <InputGroup>
                 <InputGroup.Text>🧑 Message</InputGroup.Text>
-                <Form.Control ref={messageForm} rows="5" as="textarea" aria-label="With textarea" />
+                <Form.Control ref={messageForm} rows="2" as="textarea" aria-label="With textarea" />
               </InputGroup>
             </Col>
           </Row>
@@ -360,7 +357,7 @@ function Chat() {
               <div className="d-grid gap-2">
                 <Button variant="dark" type="submit" size="lg">
                   {
-                    canSubmit ? <span>Chat</span> : <Spinner animation="border" />
+                    canSubmit ? <span><FaRegPaperPlane size="0.9em" /> Send</span> : <Spinner animation="border" />
                   }
                 </Button>
               </div>

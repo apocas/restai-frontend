@@ -7,6 +7,8 @@ import ReactJson from '@microlink/react-json-view';
 import ModalImage from "react-modal-image";
 import { FileUploader } from "react-drag-drop-files";
 import { toast } from 'react-toastify';
+import { FaRegPaperPlane } from "react-icons/fa";
+import { RiQuestionnaireLine } from "react-icons/ri";
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
@@ -134,7 +136,7 @@ function Multimodal() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Multimodal - {projectName}</h1>
+        <h1><RiQuestionnaireLine size="1.3em" /> Multimodal - {projectName}</h1>
         <Form onSubmit={onSubmitHandler}>
           <Row>
             {(data.system !== "") &&
@@ -220,7 +222,7 @@ function Multimodal() {
               <div className="d-grid gap-2">
                 <Button variant="dark" type="submit" size="lg">
                   {
-                    canSubmit ? <span>Ask</span> : <Spinner animation="border" />
+                    canSubmit ? <span><FaRegPaperPlane size="0.9em" /> Ask</span> : <Spinner animation="border" />
                   }
                 </Button>
               </div>

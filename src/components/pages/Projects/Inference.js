@@ -9,6 +9,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { toast } from 'react-toastify';
 import { MdInfoOutline } from "react-icons/md";
+import { RiQuestionnaireLine } from "react-icons/ri";
+import { FaRegPaperPlane } from "react-icons/fa";
 
 function Inference() {
 
@@ -218,7 +220,7 @@ function Inference() {
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <h1>Inference - {projectName}</h1>
+        <h1><RiQuestionnaireLine size="1.3em" /> Inference - {projectName}</h1>
         <h5>
           {checkPrivacy() ?
             <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
@@ -311,7 +313,7 @@ function Inference() {
               <div className="d-grid gap-2">
                 <Button variant="dark" type="submit" size="lg">
                   {
-                    canSubmit ? <span>Ask</span> : <Spinner animation="border" />
+                    canSubmit ? <span><FaRegPaperPlane size="0.9em" /> Ask</span> : <Spinner animation="border" />
                   }
                 </Button>
               </div>

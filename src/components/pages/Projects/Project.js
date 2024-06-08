@@ -549,20 +549,20 @@ function Project() {
               <ListGroup.Item><b>Project: {data.name}</b></ListGroup.Item>
               <ListGroup.Item><b>LLM:</b> {data.llm}</ListGroup.Item>
               <ListGroup.Item><b>Name:</b> {data.human_name}</ListGroup.Item>
-              <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>
-              <ListGroup.Item><b>Guardian:</b> {data.guard}</ListGroup.Item>
-              <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>
+              {data.human_description && <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>}
+              {data.guard && <ListGroup.Item><b>Guardian:</b> {data.guard}</ListGroup.Item>}
+              {data.censorship && <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>}
 
-              {(data.type === "inference" || data.type === "rag" || data.type === "ragsql" || data.type === "agent") &&
+              {((data.type === "inference" || data.type === "rag" || data.type === "ragsql" || data.type === "agent") && data.system) &&
                 <ListGroup.Item><b>System:</b> <span style={{ whiteSpace: "pre-line" }}>{data.system}</span></ListGroup.Item>
               }
-              {data.type === "agent" &&
+              {(data.type === "agent" && data.tools) &&
                 <ListGroup.Item><b>Tools:</b> {data.tools}</ListGroup.Item>
               }
-              {data.type === "ragsql" &&
+              {(data.type === "ragsql" && data.connection) &&
                 <ListGroup.Item><b>Connection:</b> {data.connection}</ListGroup.Item>
               }
-              {data.type === "ragsql" &&
+              {(data.type === "ragsql" && data.tables) &&
                 <ListGroup.Item><b>Tables:</b> {data.tables}</ListGroup.Item>
               }
               {data.type === "rag" &&

@@ -6,13 +6,13 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { toast } from 'react-toastify';
 import { MdOutlineImage, MdOutlineChat, MdInfoOutline } from "react-icons/md";
-import { FaRegPaperPlane } from "react-icons/fa";
 import { PiMagnifyingGlassPlus } from "react-icons/pi";
 import Modal from 'react-bootstrap/Modal';
 import Badge from 'react-bootstrap/Badge';
 import { PiGraph } from "react-icons/pi";
 import { FiFilePlus } from "react-icons/fi";
 import { AiOutlineCrown } from "react-icons/ai";
+import { RiQuestionnaireLine } from "react-icons/ri";
 
 function Projects() {
 
@@ -265,7 +265,7 @@ function Projects() {
                         <NavLink
                           to={"/projects/" + project.name}
                         >
-                          {project.name}
+                          {project.name} {project.public === true && <Badge bg="success">Shared</Badge>}
                         </NavLink>
                       </td>
                       <td>
@@ -339,28 +339,28 @@ function Projects() {
                               <NavLink
                                 to={"/projects/" + project.name + "/question"}
                               >
-                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                                <Button variant="success"><RiQuestionnaireLine size="1.1em" /> Question</Button>{' '}
                               </NavLink>
                             }
                             {project.type === "ragsql" &&
                               <NavLink
                                 to={"/projects/" + project.name + "/questionsql"}
                               >
-                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                                <Button variant="success"><RiQuestionnaireLine size="1.1em" /> Question</Button>{' '}
                               </NavLink>
                             }
                             {(project.type === "inference" || project.type === "agent") &&
                               <NavLink
                                 to={"/projects/" + project.name + "/inference"}
                               >
-                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Question</Button>{' '}
+                                <Button variant="success"><RiQuestionnaireLine size="1.1em" /> Question</Button>{' '}
                               </NavLink>
                             }
                             {(project.type === "router") &&
                               <NavLink
                                 to={"/projects/" + project.name + "/multimodal"}
                               >
-                                <Button variant="success"><FaRegPaperPlane size="1.1em" /> Multimodal</Button>{' '}
+                                <Button variant="success"><RiQuestionnaireLine size="1.1em" /> Multimodal</Button>{' '}
                               </NavLink>
                             }
                           </Col>
