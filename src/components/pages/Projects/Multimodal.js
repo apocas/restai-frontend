@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -9,6 +9,8 @@ import { FileUploader } from "react-drag-drop-files";
 import { toast } from 'react-toastify';
 import { FaRegPaperPlane } from "react-icons/fa";
 import { RiQuestionnaireLine } from "react-icons/ri";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const fileTypes = ["JPG", "JPEG", "PNG", "GIF", "JPEGZ"];
 
@@ -19,11 +21,18 @@ function Multimodal() {
   const systemForm = useRef(null);
   const [data, setData] = useState({});
   const [uploadForm, setUploadForm] = useState(null);
+  const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [canSubmit, setCanSubmit] = useState(true);
   const { getBasicAuth } = useContext(AuthContext);
   const user = getBasicAuth();
+
+  const Link = ({ id, children, title }) => (
+    <OverlayTrigger overlay={<Tooltip id={id}>{title}</Tooltip>}>
+      <span style={{ fontSize: "small", margin: "3px" }}>{children}</span>
+    </OverlayTrigger>
+  );
 
   function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -35,6 +44,19 @@ function Multimodal() {
         {children}
       </span>
     );
+  }
+
+  const checkPrivacy = () => {
+    var embbeddingPrivacy = true;
+    info.embeddings.forEach(function (element) {
+      if (element.name === data.embeddings && element.privacy === "public")
+        embbeddingPrivacy = false;
+    })
+    if (embbeddingPrivacy && data.llm_privacy === "private") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   const repeatClick = (answer) => {
@@ -110,6 +132,24 @@ function Multimodal() {
     }
   }
 
+  const fetchInfo = () => {
+    return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + user.basicAuth }) })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => setInfo(d)
+      ).catch(err => {
+        toast.error(err.toString());
+      });
+  }
+
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -131,12 +171,20 @@ function Multimodal() {
   useEffect(() => {
     document.title = 'RESTAI - Multimodal - ' + projectName;
     fetchProject(projectName);
+    fetchInfo();
   }, [projectName]);
 
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
         <h1><RiQuestionnaireLine size="1.3em" /> Multimodal - {projectName}</h1>
+        <h5>
+          {checkPrivacy() ?
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+            :
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+          }
+        </h5>
         <Row>
           {data.human_description &&
             <Col sm={12}>

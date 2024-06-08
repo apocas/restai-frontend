@@ -279,6 +279,13 @@ function Chat() {
     <>
       <Container style={{ marginTop: "20px" }}>
         <h1><MdOutlineChat size="1.3em" /> Chat - {projectName}</h1>
+        <h5>
+          {checkPrivacy() ?
+            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
+            :
+            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
+          }
+        </h5>
         <Row>
           {data.human_description &&
             <Col sm={12}>
@@ -287,13 +294,6 @@ function Chat() {
             </Col>
           }
         </Row>
-        <h5>
-          {checkPrivacy() ?
-            <Badge bg="success">Local AI <Link title="You are NOT SHARING any data with external entities.">ℹ️</Link></Badge>
-            :
-            <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
-          }
-        </h5>
         <Form onSubmit={onSubmitHandler}>
           <Row>
             {(data.system !== "") &&
