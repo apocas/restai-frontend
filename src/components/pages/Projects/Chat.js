@@ -74,7 +74,7 @@ function Chat() {
 
     var body = { "question": question };
     var submit = false;
-    
+
     if (question !== "" && id === "") {
       submit = true;
     } else if (question !== "" && id !== "") {
@@ -113,10 +113,7 @@ function Chat() {
               setCanSubmit(true);
             } else {
               setAnswert((answert) => [...answert, event.data]);
-              setAnswert((answert) => [...answert, "RESTAICLOSED"]);
             }
-          } else if (event.data === "") {
-            setAnswert((answert) => [...answert, "\n"]);
           } else {
             setAnswert((answert) => [...answert, event.data]);
           }
@@ -256,10 +253,9 @@ function Chat() {
   }, [projectName]);
 
   useEffect(() => {
-    if (answert[answert.length - 1] === "RESTAICLOSED") {
-      answert.pop()
+    if (answert[answert.length - 1] && JSON.parse(answert[answert.length - 1]).answer !== undefined) {
       var info = JSON.parse(answert.pop());
-      setMessages([...messages, { id: info.id, question: messageForm.current.value, answer: answert.join('').trim().replace(/\n\n\n/g, '\n\n'), sources: info.sources }]);
+      setMessages([...messages, { id: info.id, question: messageForm.current.value, answer: info.answer, sources: info.sources }]);
       setAnswert([]);
       messageForm.current.value = "";
       setCanSubmit(true);
@@ -332,7 +328,10 @@ function Chat() {
                     {answert.length > 0 &&
                       <div className='lineBreaks' style={{ marginTop: "10px" }}>
                         🧑<span className='highlight'>MESSAGE:</span> {messageForm.current.value} <br />
-                        🤖<span className='highlight'>RESPONSE:</span> {answert}
+                        🤖<span className='highlight'>RESPONSE:</span> {answert.map(answer => {
+                          const parsedAnswer = JSON.parse(answer);
+                          return parsedAnswer.text !== undefined ? parsedAnswer.text : '';
+                        }).join('')}
                         <hr />
                       </div>
                     }
