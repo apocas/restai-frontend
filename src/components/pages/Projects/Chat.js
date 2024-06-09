@@ -330,7 +330,7 @@ function Chat() {
             <Col sm={12}>
               <InputGroup>
                 <InputGroup.Text>🧑 Message</InputGroup.Text>
-                <Form.Control ref={messageForm} rows="2" as="textarea" aria-label="With textarea" />
+                <Form.Control ref={messageForm} rows="2" as="textarea" aria-label="With textarea" defaultValue={data.default_prompt ? data.default_prompt : ""}/>
               </InputGroup>
             </Col>
           </Row>

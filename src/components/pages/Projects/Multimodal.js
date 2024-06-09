@@ -259,7 +259,7 @@ function Multimodal() {
             <Col sm={12}>
               <InputGroup>
                 <InputGroup.Text>{"🧑 Message"}</InputGroup.Text>
-                <Form.Control ref={questionForm} rows="2" as="textarea" aria-label="Question textarea" />
+                <Form.Control ref={questionForm} rows="2" as="textarea" aria-label="Question textarea" defaultValue={data.default_prompt ? data.default_prompt : ""}/>
               </InputGroup>
             </Col>
           </Row>

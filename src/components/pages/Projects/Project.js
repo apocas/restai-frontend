@@ -552,6 +552,7 @@ function Project() {
               {data.human_description && <ListGroup.Item><b>Description:</b> {data.human_description}</ListGroup.Item>}
               {data.guard && <ListGroup.Item><b>Guardian:</b> {data.guard}</ListGroup.Item>}
               {data.censorship && <ListGroup.Item><b>Sandbox Message:</b> {data.censorship}</ListGroup.Item>}
+              {data.default_prompt && <ListGroup.Item><b>Default Prompt:</b> {data.default_prompt}</ListGroup.Item>}
 
               {((data.type === "inference" || data.type === "rag" || data.type === "ragsql" || data.type === "agent") && data.system) &&
                 <ListGroup.Item><b>System:</b> <span style={{ whiteSpace: "pre-line" }}>{data.system}</span></ListGroup.Item>

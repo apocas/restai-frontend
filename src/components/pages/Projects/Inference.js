@@ -305,7 +305,7 @@ function Inference() {
             <Col sm={12}>
               <InputGroup>
                 <InputGroup.Text>Question</InputGroup.Text>
-                <Form.Control ref={questionForm} rows="5" as="textarea" aria-label="With textarea" />
+                <Form.Control ref={questionForm} rows="5" as="textarea" aria-label="With textarea" defaultValue={data.default_prompt ? data.default_prompt : ""}/>
               </InputGroup>
             </Col>
           </Row>

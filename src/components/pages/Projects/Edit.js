@@ -22,6 +22,7 @@ function Edit() {
   const [availableLLMs, setAvailableLLMs] = useState([]);
   const kForm = useRef(null);
   const censorshipForm = useRef(null)
+  const defaultpromptForm = useRef(null)
   const llmForm = useRef(null)
   const colbertRerankForm = useRef(null)
   const publicForm = useRef(null)
@@ -109,7 +110,8 @@ function Edit() {
       "human_name": hnameForm.current.value,
       "guard": guardForm.current.value,
       "censorship": censorshipForm.current.value,
-      "public": publicForm.current.checked
+      "public": publicForm.current.checked,
+      "default_prompt": defaultpromptForm.current.value
     }
 
     if (data.type === "rag" || data.type === "inference" || data.type === "ragsql" || data.type === "agent") {
@@ -232,6 +234,13 @@ function Edit() {
               <hr style={{ marginTop: "20px" }} />
             </Row>
           }
+
+          <Row className="mb-3">
+            <Col sm={8}>
+              <Form.Label>Default Prompt<Link title="Default user's prompt suggestion"><MdInfoOutline size="1.4em" /></Link></Form.Label>
+              <Form.Control rows="2" as="textarea" ref={defaultpromptForm} defaultValue={data.default_prompt ? data.default_prompt : ""} />
+            </Col>
+          </Row>
 
           <Row className="mb-3">
             <Col sm={12}>

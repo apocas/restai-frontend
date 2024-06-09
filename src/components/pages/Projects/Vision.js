@@ -270,7 +270,7 @@ function Vision() {
             <Col sm={8}>
               <InputGroup>
                 <InputGroup.Text>{file ? "Question" : "Prompt"}</InputGroup.Text>
-                <Form.Control ref={questionForm} rows="7" as="textarea" aria-label="Question textarea" />
+                <Form.Control ref={questionForm} rows="7" as="textarea" aria-label="Question textarea" defaultValue={data.default_prompt ? data.default_prompt : ""}/>
               </InputGroup>
               <InputGroup>
                 <InputGroup.Text>{"Negative Prompt"}</InputGroup.Text>
