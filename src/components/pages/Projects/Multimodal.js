@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion, Badge } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Accordion, Badge } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -20,6 +20,7 @@ function Multimodal() {
   const questionForm = useRef(null);
   const systemForm = useRef(null);
   const [data, setData] = useState({});
+  // eslint-disable-next-line no-unused-vars
   const [uploadForm, setUploadForm] = useState(null);
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const [file, setFile] = useState(null);

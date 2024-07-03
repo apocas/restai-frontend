@@ -4,27 +4,27 @@
   "private": true,
   "homepage": "/admin",
   "dependencies": {
-    "@microlink/react-json-view": "^1.23.0",
+    "@microlink/react-json-view": "^1.23.1",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@smastrom/react-rating": "^1.5.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "bootstrap": "^5.3.2",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "bootstrap": "^5.3.3",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-bootstrap": "^2.9.1",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.4",
+    "react-dom": "^18.3.1",
     "react-drag-drop-files": "^2.3.10",
-    "react-gauge-chart": "^0.4.1",
-    "react-icons": "^5.0.1",
+    "react-gauge-chart": "^0.5.1",
+    "react-icons": "^5.2.1",
     "react-modal-image": "^2.6.0",
-    "react-router-dom": "^6.18.0",
-    "react-scripts": "5.0.1",
-    "react-tag-input": "^6.8.1",
-    "react-toastify": "^10.0.4",
-    "web-vitals": "^2.1.4"
+    "react-router-dom": "^6.24.1",
+    "react-scripts": "^5.0.1",
+    "react-tag-input": "^6.10.2",
+    "react-toastify": "^10.0.5",
+    "web-vitals": "^4.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -49,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "^7.24.7"
   }
 }

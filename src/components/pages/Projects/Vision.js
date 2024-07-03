@@ -1,4 +1,4 @@
-import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Alert, Accordion } from 'react-bootstrap';
+import { Container, Row, Form, InputGroup, Col, Card, Button, Spinner, Accordion } from 'react-bootstrap';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { useParams } from "react-router-dom";
 import React, { useState, useEffect, useRef, useContext } from "react";
@@ -26,6 +26,7 @@ function Vision() {
   var { projectName } = useParams();
   const questionForm = useRef(null);
   const negativePromptForm = useRef(null);
+  // eslint-disable-next-line no-unused-vars
   const [uploadForm, setUploadForm] = useState(null);
   const [file, setFile] = useState(null);
   const [answers, setAnswers] = useState([]);
