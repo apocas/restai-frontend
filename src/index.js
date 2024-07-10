@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Navigation from './components/common/Navigation.js'
@@ -32,6 +32,24 @@ import 'react-toastify/dist/ReactToastify.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function Root() {
+  const url = process.env.REACT_APP_RESTAI_API_URL || "";
+  const [version, setVersion] = useState([]);
+
+  const fetchVersion = () => {
+    return fetch(url + "/version")
+      .then((res) => res.json())
+      .then((d) => {
+        setVersion(d.version)
+      }).catch(err => {
+        console.log(err.toString());
+      });
+  }
+
+  useEffect(() => {
+    document.title = 'RESTAI - Users';
+    fetchVersion();
+  }, []);
+
   return (
     <>
       <BrowserRouter basename="/admin">
@@ -75,7 +93,7 @@ function Root() {
           </Routes>
 
           <Container style={{ marginTop: "20px", marginBottom: "20px", textAlign: "center" }}>
-            <ToastContainer 
+            <ToastContainer
               position="top-right"
               autoClose={8000}
               hideProgressBar={false}
@@ -90,7 +108,8 @@ function Root() {
             <Row>
               <Col sm={12}>
                 <hr />
-                Powered by <a href="https://github.com/apocas/restai"><b>RestAI</b>, so many 'A's and 'I's, so little time...</a>
+                Powered by <a href="https://github.com/apocas/restai" target="_blank" rel="noreferrer"><b>RestAI</b>, so many 'A's and 'I's, so little time...</a><br/>
+                {(version) && <span style={{fontSize: "0.7rem"}}>Core v{version + ', UI v' + process.env.REACT_APP_VERSION}</span>}
               </Col>
             </Row>
           </Container>
