@@ -164,7 +164,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Edit - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Edit - ' + projectName;
     fetchInfo();
   }, [projectName]);
 

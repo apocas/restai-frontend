@@ -233,7 +233,7 @@ function Chat() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Chat - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI")  + ' - Chat - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -264,6 +264,11 @@ function Chat() {
             <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities.">ℹ️</Link></Badge>
           }
         </h5>
+        <Row style={{ marginBottom: "15px" }}>
+          <Col sm={12}>
+            {'Check how to consume this project via API '}<b><a href={"/admin/projects/" + projectName + "/api"}>here</a></b>.
+          </Col>
+        </Row>
         <Row>
           {data.human_description &&
             <Col sm={12}>

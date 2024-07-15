@@ -67,7 +67,7 @@ function Login() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Login';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI")  + ' - Login';
     if (remember && remember.username) {
       rememberForm.current.checked = true;
       setInputUsername(remember.username);

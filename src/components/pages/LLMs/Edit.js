@@ -79,7 +79,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Edit - ' + llmname;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI")  + ' - Edit - ' + llmname;
     fetchLLM(llmname);
   }, [llmname]);
 

@@ -121,7 +121,7 @@ function User() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - User - ' + username;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - User - ' + username;
     fetchUser(username);
     fetchProjects();
   }, [username]);

@@ -192,7 +192,7 @@ function Projects() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Projects';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Projects';
     fetchProjects();
     fetchInfo();
   }, []);

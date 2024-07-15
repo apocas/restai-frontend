@@ -104,7 +104,7 @@ function LLMs() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - LLMs';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI")  + ' - LLMs';
     fetchLLMS();
   }, []);
 

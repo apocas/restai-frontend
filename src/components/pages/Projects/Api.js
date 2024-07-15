@@ -26,16 +26,70 @@ function Api() {
       });
   }
 
+  const replaceVars = (code) => {
+    code = code.replaceAll('<URL>', window.location.protocol + "//" + window.location.host);
+    code = code.replaceAll('<PROJECT>', projectName);
+    code = code.replaceAll('<QUESTION>', data.default_prompt || 'Who was born first? Chicken or egg?');
+    return code;
+  }
+
+  const pythonquestioncode = () => {
+    return replaceVars(`import requests
+
+api_key = 'YOUR_API_KEY'
+
+data = {
+    'question': '<QUESTION>',
+}
+
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'Bearer {api_key}',
+}
+
+response = requests.post('<URL>/<PROJECT>/question', json=data, headers=headers)
+
+if response.status_code != 200:
+    print('Error:', response.status_code, response.text)
+else:
+    response_data = response.json()
+    print(response_data)`);
+  }
+
+  const pythonchatcode = () => {
+    return replaceVars(`import requests
+
+api_key = 'YOUR_API_KEY'
+
+data = {
+    'question': '<QUESTION>',
+      #'id' => 'XXXXXXXXXXX' //First iteration should not contain ID it will start a new chat history. Use the ID returned in the first response to continue the chat.
+}
+
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'Bearer {api_key}',
+}
+
+response = requests.post('<URL>/<PROJECT>/question', json=data, headers=headers)
+
+if response.status_code != 200:
+    print('Error:', response.status_code, response.text)
+else:
+    response_data = response.json()
+    print(response_data)`);
+  }
+
   const phpquestioncode = () => {
-    return `<?php
+    return replaceVars(`<?php
 
 $apiKey = 'YOUR_API_KEY';
 
 $data = [
-  'question' => 'What is the capital of France?',
+  'question' => '<QUESTION>',
 ];
 
-$ch = curl_init('https://ai.group.team.blue/xpto/question');
+$ch = curl_init('<URL>/<PROJECT>/chat');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -54,20 +108,20 @@ if (curl_errno($ch)) {
   print_r($responseData);
 }
 
-curl_close($ch);`;
+curl_close($ch);`);
   }
 
   const phpchatcode = () => {
-    return `<?php
+    return replaceVars(`<?php
 
 $apiKey = 'YOUR_API_KEY';
 
 $data = [
-  'question' => 'What is the capital of France?',
+  'question' => '<QUESTION>',
   //'id' => 'XXXXXXXXXXX' //First iteration should not contain ID it will start a new chat history. Use the ID returned in the first response to continue the chat. 
 ];
 
-$ch = curl_init('https://ai.group.team.blue/xpto/chat');
+$ch = curl_init('<URL>/<PROJECT>/chat');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -86,59 +140,100 @@ if (curl_errno($ch)) {
   print_r($responseData);
 }
 
-curl_close($ch);`;
+curl_close($ch);`);
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Project - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Project - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 
   return (
     <>
       <Container style={{ marginTop: "20px" }}>
-        <Tabs
-          defaultActiveKey="php"
-          id="uncontrolled-tab-example"
-          className="mb-3"
-        >
-          <Tab eventKey="php" title="PHP">
-            <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>PHP Question (stateless) Usage</Accordion.Header>
-                <Accordion.Body>
-                  <Row>
-                    <Col sm={12}>
-                      <CopyBlock
-                        text={phpquestioncode()}
-                        language="php"
-                        theme={monoBlue}
-                        codeBlock
-                      />
-                    </Col>
-                  </Row>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>PHP Chat (stateful) Usage</Accordion.Header>
-                <Accordion.Body>
-                  <Row>
-                    <Col sm={12}>
-                      <CopyBlock
-                        text={phpchatcode()}
-                        language="php"
-                        theme={monoBlue}
-                        codeBlock
-                      />
-                    </Col>
-                  </Row>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </Tab>
-          <Tab eventKey="python" title="Python">
-          </Tab>
-        </Tabs>
+        <Row style={{ marginBottom: "15px" }}>
+          <Col sm={12}>
+            {'Generate an API key '}<b><a href={"/admin/users/" + user.username}>here</a></b>.
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
+            <Tabs
+              defaultActiveKey="php"
+              id="uncontrolled-tab-example"
+              className="mb-3"
+            >
+              <Tab eventKey="php" title="PHP">
+                <Accordion>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>PHP Question (stateless) Usage</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        <Col sm={12}>
+                          <CopyBlock
+                            text={phpquestioncode()}
+                            language="php"
+                            theme={monoBlue}
+                            codeBlock
+                          />
+                        </Col>
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1">
+                    <Accordion.Header>PHP Chat (stateful) Usage</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        <Col sm={12}>
+                          <CopyBlock
+                            text={phpchatcode()}
+                            language="php"
+                            theme={monoBlue}
+                            codeBlock
+                          />
+                        </Col>
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Tab>
+              <Tab eventKey="python" title="Python">
+                <Accordion>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>Python Question (stateless) Usage</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        <Col sm={12}>
+                          <CopyBlock
+                            text={pythonquestioncode()}
+                            language="php"
+                            theme={monoBlue}
+                            codeBlock
+                          />
+                        </Col>
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1">
+                    <Accordion.Header>Python Chat (stateful) Usage</Accordion.Header>
+                    <Accordion.Body>
+                      <Row>
+                        <Col sm={12}>
+                          <CopyBlock
+                            text={pythonchatcode()}
+                            language="php"
+                            theme={monoBlue}
+                            codeBlock
+                          />
+                        </Col>
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Tab>
+            </Tabs>
+          </Col>
+        </Row>
       </Container>
     </>
   );

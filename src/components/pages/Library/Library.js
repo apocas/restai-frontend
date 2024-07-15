@@ -49,7 +49,7 @@ function Library() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Library';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI")  + ' - Library';
     fetchProjects();
   }, []);
 

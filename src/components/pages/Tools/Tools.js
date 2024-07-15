@@ -25,7 +25,7 @@ function Tools() {
 
 
   useEffect(() => {
-    document.title = 'RESTAI - Tools';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Tools';
     fetchTools();
   }, []);
 

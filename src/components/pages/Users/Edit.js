@@ -86,7 +86,7 @@ function Edit() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Edit - ' + username;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Edit - ' + username;
     fetchUser(username);
   }, []);
 

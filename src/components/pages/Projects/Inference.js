@@ -203,7 +203,7 @@ function Inference() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Inference - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Inference - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 
@@ -228,6 +228,11 @@ function Inference() {
             <Badge bg="danger">Public AI <Link title="You ARE SHARING data with external entities."><MdInfoOutline size="1.4em" /></Link></Badge>
           }
         </h5>
+        <Row style={{ marginBottom: "15px" }}>
+          <Col sm={12}>
+            {'Check how to consume this project via API '}<b><a href={"/admin/projects/" + projectName + "/api"}>here</a></b>.
+          </Col>
+        </Row>
         <Row>
           {data.human_description &&
             <Col sm={12}>

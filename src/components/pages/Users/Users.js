@@ -91,7 +91,7 @@ function Users() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Users';
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Users';
     fetchUsers();
   }, []);
 

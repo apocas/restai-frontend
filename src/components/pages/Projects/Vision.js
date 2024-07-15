@@ -193,7 +193,7 @@ function Vision() {
   };
 
   useEffect(() => {
-    document.title = 'RESTAI - Vision - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Vision - ' + projectName;
     fetchProject(projectName);
   }, [projectName]);
 
@@ -208,6 +208,11 @@ function Vision() {
               <span style={{ whiteSpace: "pre-line" }}>{data.human_description}</span>
             </Col>
           }
+        </Row>
+        <Row style={{ marginBottom: "15px" }}>
+          <Col sm={12}>
+            {'Check how to consume this project via API '}<b><a href={"/admin/projects/" + projectName + "/api"}>here</a></b>.
+          </Col>
         </Row>
         <Row style={{ textAlign: "right", marginLeft: "4px", marginBottom: "15px", marginTop: "-9px" }}>
           (For generation remember to specify if you want to use Dall-e or Stable Diffusion in plain english)

@@ -453,7 +453,7 @@ function Project() {
   }
 
   useEffect(() => {
-    document.title = 'RESTAI - Project - ' + projectName;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RestAI") + ' - Project - ' + projectName;
     fetchProject(projectName);
     fetchInfo();
   }, [projectName]);
@@ -469,6 +469,11 @@ function Project() {
         <Row style={{ marginTop: "20px" }}>
           <Col sm={12}>
             <h1><PiMagnifyingGlassPlus size="1.2em" /> Project Details ({data.name})</h1>
+          </Col>
+        </Row>
+        <Row style={{ marginBottom: "15px" }}>
+          <Col sm={12}>
+            {'Check how to consume this project via API '}<b><a href={"/admin/projects/" + projectName + "/api"}>here</a></b>.
           </Col>
         </Row>
         {(data.level === "own") &&
