@@ -47,7 +47,7 @@ headers = {
     'Authorization': f'Bearer {api_key}',
 }
 
-response = requests.post('<URL>/<PROJECT>/question', json=data, headers=headers)
+response = requests.post('<URL>/projects/<PROJECT>/question', json=data, headers=headers)
 
 if response.status_code != 200:
     print('Error:', response.status_code, response.text)
@@ -71,7 +71,7 @@ headers = {
     'Authorization': f'Bearer {api_key}',
 }
 
-response = requests.post('<URL>/<PROJECT>/question', json=data, headers=headers)
+response = requests.post('<URL>/projects/<PROJECT>/question', json=data, headers=headers)
 
 if response.status_code != 200:
     print('Error:', response.status_code, response.text)
@@ -89,7 +89,7 @@ $data = [
   'question' => '<QUESTION>',
 ];
 
-$ch = curl_init('<URL>/<PROJECT>/chat');
+$ch = curl_init('<URL>/projects/<PROJECT>/chat');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
@@ -121,7 +121,7 @@ $data = [
   //'id' => 'XXXXXXXXXXX' //First iteration should not contain ID it will start a new chat history. Use the ID returned in the first response to continue the chat. 
 ];
 
-$ch = curl_init('<URL>/<PROJECT>/chat');
+$ch = curl_init('<URL>/projects/<PROJECT>/chat');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
