@@ -71,7 +71,7 @@ headers = {
     'Authorization': f'Bearer {api_key}',
 }
 
-response = requests.post('<URL>/projects/<PROJECT>/question', json=data, headers=headers)
+response = requests.post('<URL>/projects/<PROJECT>/chat', json=data, headers=headers)
 
 if response.status_code != 200:
     print('Error:', response.status_code, response.text)
@@ -89,7 +89,7 @@ $data = [
   'question' => '<QUESTION>',
 ];
 
-$ch = curl_init('<URL>/projects/<PROJECT>/chat');
+$ch = curl_init('<URL>/projects/<PROJECT>/question');
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
