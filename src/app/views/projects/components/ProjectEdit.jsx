@@ -37,7 +37,7 @@ export default function ProjectEdit({ project, projects, info }) {
     //}
 
     if (project.type === "agent") {
-      opts.tools = state.tools.join(",")
+      opts.tools = state.tools
     }
 
     if (project.type === "rag") {
@@ -245,10 +245,13 @@ export default function ProjectEdit({ project, projects, info }) {
                       <Autocomplete
                         multiple
                         id="tags-standard"
+                        name="tools"
                         options={tools.map((tool) => tool.name)}
                         getOptionLabel={(option) => option}
-                        onChange={handleChange}
-                        defaultValue={(state.tools || "").split(",")}
+                        onChange={(event, newValue) => {
+                          setState({ ...state, ["tools"]: newValue.join(",") });
+                        }}
+                        defaultValue={state.tools ? state.tools.split(",") : []}
                         renderInput={(params) => (
                           <TextField
                             {...params}
