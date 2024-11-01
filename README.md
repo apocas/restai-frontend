@@ -1,2 +1,2 @@
 # restai-frontend
-RestAI's Frontend
+RESTai's Frontend

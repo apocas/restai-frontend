@@ -1,42 +1,18 @@
 {
-  "name": "react-app",
-  "version": "1.0.0",
+  "name": "restai-frontend",
+  "version": "2.0.0",
   "private": true,
   "homepage": "/admin",
-  "dependencies": {
-    "@microlink/react-json-view": "^1.23.1",
-    "@microsoft/fetch-event-source": "^2.0.1",
-    "@smastrom/react-rating": "^1.5.0",
-    "@testing-library/jest-dom": "^6.4.6",
-    "@testing-library/react": "^16.0.0",
-    "@testing-library/user-event": "^14.5.2",
-    "bootstrap": "^5.3.3",
-    "js-cookie": "^3.0.5",
-    "jwt-decode": "^4.0.0",
-    "react": "^18.3.1",
-    "react-bootstrap": "^2.10.4",
-    "react-code-blocks": "^0.1.6",
-    "react-dom": "^18.3.1",
-    "react-drag-drop-files": "^2.3.10",
-    "react-gauge-chart": "^0.5.1",
-    "react-icons": "^5.2.1",
-    "react-modal-image": "^2.6.0",
-    "react-router-dom": "^6.24.1",
-    "react-scripts": "^5.0.1",
-    "react-tag-input": "^6.10.2",
-    "react-toastify": "^10.0.5",
-    "web-vitals": "^4.2.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "REACT_APP_VERSION=$npm_package_version BUILD_PATH='./html' react-scripts build",
+    "start": "REACT_APP_VERSION=$npm_package_version react-scripts start",
+    "build": "REACT_APP_VERSION=$npm_package_version react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "ghp": "react-scripts build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -51,7 +27,46 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@microlink/react-json-view": "^1.23.1",
+    "@microsoft/fetch-event-source": "^2.0.1",
+    "@mui/icons-material": "^5.15.10",
+    "@mui/material": "^5.15.10",
+    "@mui/lab": "^5.0.0-alpha.165",
+    "@reduxjs/toolkit": "^2.2.1",
+    "autosuggest-highlight": "^3.3.4",
+    "axios": "^1.6.7",
+    "clsx": "^2.1.0",
+    "crypto-js": "^4.2.0",
+    "date-fns": "^3.3.1",
+    "echarts": "^5.4.3",
+    "echarts-for-react": "^3.0.2",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
+    "mui-datatables": "^4.3.0",
+    "notistack": "^3.0.1",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-code-blocks": "^0.1.6",
+    "react-dom": "^18.2.0",
+    "react-highlight": "^0.15.0",
+    "react-material-ui-form-validator": "^3.0.1",
+    "react-modal-image": "^2.6.0",
+    "react-perfect-scrollbar": "^1.5.8",
+    "react-qr-code": "^2.0.15",
+    "react-redux": "^9.1.0",
+    "react-router-dom": "^6.22.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^10.0.6",
+    "shortid": "^2.2.16"
+  },
   "devDependencies": {
-    "@babel/plugin-transform-private-property-in-object": "^7.24.7"
+    "axios-mock-adapter": "^1.22.0",
+    "cross-env": "^7.0.3",
+    "customize-cra": "^1.0.0",
+    "gh-pages": "^6.1.1"
   }
 }
