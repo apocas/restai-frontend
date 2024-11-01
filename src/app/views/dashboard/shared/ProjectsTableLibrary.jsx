@@ -56,7 +56,7 @@ export default function ProjectsTableLibrary({ projects = [], title = "Projects"
             },
           }
         }}
-        data={projects.map(project => [project.name, project.type, project.llm, project.users, project.name])}
+        data={projects.map(project => [project.name, project.type, project, project, project.name])}
         columns={[{
           name: "Name",
           options: {
