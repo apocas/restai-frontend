@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, Divider, Grid, MenuItem, styled, TextField } from "@mui/material";
+import { Box, Button, Card, Divider, Grid, MenuItem, styled, TextField, Tabs, Tab } from "@mui/material";
 import Publish from "@mui/icons-material/Publish";
 import { useDropzone } from "react-dropzone";
 import { toast } from 'react-toastify';
@@ -9,6 +9,7 @@ import { FlexAlignCenter, FlexBox } from "app/components/FlexBox";
 import { FileUpload } from "@mui/icons-material";
 import { convertHexToRGB } from "app/utils/utils";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 const Form = styled("form")({
   paddingLeft: "16px",
@@ -34,41 +35,77 @@ export default function RAGUpload({ project }) {
   const navigate = useNavigate();
   const auth = useAuth();
   const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [state, setState] = useState({ "chunksize": "512", "splitter": "token" });
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
     "maxFiles": 1,
     "multiple": false
   });
+  const [tabIndex, setTabIndex] = useState(0);
+  const handleTabChange = (e, value) => setTabIndex(value);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append("file", files[0]);
-    formData.append("splitter", state.splitter);
-    formData.append("chunks", state.chunksize);
+    setLoading(true);
 
-    fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
-      method: 'POST',
-      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
-      body: formData,
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            toast.error(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
+    if (tabIndex === 0) {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      formData.append("splitter", state.splitter);
+      formData.append("chunks", state.chunksize);
+
+      fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
+        method: 'POST',
+        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
+        body: formData,
       })
-      .then((response) => {
-        window.location.reload();
-      }).catch(err => {
-        toast.error(err.toString());
-      }).finally(() => {
-      });
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              toast.error(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
+        .then((response) => {
+          window.location.reload();
+        }).catch(err => {
+          toast.error(err.toString());
+        }).finally(() => {
+        });
+    } else if (tabIndex === 1) {
+      var body = {
+        "url": state.url,
+        "splitter": state.splitter,
+        "chunks": state.chunksize
+      }
+
+      fetch(url + "/projects/" + project.name + "/embeddings/ingest/url", {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+        body: JSON.stringify(body),
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              toast.error(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
+        .then((response) => {
+          window.location.reload();
+        }).catch(err => {
+          toast.error(err.toString());
+        }).finally(() => {
+        });
+    }
   };
 
   const handleChange = (event) => {
@@ -130,23 +167,54 @@ export default function RAGUpload({ project }) {
               ))}
             </TextField>
 
-            <DropZone {...getRootProps()}>
-              <input {...getInputProps()} />
-              <FlexBox alignItems="center" flexDirection="column">
-                <Publish sx={{ color: "text.secondary", fontSize: "48px" }} />
-                {files.length ? (
-                  <span>{files[0].name}</span>
-                ) : (
-                  <span>Drop file</span>
-                )}
-              </FlexBox>
-            </DropZone>
+            <Tabs
+              value={tabIndex}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary">
+              {["File", "URL"].map((item, ind) => (
+                <Tab key={ind} value={ind} label={item} sx={{ textTransform: "capitalize" }} />
+              ))}
+            </Tabs>
+
+            <Divider sx={{ mb: "24px" }} />
+
+            {tabIndex === 0 &&
+              <DropZone {...getRootProps()}>
+                <input {...getInputProps()} />
+                <FlexBox alignItems="center" flexDirection="column">
+                  <Publish sx={{ color: "text.secondary", fontSize: "48px" }} />
+                  {files.length ? (
+                    <span>{files[0].name}</span>
+                  ) : (
+                    <span>Drop file</span>
+                  )}
+                </FlexBox>
+              </DropZone>
+            }
+
+            {tabIndex === 1 && <>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="url"
+                label="URL"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.url}
+                sx={{ mb: "24px" }}
+              /></>}
           </Grid>
         </Grid>
 
-        <Button type="submit" color="primary" variant="contained" sx={{ mb: 2, px: 6 }}>
+        <LoadingButton
+          type="submit"
+          color="primary"
+          loading={loading}
+          variant="contained"
+          sx={{ mb: 2, px: 6 }}>
           Ingest
-        </Button>
+        </LoadingButton>
       </Form>
     </Card>
   );
