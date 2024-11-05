@@ -6,6 +6,15 @@ import useSettings from "app/hooks/useSettings";
 import { topBarHeight } from "app/utils/constant";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+import { useNavigate } from "react-router-dom";
+import { Description } from "@mui/icons-material";
 
 // STYLED COMPONENTS
 const AppFooter = styled(Toolbar)(() => ({
@@ -33,6 +42,18 @@ const FooterContent = styled("div")(() => ({
   margin: "0 auto"
 }));
 
+const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
+  position: 'absolute',
+  '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+  '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+    top: theme.spacing(2),
+    left: theme.spacing(2),
+  },
+}));
+
 export default function Footer() {
   const theme = useTheme();
   const { settings } = useSettings();
@@ -41,6 +62,8 @@ export default function Footer() {
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [version, setVersion] = useState([]);
+
+  const navigate = useNavigate();
 
   const fetchVersion = () => {
     return fetch(url + "/version")
@@ -55,6 +78,10 @@ export default function Footer() {
   useEffect(() => {
     fetchVersion();
   }, []);
+
+  const actions = [
+    { icon: <Description />, name: 'New Project' },
+  ];
 
   return (
     <ThemeProvider theme={footerTheme}>
@@ -79,6 +106,23 @@ export default function Footer() {
               {(version) && <span style={{ fontSize: "0.7rem" }}>Core v{version + ', UI v' + process.env.REACT_APP_VERSION}</span>}
             </Paragraph>
           </FooterContent>
+
+          <SpeedDial
+            ariaLabel="SpeedDial basic example"
+            sx={{ position: 'absolute', bottom: 16, right: 16 }}
+            icon={<SpeedDialIcon />}
+            theme={footerTheme}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                onClick={() => { navigate("/projects/new");}}
+              />
+            ))}
+          </SpeedDial>
+
         </AppFooter>
       </AppBar>
     </ThemeProvider >

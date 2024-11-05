@@ -43,12 +43,6 @@ export default function RAGUpload({ project }) {
   const [embedding, setEmbedding] = useState({ "ids": {}, "metadatas": {}, "documents": {} });
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({ "chunksize": "512", "splitter": "token" });
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
-    "maxFiles": 1,
-    "multiple": false
-  });
-  const [tabIndex, setTabIndex] = useState(0);
-  const handleTabChange = (e, value) => setTabIndex(value);
 
   const fetchEmbeddings = (projectName) => {
     setEmbeddings([]);
@@ -88,7 +82,7 @@ export default function RAGUpload({ project }) {
 
   useEffect(() => {
     fetchEmbeddings(project.name);
-  }, [acceptedFiles]);
+  }, []);
 
   return (
     <Card elevation={3}>

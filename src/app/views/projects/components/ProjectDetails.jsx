@@ -6,6 +6,7 @@ import ProjectRAG from "./ProjectRAG";
 import RAGUpload from "./RAGUpload";
 import RAGRetrieval from "./RAGRetrieval";
 import ProjectAgent from "./ProjectAgent";
+import RouterDetails from "./RouterDetails";
 import ProjectSecurity from "./ProjectSecurity";
 
 export default function ProjectDetails({ project, projects, info }) {
@@ -42,6 +43,11 @@ export default function ProjectDetails({ project, projects, info }) {
         {project.type === "agent" && (
           <Grid item lg={4} md={6} xs={12}>
             <ProjectAgent project={project} projects={projects} />
+          </Grid>
+        )}
+        {project.type === "router" && (
+          <Grid item lg={8} md={6} xs={12}>
+            <RouterDetails project={project} projects={projects} />
           </Grid>
         )}
       </Grid>
