@@ -4,6 +4,7 @@ import ProjectInfo from "./ProjectInfo";
 import ProjectAI from "./ProjectAI";
 import ProjectRAG from "./ProjectRAG";
 import RAGUpload from "./RAGUpload";
+import RAGRetrieval from "./RAGRetrieval";
 import ProjectAgent from "./ProjectAgent";
 import ProjectSecurity from "./ProjectSecurity";
 
@@ -31,6 +32,11 @@ export default function ProjectDetails({ project, projects, info }) {
             <Grid item lg={4} md={6} xs={12}>
               <RAGUpload project={project} />
             </Grid>
+            {project.chunks < 30000 && (
+              <Grid item lg={12} md={12} xs={12}>
+                <RAGRetrieval project={project} />
+              </Grid>
+            )}
           </>
         )}
         {project.type === "agent" && (
