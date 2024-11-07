@@ -99,19 +99,23 @@ export const AuthProvider = ({ children }) => {
         user = JSON.parse(localStorage.getItem("user"));
       }
 
-      try {
-        const response = await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, { headers: { "Authorization": "Basic " + user.token } });
-        response.data.token = user.token;
+      if (user) {
+        try {
+          const response = await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, { headers: { "Authorization": "Basic " + user.token } });
+          response.data.token = user.token;
 
-        if (response.data.is_admin === true) {
-          response.data.role = "ADMIN";
-        } else {
-          response.data.role = "USER";
+          if (response.data.is_admin === true) {
+            response.data.role = "ADMIN";
+          } else {
+            response.data.role = "USER";
+          }
+
+          dispatch({ type: "INIT", payload: { isAuthenticated: true, user: response.data } });
+        } catch (err) {
+          console.error(err);
+          dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
         }
-
-        dispatch({ type: "INIT", payload: { isAuthenticated: true, user: response.data } });
-      } catch (err) {
-        console.error(err);
+      } else {
         dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
       }
     })();
@@ -120,7 +124,7 @@ export const AuthProvider = ({ children }) => {
   if (!state.isInitialized) return <MatxLoading />;
 
   return (
-    <AuthContext.Provider value={{ ...state, method: "JWT", login, checkAuth,logout }}>
+    <AuthContext.Provider value={{ ...state, method: "JWT", login, checkAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );

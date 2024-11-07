@@ -17,7 +17,6 @@ import { toast } from 'react-toastify';
 const Form = styled("form")(() => ({ padding: "16px" }));
 
 export default function LLMNew({ projects, info }) {
-  const typeList = ["qa", "chat", "vision"];
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -27,23 +26,18 @@ export default function LLMNew({ projects, info }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(state);
 
-    var opts = {
-      "name": state.projectname,
-      "llm": state.projectllm,
-      "type": state.projecttype
-    }
-
-    if (state.projecttype === "rag") {
-      opts.embeddings = state.projectembeddings;
-      opts.vectorstore = state.projectvectorstore;
-    }
-
-    fetch(url + "/projects", {
+    fetch(url + "/llms", {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
-      body: JSON.stringify(opts),
+      body: JSON.stringify({
+        "name": state.name,
+        "class_name": state.class,
+        "options": state.options,
+        "privacy": state.privacy,
+        "type": state.type,
+        "description": state.description
+      })
     })
       .then(function (response) {
         if (!response.ok) {
@@ -56,7 +50,7 @@ export default function LLMNew({ projects, info }) {
         }
       })
       .then((response) => {
-        navigate("/project/" + response.project);
+        navigate("/llm/" + response.name);
       }).catch(err => {
         toast.error(err.toString());
       });
@@ -118,7 +112,7 @@ export default function LLMNew({ projects, info }) {
               onChange={handleChange}
               sx={{ minWidth: 188 }}
             >
-              {typeList.map((item, ind) => (
+              {["qa", "chat", "vision"].map((item, ind) => (
                 <MenuItem value={item} key={item}>
                   {item}
                 </MenuItem>
@@ -140,7 +134,7 @@ export default function LLMNew({ projects, info }) {
               onChange={handleChange}
               sx={{ minWidth: 188 }}
             >
-              {typeList.map((item, ind) => (
+              {["public", "private"].map((item, ind) => (
                 <MenuItem value={item} key={item}>
                   {item}
                 </MenuItem>

@@ -28,7 +28,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 
-export default function ProjectsTableLibrary({ projects = [], title = "Projects" }) {
+export default function ProjectsTableLibrary({ projects = [], title = "Projects Library" }) {
   const { palette } = useTheme();
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
