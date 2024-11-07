@@ -1,7 +1,6 @@
 import { Grid, LinearProgress, Typography, styled, useTheme } from "@mui/material";
 import { Small } from "./Typography";
 
-// STYLED COMPONENT
 const CustomLinearProgress = styled(LinearProgress)({
   borderRadius: 2,
   background: "rgba(0, 0, 0, 0.1)"

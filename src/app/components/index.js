@@ -1,4 +1,3 @@
-export { default as Chatbox } from "./Chatbox";
 export { default as ChatHead } from "./ChatHead";
 export { default as MatxLogo } from "./MatxLogo";
 export { default as MatxMenu } from "./MatxMenu";

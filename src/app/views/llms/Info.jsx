@@ -87,7 +87,7 @@ export default function ProjectInfo() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }, { name: id, path: "/project/" + id }]} />
+        <Breadcrumb routeSegments={[{ name: "LLMs", path: "/llms" }, { name: id, path: "/llm/" + id }]} />
       </Box>
 
       <ContentBox className="analytics">

@@ -1,7 +1,6 @@
 import { Box, Button, styled } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-// STYLED COMPONENTS
 const FlexBox = styled(Box)({
   display: "flex",
   alignItems: "center"

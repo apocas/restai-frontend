@@ -4,7 +4,6 @@ import clsx from "clsx";
 
 import { topBarHeight } from "app/utils/constant";
 
-// STYLED COMPONENTS
 const PopupRoot = styled("div")(({ theme }) => ({
   "& .popupOpen": {
     top: topBarHeight + 16,

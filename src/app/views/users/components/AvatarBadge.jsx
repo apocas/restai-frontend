@@ -1,6 +1,5 @@
 import { Badge, styled } from "@mui/material";
 
-// STYLED COMPONENT
 const StyledBadge = styled(Badge)(({ theme, width, height }) => ({
   "& .MuiBadge-badge": {
     width: width,

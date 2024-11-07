@@ -6,20 +6,17 @@ import {
   Divider,
   TextField,
   styled,
-  Autocomplete,
   MenuItem
 } from "@mui/material";
-import { Fragment, useState, useEffect } from "react";
+import { useState } from "react";
 import { H5, Paragraph } from "app/components/Typography";
 import { FlexBetween, FlexBox } from "app/components/FlexBox";
 import { convertHexToRGB } from "app/utils/utils";
 import QRCode from "react-qr-code";
-import { set } from "lodash";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 
 export default function Preferences({ user, projects }) {
-  const [projs, setProjs] = useState([]);
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
   const [state, setState] = useState({});

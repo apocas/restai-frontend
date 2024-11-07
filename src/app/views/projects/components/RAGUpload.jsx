@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, Divider, Grid, MenuItem, styled, TextField, Tabs, Tab } from "@mui/material";
+import { Card, Divider, Grid, MenuItem, styled, TextField, Tabs, Tab } from "@mui/material";
 import Publish from "@mui/icons-material/Publish";
 import { useDropzone } from "react-dropzone";
 import { toast } from 'react-toastify';
@@ -8,7 +8,6 @@ import useAuth from "app/hooks/useAuth";
 import { FlexAlignCenter, FlexBox } from "app/components/FlexBox";
 import { FileUpload } from "@mui/icons-material";
 import { convertHexToRGB } from "app/utils/utils";
-import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
 const Form = styled("form")({
@@ -32,7 +31,6 @@ const DropZone = styled(FlexAlignCenter)(({ isDragActive, theme }) => ({
 
 export default function RAGUpload({ project }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const navigate = useNavigate();
   const auth = useAuth();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);

@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Grid, styled, Box } from "@mui/material";
-import useAuth from "app/hooks/useAuth";
 import UserNew from "./components/UserNew";
 import Breadcrumb from "app/components/Breadcrumb";
 
@@ -18,14 +17,9 @@ const ContentBox = styled("div")(({ theme }) => ({
 
 
 export default function UserNewView() {
-  const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const auth = useAuth();
-
-
   useEffect(() => {
     document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - New User';
   }, []);
-
 
   return (
     <Container>

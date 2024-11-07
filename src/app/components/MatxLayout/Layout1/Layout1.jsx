@@ -14,7 +14,6 @@ import SidenavTheme from "app/components/MatxTheme/SidenavTheme/SidenavTheme";
 
 import { sidenavCompactWidth, sideNavWidth } from "app/utils/constant";
 
-// STYLED COMPONENTS
 const Layout1Root = styled(Box)(({ theme }) => ({
   display: "flex",
   background: theme.palette.background.default

@@ -1,8 +1,7 @@
-import { SportsEsports, PhotoLibrary, QuestionAnswer } from "@mui/icons-material";
+import { SportsEsports } from "@mui/icons-material";
 import {
   Box,
   Card,
-  Table,
   Avatar,
   styled,
   useTheme,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Checkbox, Grid, TextField, Box, styled, useTheme } from "@mui/material";
+import { Card, Checkbox, Grid, TextField, Box, styled } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 import useAuth from "app/hooks/useAuth";

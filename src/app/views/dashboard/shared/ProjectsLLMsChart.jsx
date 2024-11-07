@@ -41,7 +41,7 @@ export default function ProjectsLLMsChart({ projects = [], height, color = [] })
         label: {
           normal: {
             show: false,
-            position: "center", // shows the description data to center, turn off to show in right side
+            position: "center",
             textStyle: { color: theme.palette.text.secondary, fontSize: 13, fontFamily: "roboto" },
             formatter: "{a}"
           },

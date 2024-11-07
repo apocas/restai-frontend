@@ -9,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { useState, useEffect } from "react";
-import ReactJson from '@microlink/react-json-view';
 
 const DialogTitleRoot = styled(MuiDialogTitle)(({ theme }) => ({
   margin: 0,

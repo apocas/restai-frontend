@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import useAuth from "app/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,8 +9,6 @@ import {
   Grid,
   MenuItem,
   styled,
-  Tab,
-  Tabs,
   TextField
 } from "@mui/material";
 import { H4 } from "app/components/Typography";
@@ -20,7 +18,6 @@ const Form = styled("form")(() => ({ padding: "16px" }));
 
 export default function LLMNew({ projects, info }) {
   const typeList = ["qa", "chat", "vision"];
-  const privacyList = ["public", "private"];
   const auth = useAuth();
   const navigate = useNavigate();
 

@@ -6,7 +6,6 @@ import {
   TableRow,
   TableBody,
   TableCell,
-  Switch,
   Button
 } from "@mui/material";
 

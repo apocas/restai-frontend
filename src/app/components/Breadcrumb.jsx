@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import { Breadcrumbs, styled } from "@mui/material";
 import { Home, NavigateNext } from "@mui/icons-material";
 
-// STYLED COMPONENTS
 const BreadcrumbRoot = styled("div")({
   display: "flex",
   flexWrap: "wrap",

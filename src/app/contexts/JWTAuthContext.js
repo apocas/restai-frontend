@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
 import axios from "axios";
-// CUSTOM COMPONENT
 import { MatxLoading } from "app/components";
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode'
@@ -56,6 +55,13 @@ export const AuthProvider = ({ children }) => {
     } else {
       user.token = basicAuth;
     }
+
+    if (user.is_admin === true) {
+      user.role = "ADMIN";
+    } else {
+      user.role = "USER";
+    }
+
     localStorage.setItem("user", JSON.stringify(user));
 
     dispatch({ type: "LOGIN", payload: { user } });
@@ -96,6 +102,13 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, { headers: { "Authorization": "Basic " + user.token } });
         response.data.token = user.token;
+
+        if (response.data.is_admin === true) {
+          response.data.role = "ADMIN";
+        } else {
+          response.data.role = "USER";
+        }
+
         dispatch({ type: "INIT", payload: { isAuthenticated: true, user: response.data } });
       } catch (err) {
         console.error(err);
@@ -104,7 +117,6 @@ export const AuthProvider = ({ children }) => {
     })();
   }, []);
 
-  // SHOW LOADER
   if (!state.isInitialized) return <MatxLoading />;
 
   return (

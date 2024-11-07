@@ -1,3 +1,5 @@
+import { authRoles } from "app/auth/authRoles";
+
 export const navigations = [
   { name: "Home", path: "/home", icon: "dashboard" },
   { label: "AIaaS", type: "label" },
@@ -20,9 +22,10 @@ export const navigations = [
     name: "Users",
     icon: "person",
     path: "/users",
+    auth: authRoles.admin,
     children: [
-      { name: "User List", iconText: "SI", path: "/users" },
-      { name: "New User", iconText: "SU", path: "/users/new" },
+      { name: "User List", iconText: "SI", path: "/users", auth: authRoles.admin },
+      { name: "New User", iconText: "SU", path: "/users/new", auth: authRoles.admin },
     ]
   },
   { label: "AI", type: "label" },
@@ -32,7 +35,7 @@ export const navigations = [
     path: "/llms",
     children: [
       { name: "List LLMs", iconText: "SI", path: "/llms" },
-      { name: "New LLM", iconText: "SU", path: "/llms/new" },
+      { name: "New LLM", iconText: "SU", path: "/llms/new", auth: authRoles.admin },
     ]
   },
   {

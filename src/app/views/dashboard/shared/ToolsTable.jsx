@@ -1,4 +1,3 @@
-import { SportsEsports, PhotoLibrary, QuestionAnswer } from "@mui/icons-material";
 import { useState } from "react";
 import {
   Box,
@@ -11,12 +10,9 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  IconButton,
   Button,
-  Tooltip,
   TablePagination
 } from "@mui/material";
-import sha256 from 'crypto-js/sha256';
 import { useNavigate } from "react-router-dom";
 import Highlight from 'react-highlight';
 
@@ -49,34 +45,8 @@ const ProductTable = styled(Table)(() => ({
   "& td:first-of-type": { paddingLeft: "16px !important" }
 }));
 
-const Small = styled("small")(({ bgcolor }) => ({
-  width: 50,
-  height: 15,
-  color: "#fff",
-  padding: "2px 8px",
-  borderRadius: "4px",
-  overflow: "hidden",
-  background: bgcolor,
-  boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)"
-}));
-
-const StyledAvatar = styled(Avatar)(() => ({
-  width: "32px !important",
-  height: "32px !important"
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1)
-}));
-
 
 export default function ProjectsTable({ tools = [], title = "Tools" }) {
-  const { palette } = useTheme();
-  const bgError = palette.error.main;
-  const bgPrimary = palette.primary.main;
-  const bgSecondary = palette.secondary.main;
-
-  const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
 

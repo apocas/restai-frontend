@@ -44,7 +44,7 @@ export default function LLMEditView() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects"}, { name: "Edit " + id, path: "/project/" + id + "/edit" }]} />
+        <Breadcrumb routeSegments={[{ name: "LLMs", path: "/llms"}, { name: "Edit " + id, path: "/project/" + id + "/edit" }]} />
       </Box>
 
       <ContentBox className="analytics">

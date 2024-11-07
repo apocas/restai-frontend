@@ -1,9 +1,7 @@
-import { Card, Divider, Box, Grid, TextField, Button, MenuItem, Switch, Autocomplete, Slider, Typography } from "@mui/material";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import { Card, Divider, Box, Grid, TextField, Button } from "@mui/material";
 import { H4 } from "app/components/Typography";
-import { useState, useRef, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "app/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 export default function ProjectEdit({ llm }) {

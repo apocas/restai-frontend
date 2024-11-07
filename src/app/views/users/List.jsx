@@ -49,7 +49,7 @@ export default function Users() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }]} />
+        <Breadcrumb routeSegments={[{ name: "Users", path: "/users" }]} />
       </Box>
 
       <ContentBox className="analytics">

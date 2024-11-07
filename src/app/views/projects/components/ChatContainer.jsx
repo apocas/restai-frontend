@@ -426,7 +426,7 @@ export default function ChatContainer({
           multiline={true}
           variant="outlined"
           onKeyUp={sendMessageOnEnter}
-          label="Type your message here..."
+          label={"Type your message here..."}
           onChange={(e) => setMessage(e.target.value)}
         />
 

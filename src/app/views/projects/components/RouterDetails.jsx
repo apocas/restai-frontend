@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Card, Divider, Grid, MenuItem, styled, TextField, Tabs, Tab, Stack, Paper, IconButton } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Card, Divider, styled, Stack, Paper, IconButton } from "@mui/material";
 import { H4 } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
-import { FlexAlignCenter, FlexBox } from "app/components/FlexBox";
+import { FlexBox } from "app/components/FlexBox";
 import { FileUpload } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import React from 'react';
 import Tree from 'react-d3-tree';
 import { toast } from 'react-toastify';
 
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { AddBox } from "@mui/icons-material";
 
 import { Typography } from "@mui/material";
@@ -20,16 +18,9 @@ import CustomizedDialogEntrance from "./CustomizedDialogEntrance";
 
 export default function RouterDetails({ project }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const navigate = useNavigate();
   const auth = useAuth();
-  const [state, setState] = useState({ "chunksize": "512", "splitter": "token" });
   const [selectedProject, setSelectedProject] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (event) => {
-    if (event && event.persist) event.persist();
-    setState({ ...state, [event.target.name]: event.target.value });
-  };
 
   const onClose = () => {
     setSelectedProject(null);

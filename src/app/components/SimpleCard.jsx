@@ -1,6 +1,5 @@
 import { Card, Box, styled } from "@mui/material";
 
-// STYLED COMPONENTS
 const CardRoot = styled(Card)({
   height: "100%",
   padding: "20px 24px"

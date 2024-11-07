@@ -1,6 +1,6 @@
-import { Box, Divider, Fab, IconButton, MenuItem, styled, TextField, CircularProgress, useTheme } from "@mui/material";
-import { Delete, MoreVert, Send, CloudUpload, Cast, Chat } from "@mui/icons-material";
-import { Fragment, useState, useRef } from "react";
+import { Box, Divider, Fab, IconButton, MenuItem, styled, TextField, CircularProgress } from "@mui/material";
+import { Delete, MoreVert, Send, CloudUpload } from "@mui/icons-material";
+import { Fragment, useState } from "react";
 import Scrollbar from "react-perfect-scrollbar";
 import shortid from "shortid";
 import ModalImage from "react-modal-image";
@@ -81,7 +81,6 @@ export default function ImageChatContainer({
 }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
-  const { palette } = useTheme();
 
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");

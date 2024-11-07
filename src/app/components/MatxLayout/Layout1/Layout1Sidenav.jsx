@@ -10,7 +10,6 @@ import { themeShadows } from "app/components/MatxTheme/themeColors";
 import { convertHexToRGB } from "app/utils/utils";
 import { sidenavCompactWidth, sideNavWidth } from "app/utils/constant";
 
-// STYLED COMPONENTS
 const SidebarNavRoot = styled(Box)(({ theme, width, bg, image }) => ({
   position: "fixed",
   top: 0,

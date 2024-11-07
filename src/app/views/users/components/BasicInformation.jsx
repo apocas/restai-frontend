@@ -9,7 +9,6 @@ import {
   TextField,
   Switch
 } from "@mui/material";
-import { CameraAlt, DateRange } from "@mui/icons-material";
 import AvatarBadge from "./AvatarBadge";
 import { H4, H5, Small } from "app/components/Typography";
 import { FlexBetween, FlexBox } from "app/components/FlexBox";
@@ -18,6 +17,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import useAuth from "app/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { People, AccountTree, Key } from "@mui/icons-material";
 
 const ContentWrapper = styled(Box)(({ theme }) => ({
   zIndex: 1,
@@ -105,21 +105,21 @@ export default function BasicInformation({user}) {
 
             <FlexBetween maxWidth={400} flexWrap="wrap" margin="auto" mt={1}>
               <FlexBox alignItems="center" gap={1}>
-                <CameraAlt sx={{ color: "text.disabled" }} />
+                <AccountTree sx={{ color: "text.disabled" }} />
                 <Small fontWeight={600} color="text.disabled">
                   {user.projects && user.projects.length} Projects
                 </Small>
               </FlexBox>
 
               <FlexBox alignItems="center" gap={1}>
-                <CameraAlt sx={{ color: "text.disabled" }} />
+                <People sx={{ color: "text.disabled" }} />
                 <Small fontWeight={600} color="text.disabled">
                   {user.is_admin ? "Admin" : "Regular"}
                 </Small>
               </FlexBox>
 
               <FlexBox alignItems="center" gap={1}>
-                <DateRange sx={{ color: "text.disabled" }} />
+                <Key sx={{ color: "text.disabled" }} />
                 <Small fontWeight={600} color="text.disabled">
                 {user.sso ? "SSO" : "Local"}
                 </Small>

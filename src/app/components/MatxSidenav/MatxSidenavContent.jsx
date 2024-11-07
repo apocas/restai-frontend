@@ -1,6 +1,5 @@
 import { styled } from "@mui/material/styles";
 
-// STYLED COMPONENT
 const Content = styled("div")({
   flexGrow: 1,
   height: "100%",

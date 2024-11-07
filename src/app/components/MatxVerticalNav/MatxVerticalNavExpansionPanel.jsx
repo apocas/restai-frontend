@@ -4,7 +4,6 @@ import { ChevronRight } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 import clsx from "clsx";
 
-// STYLED COMPONENTS
 const NavExpandRoot = styled("div")(({ theme }) => ({
   "& .expandIcon": {
     transition: "transform 0.3s cubic-bezier(0, 0, 0.2, 1) 0ms",
@@ -59,7 +58,6 @@ const BulletIcon = styled("div")(({ theme }) => ({
   marginLeft: "20px",
   marginRight: "8px",
   borderRadius: "300px !important",
-  // background: theme.palette.primary.contrastText,
   background: theme.palette.text.primary
 }));
 
@@ -96,7 +94,7 @@ export default function MatxVerticalNavExpansionPanel({ item, children, mode }) 
     }
 
     if (node.name === "child") componentHeight.current += node.scrollHeight;
-    else componentHeight.current += 44; //here 44 is node height
+    else componentHeight.current += 44;
     return;
   }, []);
 
@@ -105,7 +103,6 @@ export default function MatxVerticalNavExpansionPanel({ item, children, mode }) 
 
     calculateHeight(elementRef.current);
 
-    // OPEN DROPDOWN IF CHILD IS ACTIVE
     for (let child of elementRef.current.children) {
       if (child.getAttribute("href") === pathname) {
         setCollapsed(false);

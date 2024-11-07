@@ -6,7 +6,6 @@ import useSettings from "app/hooks/useSettings";
 import { Paragraph, Span } from "../Typography";
 import MatxVerticalNavExpansionPanel from "./MatxVerticalNavExpansionPanel";
 
-// STYLED COMPONENTS
 const ListLabel = styled(Paragraph)(({ theme, mode }) => ({
   fontSize: "12px",
   marginTop: "20px",

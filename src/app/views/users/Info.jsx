@@ -14,11 +14,10 @@ import {
   IconButton,
   useMediaQuery
 } from "@mui/material";
-// GLOBAL CUSTOM COMPONENTS
+
 import { H5 } from "app/components/Typography";
 import { FlexBox } from "app/components/FlexBox";
-// CUSTOM ICON COMPONENTS
-import { ContentCopy, Delete } from "@mui/icons-material";
+import { ContentCopy } from "@mui/icons-material";
 
 import ApiKeys from "./components/ApiKeys";
 import Password from "./components/Password";
@@ -154,7 +153,7 @@ export default function UserInfo() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects"}, { name: id, path: "/project/" + id }]} />
+        <Breadcrumb routeSegments={[{ name: "Users", path: "/users"}, { name: id, path: "/user/" + id }]} />
       </Box>
 
       <Box p={4} pt={0}>

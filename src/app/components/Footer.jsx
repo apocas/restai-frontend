@@ -1,7 +1,7 @@
 import { AppBar, ThemeProvider, Toolbar, styled, useTheme } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-import { Paragraph, Span } from "./Typography";
+import { Paragraph } from "./Typography";
 import useSettings from "app/hooks/useSettings";
 import { topBarHeight } from "app/utils/constant";
 import { ToastContainer } from 'react-toastify';
@@ -9,14 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
 import { useNavigate } from "react-router-dom";
 import { Description } from "@mui/icons-material";
 
-// STYLED COMPONENTS
 const AppFooter = styled(Toolbar)(() => ({
   display: "flex",
   alignItems: "center",
@@ -40,18 +35,6 @@ const FooterContent = styled("div")(() => ({
   padding: "0px 1rem",
   maxWidth: "1170px",
   margin: "0 auto"
-}));
-
-const StyledSpeedDial = styled(SpeedDial)(({ theme }) => ({
-  position: 'absolute',
-  '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-  '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-    top: theme.spacing(2),
-    left: theme.spacing(2),
-  },
 }));
 
 export default function Footer() {

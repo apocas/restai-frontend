@@ -1,6 +1,5 @@
 import { Button, Dialog, styled } from "@mui/material";
 
-// STYLED COMPONENTS
 const DialogBox = styled("div")(() => ({
   width: 360,
   padding: "32px",

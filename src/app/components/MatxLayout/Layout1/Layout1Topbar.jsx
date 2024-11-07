@@ -29,7 +29,6 @@ import {
   PowerSettingsNew
 } from "@mui/icons-material";
 
-// STYLED COMPONENTS
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary
 }));

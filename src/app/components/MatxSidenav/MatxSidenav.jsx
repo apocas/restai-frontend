@@ -1,6 +1,5 @@
 import { Box, styled, useMediaQuery, useTheme } from "@mui/material";
 
-// STYLED COMPONENTS
 const SideNav = styled("div")(({ theme, width }) => ({
   zIndex: 91,
   width: width,

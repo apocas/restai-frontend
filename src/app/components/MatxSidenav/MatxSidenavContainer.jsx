@@ -1,6 +1,5 @@
 import { styled } from "@mui/material/styles";
 
-// STYLED COMPONENT
 const Container = styled("div")({
   height: "100%",
   display: "flex",

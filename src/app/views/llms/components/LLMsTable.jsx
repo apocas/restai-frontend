@@ -1,22 +1,17 @@
-import { SportsEsports, PhotoLibrary, QuestionAnswer } from "@mui/icons-material";
 import { useState } from "react";
 import {
   Box,
   Card,
   Table,
-  Avatar,
   styled,
   TableRow,
   useTheme,
   TableBody,
   TableCell,
   TableHead,
-  IconButton,
   Button,
-  Tooltip,
   TablePagination
 } from "@mui/material";
-import sha256 from 'crypto-js/sha256';
 import { useNavigate } from "react-router-dom";
 
 
@@ -57,11 +52,6 @@ const Small = styled("small")(({ bgcolor }) => ({
   overflow: "hidden",
   background: bgcolor,
   boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)"
-}));
-
-const StyledAvatar = styled(Avatar)(() => ({
-  width: "32px !important",
-  height: "32px !important"
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
