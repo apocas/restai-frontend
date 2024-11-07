@@ -56,7 +56,7 @@ export default function LLMInfo({ llm, projects }) {
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Options</TableCell>
-            <TableCell colSpan={4}>{llm.options && (<ReactJson src={JSON.parse(llm.options)} enableClipboard={false} name={false}/>)}</TableCell>
+            <TableCell colSpan={4}>{llm.options && (<ReactJson src={JSON.parse(llm.options)} enableClipboard={true} name={false}/>)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Description</TableCell>
