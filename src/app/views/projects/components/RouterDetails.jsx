@@ -16,7 +16,7 @@ import { Typography } from "@mui/material";
 import CustomizedDialogEntrance from "./CustomizedDialogEntrance";
 
 
-export default function RouterDetails({ project }) {
+export default function RouterDetails({ project, projects }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
   const [selectedProject, setSelectedProject] = useState(null);
@@ -154,7 +154,7 @@ export default function RouterDetails({ project }) {
         </Stack>
       </Box>
 
-      <CustomizedDialogEntrance project={selectedProject} saveEntrances={saveEntrances} onClose={onClose} />
+      <CustomizedDialogEntrance project={selectedProject} projects={projects} saveEntrances={saveEntrances} onClose={onClose} />
 
     </Card>
   );

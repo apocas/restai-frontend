@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { styled } from "@mui/material";
+import { styled, MenuItem } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import MuiDialogActions from "@mui/material/DialogActions";
@@ -43,22 +43,23 @@ const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
   "&.root": { margin: 0, padding: theme.spacing(1) },
 }));
 
-const CustomizedDialogEntrance = ({ project, saveEntrances, onClose}) => {
+const CustomizedDialogEntrance = ({ project, projects, saveEntrances, onClose }) => {
   const [open, setOpen] = useState(false);
   const [entrance, setEntrance] = useState({});
 
   const handleClose = () => {
     setOpen(false);
-    if(onClose)
+    if (onClose)
       onClose();
   }
 
-  const handleSave = () => {    
+  const handleSave = () => {
     project.entrances.push(entrance);
-    if(saveEntrances)
+    if (saveEntrances)
       saveEntrances();
     setOpen(false);
-    if(onClose)
+    setEntrance({});
+    if (onClose)
       onClose();
   }
 
@@ -85,12 +86,23 @@ const CustomizedDialogEntrance = ({ project, saveEntrances, onClose}) => {
             onChange={(e) => setEntrance({ ...entrance, name: e.target.value })}
           />
           <TextField
+            select
+            name="projectllm"
             margin="dense"
             label="Destination"
             fullWidth
-            value={entrance.destination}
+            variant="outlined"
             onChange={(e) => setEntrance({ ...entrance, destination: e.target.value })}
-          />
+            sx={{ minWidth: 188 }}
+          >
+            {projects.filter(item =>
+              item.name
+            ).map((item, ind) => (
+              <MenuItem value={item.name} key={item.name}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField
             margin="dense"
             label="Description"
@@ -103,11 +115,11 @@ const CustomizedDialogEntrance = ({ project, saveEntrances, onClose}) => {
         </DialogContent>
 
         <DialogActions>
-        <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
           <Button onClick={handleClose} color="primary">
             Close
+          </Button>
+          <Button onClick={handleSave} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>

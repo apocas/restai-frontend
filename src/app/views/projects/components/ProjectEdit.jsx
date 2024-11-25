@@ -23,7 +23,7 @@ export default function ProjectEdit({ project, projects, info }) {
       "human_name": state.human_name,
       "guard": state.guard || "",
       "censorship": state.censorship || "",
-      "public": state.shared,
+      "public": state.public,
       "default_prompt": state.default_prompt || ""
     }
 
@@ -88,7 +88,7 @@ export default function ProjectEdit({ project, projects, info }) {
 
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
-    setState({ ...state, [event.target.name]: event.target.value });
+    setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
   };
 
   useEffect(() => {
@@ -140,7 +140,9 @@ export default function ProjectEdit({ project, projects, info }) {
                   control={
                     <Switch
                       checked={state.public}
-                      inputProps={{ "aria-label": "secondary checkbox" }}
+                      name="public"
+                      inputProps={{ "aria-label": "secondary checkbox controlled" }}
+                      onChange={handleChange}
                     />
                   }
                 />
