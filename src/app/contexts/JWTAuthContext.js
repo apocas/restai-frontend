@@ -64,6 +64,12 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.setItem("user", JSON.stringify(user));
 
+    if (Cookies.get('restai_redirect')) {
+      var redirect = Cookies.get('restai_redirect');
+      Cookies.remove('restai_redirect');
+      window.location.href = redirect;
+    }
+
     dispatch({ type: "LOGIN", payload: { user } });
   };
 
