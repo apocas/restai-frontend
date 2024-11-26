@@ -96,6 +96,11 @@ export default function ImageChatContainer({
   }
 
   const handler = (prompt) => {
+    if(state.generator === undefined) {
+      toast.error("Please select a generator");
+      return;
+    }
+
     var body = {
       "prompt": prompt
     };
@@ -109,7 +114,7 @@ export default function ImageChatContainer({
 
     if (canSubmit) {
       setCanSubmit(false);
-      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", answer: null, sources: [] }]);
+      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", input_image: image, answer: null, sources: [] }]);
       fetch(url + "/image/" + state.generator + "/generate", {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
@@ -128,6 +133,9 @@ export default function ImageChatContainer({
         .then((response) => {
           if (!response.prompt) {
             response.prompt = prompt + " (" + state.generator + ")";
+          }
+          if(image !== null) {
+            response.input_image = image;
           }
           setMessages([...messages, response]);
           setCanSubmit(true);
@@ -158,7 +166,7 @@ export default function ImageChatContainer({
   const sendMessageOnEnter = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       let tempMessage = message.trim();
-      if (tempMessage !== "") handleMessageSend(tempMessage);
+      if (tempMessage !== "" || image !== null) handleMessageSend(tempMessage);
       setMessage("");
     }
   };
@@ -281,6 +289,14 @@ export default function ImageChatContainer({
 
                 <UserStatus human={true} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{message.prompt}</Span>
+                  {message.input_image && (
+                    <ModalImage
+                      small={message.input_image}
+                      large={message.input_image}
+                      alt="Input image"
+                      maxHeight="200px"
+                    />
+                  )}
                 </UserStatus>
               </Box>
             </Message>
@@ -297,9 +313,9 @@ export default function ImageChatContainer({
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.image ? <CircularProgress size="1rem" /> : message.prompt}</Span>
                   {message.image && (
                     <ModalImage
-                      small={`data:image/jpg;base64,${message.image}`}
-                      large={`data:image/jpg;base64,${message.image}`}
-                      alt="Image preview"
+                      small={`data:image/png;base64,${message.image}`}
+                      large={`data:image/png;base64,${message.image}`}
+                      alt="Output image"
                       maxHeight="200px"
                     />
                   )}
@@ -348,7 +364,7 @@ export default function ImageChatContainer({
           </Fragment>
           <Fab
             onClick={() => {
-              if (message.trim() !== "") handleMessageSend(message);
+              if (message.trim() !== "" || image !== null) handleMessageSend(message);
               setMessage("");
             }}
             color="primary"
