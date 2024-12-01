@@ -14,7 +14,6 @@ import { useEffect } from "react";
 import sha256 from 'crypto-js/sha256';
 import CustomizedDialogMessage from "./CustomizedDialogMessage";
 import { toast } from 'react-toastify';
-import 'react-h5-audio-player/lib/styles.css';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 
 const HiddenInput = styled("input")({ display: "none" });
