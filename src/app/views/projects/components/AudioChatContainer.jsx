@@ -16,6 +16,7 @@ import CustomizedDialogMessage from "./CustomizedDialogMessage";
 import { toast } from 'react-toastify';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
+import { AudioRecorder } from 'react-audio-voice-recorder';
 
 const HiddenInput = styled("input")({ display: "none" });
 
@@ -91,6 +92,10 @@ export default function ImageChatContainer({
 
   const handleMessageSend = (message) => {
     handler(message);
+  }
+
+  const record_complete = (blob) => {
+    setFile(blob);
   }
 
   const handler = (prompt) => {
@@ -245,7 +250,7 @@ export default function ImageChatContainer({
       <ScrollBox id="chat-message-list" containerRef={setScroll}>
         {messages.length === 0 && (
           <MessageBox>
-            <ImageEmptyMessage image={"/admin/assets/images/music.jpg"}/>
+            <ImageEmptyMessage image={"/admin/assets/images/music.jpg"} />
             <p>Write or send something...</p>
             <p>(This isn't a chat/agent, there is no memory/conversation)</p>
           </MessageBox>
@@ -266,7 +271,7 @@ export default function ImageChatContainer({
                   {
                     message.input_audio &&
                     <>
-                      {message.input_audio.name}
+                      {message.input_audio.name || "Microphone"}
                       <AudioPlayer style={{ width: "300px" }}
                         showJumpControls={false}
                         autoPlayAfterSrcChange={false}
@@ -316,11 +321,24 @@ export default function ImageChatContainer({
                 height: 56,
               }}
             >
-              <Tooltip title={file.name}>
+              <Tooltip title={"Audio loaded. " + (file.name || "Microphone")}>
                 <MusicNote sx={{ fontSize: '3.5rem' }} />
               </Tooltip>
             </Box>
           )}
+          <AudioRecorder
+            onRecordingComplete={record_complete}
+            audioTrackConstraints={{
+              noiseSuppression: true,
+              echoCancellation: true,
+            }}
+            onNotAllowedOrFound={(err) => console.table(err)}
+            downloadOnSavePress={false}
+            downloadFileExtension="webm"
+            mediaRecorderOptions={{
+              audioBitsPerSecond: 128000,
+            }}
+          />
           <Fragment>
             <label htmlFor="upload-single-file">
               <Fab
