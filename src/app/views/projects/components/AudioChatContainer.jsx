@@ -1,4 +1,4 @@
-import { Box, Divider, Fab, IconButton, MenuItem, styled, TextField, CircularProgress } from "@mui/material";
+import { Box, Divider, Fab, IconButton, MenuItem, styled, TextField, CircularProgress, Tooltip } from "@mui/material";
 import { Delete, MoreVert, Send, CloudUpload, MusicNote } from "@mui/icons-material";
 import { Fragment, useState } from "react";
 import Scrollbar from "react-perfect-scrollbar";
@@ -14,6 +14,8 @@ import { useEffect } from "react";
 import sha256 from 'crypto-js/sha256';
 import CustomizedDialogMessage from "./CustomizedDialogMessage";
 import { toast } from 'react-toastify';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 const HiddenInput = styled("input")({ display: "none" });
 
@@ -129,7 +131,7 @@ export default function ImageChatContainer({
           if (!response.prompt) {
             response.prompt = prompt + " (" + state.generator + ")";
           }
-          if(file !== null) {
+          if (file !== null) {
             response.input_audio = file;
           }
           setMessages([...messages, response]);
@@ -261,9 +263,16 @@ export default function ImageChatContainer({
 
                 <UserStatus human={true} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{message.prompt}</Span>
-                  {//message.input_audio && (
-                    //TODO audio player
-                  //)
+                  {
+                    message.input_audio &&
+                    <>
+                      {message.input_audio.name}
+                      <AudioPlayer style={{ width: "300px" }}
+                        showJumpControls={false}
+                        autoPlayAfterSrcChange={false}
+                        src={URL.createObjectURL(message.input_audio)}
+                      />
+                    </>
                   }
                 </UserStatus>
               </Box>
@@ -307,8 +316,9 @@ export default function ImageChatContainer({
                 height: 56,
               }}
             >
-              <MusicNote />
-              {file.name}
+              <Tooltip title={file.name}>
+                <MusicNote sx={{ fontSize: '3.5rem' }} />
+              </Tooltip>
             </Box>
           )}
           <Fragment>
