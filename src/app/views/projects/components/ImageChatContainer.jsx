@@ -75,7 +75,7 @@ const MessageBox = styled(FlexAlignCenter)(() => ({
 export default function ImageChatContainer({
   generators,
   opponentUser = {
-    name: "A.I.",
+    name: "A.I. Painter",
     avatar: "/admin/assets/images/painter.jpg"
   }
 }) {
@@ -272,7 +272,7 @@ export default function ImageChatContainer({
         {messages.length === 0 && (
           <MessageBox>
             <ImageEmptyMessage />
-            <p>Write an idea...</p>
+            <p>Write or send something...</p>
             <p>(This isn't a chat/agent, there is no memory/conversation)</p>
           </MessageBox>
         )}

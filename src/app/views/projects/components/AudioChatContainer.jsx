@@ -74,8 +74,8 @@ const MessageBox = styled(FlexAlignCenter)(() => ({
 export default function ImageChatContainer({
   generators,
   opponentUser = {
-    name: "A.I.",
-    avatar: "/admin/assets/images/painter.jpg"
+    name: "A.I. Musician",
+    avatar: "/admin/assets/images/musician.jpg"
   }
 }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -245,8 +245,8 @@ export default function ImageChatContainer({
       <ScrollBox id="chat-message-list" containerRef={setScroll}>
         {messages.length === 0 && (
           <MessageBox>
-            <ImageEmptyMessage />
-            <p>Write an idea...</p>
+            <ImageEmptyMessage image={"/admin/assets/images/music.jpg"}/>
+            <p>Write or send something...</p>
             <p>(This isn't a chat/agent, there is no memory/conversation)</p>
           </MessageBox>
         )}
