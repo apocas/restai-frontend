@@ -92,7 +92,7 @@ export default function ImageChatContainer({
   }
 
   const handler = (prompt) => {
-    if(state.generator === undefined) {
+    if (state.generator === undefined) {
       toast.error("Please select a generator");
       return;
     }
@@ -109,7 +109,7 @@ export default function ImageChatContainer({
       formData.append("file", file);
       formData.append("prompt", prompt);
 
-      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", answer: null, sources: [] }]);
+      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", input_audio: file, answer: null, sources: [] }]);
       fetch(url + "/audio/" + state.generator + "/transcript", {
         method: 'POST',
         headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
@@ -128,6 +128,9 @@ export default function ImageChatContainer({
         .then((response) => {
           if (!response.prompt) {
             response.prompt = prompt + " (" + state.generator + ")";
+          }
+          if(file !== null) {
+            response.input_audio = file;
           }
           setMessages([...messages, response]);
           setCanSubmit(true);
@@ -258,6 +261,10 @@ export default function ImageChatContainer({
 
                 <UserStatus human={true} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{message.prompt}</Span>
+                  {//message.input_audio && (
+                    //TODO audio player
+                  //)
+                  }
                 </UserStatus>
               </Box>
             </Message>
