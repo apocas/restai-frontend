@@ -1,10 +1,8 @@
 import { Box, Divider, Fab, IconButton, MenuItem, styled, TextField, CircularProgress } from "@mui/material";
-import { Delete, MoreVert, Send, CloudUpload } from "@mui/icons-material";
+import { Delete, MoreVert, Send, CloudUpload, MusicNote } from "@mui/icons-material";
 import { Fragment, useState } from "react";
 import Scrollbar from "react-perfect-scrollbar";
 import shortid from "shortid";
-import ModalImage from "react-modal-image";
-
 
 import MatxMenu from "app/components/MatxMenu";
 import ChatAvatar from "app/components/ChatAvatar";
@@ -15,7 +13,6 @@ import useAuth from "app/hooks/useAuth";
 import { useEffect } from "react";
 import sha256 from 'crypto-js/sha256';
 import CustomizedDialogMessage from "./CustomizedDialogMessage";
-import CustomizedDialogImage from "./CustomizedDialogImage";
 import { toast } from 'react-toastify';
 
 const HiddenInput = styled("input")({ display: "none" });
@@ -87,8 +84,7 @@ export default function ImageChatContainer({
   const [canSubmit, setCanSubmit] = useState(true);
   const [scroll, setScroll] = useState();
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
   const [state, setState] = useState({});
 
   const handleMessageSend = (message) => {
@@ -105,20 +101,19 @@ export default function ImageChatContainer({
       "prompt": prompt
     };
 
-    if (image && image.includes("base64,")) {
-      body.image = image.split(",")[1];
-    } else if (image) {
-      body.image = image;
-    }
-
 
     if (canSubmit) {
       setCanSubmit(false);
-      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", input_image: image, answer: null, sources: [] }]);
-      fetch(url + "/image/" + state.generator + "/generate", {
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("prompt", prompt);
+
+      setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", answer: null, sources: [] }]);
+      fetch(url + "/audio/" + state.generator + "/transcript", {
         method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
-        body: JSON.stringify(body),
+        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
+        body: formData,
       })
         .then(function (response) {
           if (!response.ok) {
@@ -134,9 +129,6 @@ export default function ImageChatContainer({
           if (!response.prompt) {
             response.prompt = prompt + " (" + state.generator + ")";
           }
-          if(image !== null) {
-            response.input_image = image;
-          }
           setMessages([...messages, response]);
           setCanSubmit(true);
         }).catch(err => {
@@ -151,44 +143,22 @@ export default function ImageChatContainer({
     setSelectedMessage(message);
   }
 
-  const handleClickImage = (image) => {
-    setSelectedImage(image);
-  }
-
   const handleMessageInfoClose = () => {
     setSelectedMessage(null);
-  }
-
-  const handleImageInfoClose = () => {
-    setSelectedImage(null);
   }
 
   const sendMessageOnEnter = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       let tempMessage = message.trim();
-      if (tempMessage !== "" || image !== null) handleMessageSend(tempMessage);
+      if (tempMessage !== "" || file !== null) handleMessageSend(tempMessage);
       setMessage("");
     }
-  };
-
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
   };
 
   const handleFileSelect = async (event) => {
     if (event.target.files.length === 1) {
       let file = event.target.files[0];
-      const base64 = await convertToBase64(file);
-      setImage(base64);
+      setFile(file);
     }
   };
 
@@ -206,7 +176,6 @@ export default function ImageChatContainer({
   return (
     <ChatRoot>
       <CustomizedDialogMessage message={selectedMessage} onclose={handleMessageInfoClose} />
-      <CustomizedDialogImage image={selectedImage} onclose={handleImageInfoClose} />
 
       <LeftContent>
         <Box display="flex" alignItems="center" pl={2}>
@@ -289,14 +258,6 @@ export default function ImageChatContainer({
 
                 <UserStatus human={true} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{message.prompt}</Span>
-                  {message.input_image && (
-                    <ModalImage
-                      small={message.input_image}
-                      large={message.input_image}
-                      alt="Input image"
-                      maxHeight="200px"
-                    />
-                  )}
                 </UserStatus>
               </Box>
             </Message>
@@ -310,15 +271,7 @@ export default function ImageChatContainer({
                 </Paragraph>
 
                 <UserStatus human={false} >
-                  <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.image ? <CircularProgress size="1rem" /> : message.prompt}</Span>
-                  {message.image && (
-                    <ModalImage
-                      small={`data:image/png;base64,${message.image}`}
-                      large={`data:image/png;base64,${message.image}`}
-                      alt="Output image"
-                      maxHeight="200px"
-                    />
-                  )}
+                  <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer}</Span>
                 </UserStatus>
               </Box>
             </Message>
@@ -341,16 +294,15 @@ export default function ImageChatContainer({
         />
 
         <div style={{ display: "flex" }}>
-          {image !== null && (
+          {file !== null && (
             <Box
-              component="img"
               sx={{
                 height: 56,
               }}
-              alt="Image preview"
-              src={image}
-              onClick={() => handleClickImage(image)}
-            />
+            >
+              <MusicNote />
+              {file.name}
+            </Box>
           )}
           <Fragment>
             <label htmlFor="upload-single-file">
@@ -364,7 +316,7 @@ export default function ImageChatContainer({
           </Fragment>
           <Fab
             onClick={() => {
-              if (message.trim() !== "" || image !== null) handleMessageSend(message);
+              if (message.trim() !== "" || file !== null) handleMessageSend(message);
               setMessage("");
             }}
             color="primary"

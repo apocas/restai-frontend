@@ -48,6 +48,11 @@ export const navigations = [
     icon: "image",
     path: "/image",
   },
+  {
+    name: "Audio Gen",
+    icon: "speaker",
+    path: "/audio",
+  },
   { label: "Docs", type: "label" },
   {
     name: "API",

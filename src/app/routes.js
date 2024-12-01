@@ -27,6 +27,7 @@ const Users = Loadable(lazy(() => import("app/views/users/List")));
 const UsersInfo = Loadable(lazy(() => import("app/views/users/Info")));
 const UsersNew = Loadable(lazy(() => import("app/views/users/New")));
 const Image = Loadable(lazy(() => import("app/views/projects/Image")));
+const Audio = Loadable(lazy(() => import("app/views/projects/Audio")));
 
 const routes = [
   {
@@ -128,6 +129,11 @@ const routes = [
       {
         path: "/image",
         element: <Image />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/audio",
+        element: <Audio />,
         auth: authRoles.admin
       }
     ]

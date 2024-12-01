@@ -82,7 +82,7 @@ const MessageBox = styled(FlexAlignCenter)(() => ({
 
 export default function ChatContainer({
   project,
-  opponentUser = {
+  opponent = {
     name: "A.I.",
     avatar: "/admin/assets/images/bot.jpg"
   }
@@ -95,7 +95,7 @@ export default function ChatContainer({
   const [message, setMessage] = useState("");
   const [canSubmit, setCanSubmit] = useState(true);
   const [scroll, setScroll] = useState();
-  const [chat, setChat] = useState(false);
+  const [chat, setChat] = useState(true);
   const [stream, setStream] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -311,20 +311,33 @@ export default function ChatContainer({
       <LeftContent>
         <Box display="flex" alignItems="center" pl={2}>
           <Fragment>
-            <ChatAvatar src={opponentUser.avatar} />
+            <ChatAvatar src={opponent.avatar} />
             <UserName>{project.name} ({project.llm})</UserName>
           </Fragment>
         </Box>
 
 
         <Box>
-          <Tooltip title="Stream mode">
-            <Cast display="flex" alignItems="center" sx={{ color: stream ? palette.success.light : palette.error.main }} />
-          </Tooltip>
-          <Tooltip title="Chat mode" ml={3}>
-            <Chat display="flex" alignItems="center" sx={{ color: chat ? palette.success.light : palette.error.main }} />
-          </Tooltip>
-
+          {stream &&
+            <Tooltip title="Stream mode ON">
+              <Cast display="flex" alignItems="center" sx={{ color: stream ? palette.success.light : palette.error.main }} />
+            </Tooltip>
+          }
+          {!stream &&
+            <Tooltip title="Stream mode OFF">
+              <Cast display="flex" alignItems="center" sx={{ color: stream ? palette.success.light : palette.error.main }} />
+            </Tooltip>
+          }
+          {chat &&
+            <Tooltip title="Chat mode" ml={3}>
+              <Chat display="flex" alignItems="center" sx={{ color: chat ? palette.success.light : palette.error.main }} />
+            </Tooltip>
+          }
+          {!chat &&
+            <Tooltip title="QA mode" ml={3}>
+              <Chat display="flex" alignItems="center" sx={{ color: chat ? palette.success.light : palette.error.main }} />
+            </Tooltip>
+          }
           <MatxMenu
             menuButton={
               <IconButton size="large" sx={{ verticalAlign: "baseline !important" }}>
@@ -373,11 +386,11 @@ export default function ChatContainer({
             </Message>
 
             <Message key={shortid.generate()}>
-              <ChatAvatar src={opponentUser.avatar} />
+              <ChatAvatar src={opponent.avatar} />
 
               <Box ml={2}>
                 <Paragraph m={0} mb={1} color="text.secondary">
-                  {opponentUser.name}
+                  {opponent.name}
                 </Paragraph>
 
                 <UserStatus human={false} >
@@ -397,11 +410,11 @@ export default function ChatContainer({
         {chunks.length > 0 &&
           <Fragment>
             <Message key={shortid.generate()}>
-              <ChatAvatar src={opponentUser.avatar} />
+              <ChatAvatar src={opponent.avatar} />
 
               <Box ml={2}>
                 <Paragraph m={0} mb={1} color="text.secondary">
-                  {opponentUser.name}
+                  {opponent.name}
                 </Paragraph>
 
                 <UserStatus human={false} >
