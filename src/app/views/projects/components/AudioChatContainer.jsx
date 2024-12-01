@@ -14,7 +14,6 @@ import { useEffect } from "react";
 import sha256 from 'crypto-js/sha256';
 import CustomizedDialogMessage from "./CustomizedDialogMessage";
 import { toast } from 'react-toastify';
-import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { AudioRecorder } from 'react-audio-voice-recorder';
 
@@ -272,11 +271,13 @@ export default function ImageChatContainer({
                     message.input_audio &&
                     <>
                       {message.input_audio.name || "Microphone"}
-                      <AudioPlayer style={{ width: "300px" }}
-                        showJumpControls={false}
-                        autoPlayAfterSrcChange={false}
-                        src={URL.createObjectURL(message.input_audio)}
-                      />
+
+                      <Box>
+                        <audio
+                          src={URL.createObjectURL(message.input_audio)}
+                          controls
+                        />
+                      </Box>
                     </>
                   }
                 </UserStatus>
