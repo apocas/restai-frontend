@@ -312,6 +312,7 @@ export default function ImageChatContainer({
           onKeyUp={sendMessageOnEnter}
           label="Type your prompt here..."
           onChange={(e) => setMessage(e.target.value)}
+          sx={{marginRight: 2}}
         />
 
         <div style={{ display: "flex" }}>

@@ -403,7 +403,7 @@ export default function ChatContainer({
                       maxheight={50}
                     />
                   )}
-                  {message.reasoning && message.reasoning.steps.length > 0 && message.reasoning.steps[message.reasoning.steps.length - 1].actions.length && message.reasoning.steps[message.reasoning.steps.length - 1].actions[0].action === "terminal" && (
+                  {message.reasoning && message.reasoning.steps.length > 0 && message.reasoning.steps[message.reasoning.steps.length - 1].actions.length && (
                     <Terminal message={message}
                     >
                     </Terminal>

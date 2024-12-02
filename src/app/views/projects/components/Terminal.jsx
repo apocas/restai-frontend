@@ -27,18 +27,33 @@ export default function Terminal({
 
   return (
     <TerminalC>
-      <TerminalLine color={"gray"} textDecorationLine={"underline"}>Terminal</TerminalLine>
-      {[...message.reasoning.steps[message.reasoning.steps.length - 1].actions].map((action, index) => (
-        (action.action === "terminal" &&
-          <>
-            <TerminalLine>
-              <TerminalPrompt>ai@01 [~]# </TerminalPrompt>{action.input.kwargs.command}
-            </TerminalLine>
-            <TerminalLine marginLeft={"15px"} color={"#a8ffa8"}>
-              {action.output}
-            </TerminalLine>
-          </>
-        )))}
+
+      {message.reasoning.steps[message.reasoning.steps.length - 1].actions.map((action, index) => (
+        <>
+          <TerminalLine color={"gray"} textDecorationLine={"underline"}>{action.action}</TerminalLine>
+          {action.action === "terminal" &&
+            <>
+              <TerminalLine>
+                <TerminalPrompt>ai@01 [~]# </TerminalPrompt>{action.input.kwargs.command}
+              </TerminalLine>
+              <TerminalLine marginLeft={"15px"} color={"#a8ffa8"}>
+                {action.output}
+              </TerminalLine>
+            </>
+          }
+          {action.action !== "terminal" &&
+            <>
+              <TerminalLine>
+                {JSON.stringify(action.input.kwargs)}
+              </TerminalLine>
+              <TerminalLine marginLeft={"15px"} color={"#a8ffa8"}>
+                {action.output}
+              </TerminalLine>
+            </>
+          }
+        </>
+      ))}
+
     </TerminalC>
   );
 }
