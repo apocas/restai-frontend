@@ -18,6 +18,8 @@ import sha256 from 'crypto-js/sha256';
 import CustomizedDialogMessage from "./CustomizedDialogMessage";
 import CustomizedDialogImage from "./CustomizedDialogImage";
 import { toast } from 'react-toastify';
+import Terminal from "./Terminal";
+
 
 const HiddenInput = styled("input")({ display: "none" });
 
@@ -400,6 +402,11 @@ export default function ChatContainer({
                       large={message.image}
                       maxheight={50}
                     />
+                  )}
+                  {message.reasoning && message.reasoning.steps.length > 0 && message.reasoning.steps[message.reasoning.steps.length - 1].actions.length && message.reasoning.steps[message.reasoning.steps.length - 1].actions[0].action === "terminal" && (
+                    <Terminal message={message}
+                    >
+                    </Terminal>
                   )}
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer}</Span>
                 </UserStatus>
