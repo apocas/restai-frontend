@@ -60,7 +60,7 @@ export default function Library() {
       <ContentBox className="analytics">
         <Grid container spacing={3}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
-            <ProjectsTableLibrary projects={projects.filter(project => project.users.some(user => user.username === auth.user.username)).reverse()} />
+            <ProjectsTableLibrary projects={projects.reverse()} />
           </Grid>
         </Grid>
       </ContentBox>
