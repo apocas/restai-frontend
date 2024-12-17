@@ -33,7 +33,7 @@ const ImageWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary[200]
 }));
 
-export default function BasicInformation({user}) {
+export default function BasicInformation({ user }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
   const [state, setState] = useState({});
@@ -93,7 +93,7 @@ export default function BasicInformation({user}) {
           <FlexBox justifyContent="center">
             <AvatarBadge>
               <ImageWrapper>
-                <img src={`https://www.gravatar.com/avatar/${sha256(user.username).toString()}`} alt="Gravatar" sizes="large" style={{borderRadius: "50%"}} />
+                <img src={`https://www.gravatar.com/avatar/${sha256(user.username).toString()}`} alt="Gravatar" sizes="large" style={{ borderRadius: "50%" }} />
               </ImageWrapper>
             </AvatarBadge>
           </FlexBox>
@@ -121,7 +121,7 @@ export default function BasicInformation({user}) {
               <FlexBox alignItems="center" gap={1}>
                 <Key sx={{ color: "text.disabled" }} />
                 <Small fontWeight={600} color="text.disabled">
-                {user.sso ? "SSO" : "Local"}
+                  {user.sso ? "SSO" : "Local"}
                 </Small>
               </FlexBox>
             </FlexBetween>
@@ -161,35 +161,38 @@ export default function BasicInformation({user}) {
                 />
               </Grid>
 
-              <Grid item sm={6} xs={12}>
-              <FormControlLabel
-                  label="Administrator"
-                  control={
-                    <Switch
-                      checked={state.is_admin}
-                      name="is_admin"
-                      inputProps={{ "aria-label": "secondary checkbox controlled" }}
-                      onChange={handleChange}
+              {user.is_admin === true &&
+                <>
+                  <Grid item sm={6} xs={12}>
+                    <FormControlLabel
+                      label="Administrator"
+                      control={
+                        <Switch
+                          checked={state.is_admin}
+                          name="is_admin"
+                          inputProps={{ "aria-label": "secondary checkbox controlled" }}
+                          onChange={handleChange}
+                        />
+                      }
                     />
-                  }
-                />
-              </Grid>
+                  </Grid>
 
-              <Grid item sm={6} xs={12}>
-              <FormControlLabel
-                  label="Local AI only"
-                  control={
-                    <Switch
-                      checked={state.is_private}
-                      name="is_private"
-                      inputProps={{ "aria-label": "secondary checkbox controlled" }}
-                      onChange={handleChange}
+                  <Grid item sm={6} xs={12}>
+                    <FormControlLabel
+                      label="Local AI only"
+                      control={
+                        <Switch
+                          checked={state.is_private}
+                          name="is_private"
+                          inputProps={{ "aria-label": "secondary checkbox controlled" }}
+                          onChange={handleChange}
+                        />
+                      }
                     />
-                  }
-                />
-              </Grid>
+                  </Grid>
+                </>
+              }
 
-              
 
               <Grid item xs={12}>
                 <Button type="submit" variant="contained">

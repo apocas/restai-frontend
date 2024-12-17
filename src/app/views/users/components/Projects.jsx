@@ -81,30 +81,32 @@ export default function Preferences({ user, projects }) {
       <Divider />
 
       <Box margin={3}>
-        <Grid container spacing={3}>
-          <Grid item sm={6} xs={12}>
-            <TextField
-              select
-              size="small"
-              name="addproject"
-              label="Project"
-              variant="outlined"
-              onChange={handleChange}
-              sx={{ minWidth: 188 }}
-            >
-              {projects.map((item, ind) => (
-                <MenuItem value={item.name} key={item.name}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </TextField>
+        {user.is_admin === true &&
+          <Grid container spacing={3}>
+            <Grid item sm={6} xs={12}>
+              <TextField
+                select
+                size="small"
+                name="addproject"
+                label="Project"
+                variant="outlined"
+                onChange={handleChange}
+                sx={{ minWidth: 188 }}
+              >
+                {projects.map((item, ind) => (
+                  <MenuItem value={item.name} key={item.name}>
+                    {item.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item sm={6} xs={12}>
+              <Button type="submit" variant="contained" mt={1} onClick={() => { user.projects.push({ "name": state.addproject }); onSubmitHandler() }}>
+                Associate
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item sm={6} xs={12}>
-            <Button type="submit" variant="contained" mt={1} onClick={() => { user.projects.push({"name": state.addproject});  onSubmitHandler()}}>
-              Associate
-            </Button>
-          </Grid>
-        </Grid>
+        }
       </Box>
       <Divider />
       <Box margin={3}>
