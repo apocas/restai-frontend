@@ -12,9 +12,11 @@ import {
 import { H4, Small } from "app/components/Typography";
 import { FlexBetween, FlexBox } from "app/components/FlexBox";
 import QRCode from "react-qr-code";
-import { Edit } from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import ReactJson from '@microlink/react-json-view';
+import useAuth from "app/hooks/useAuth";
+import { toast } from 'react-toastify';
 
 const ContentBox = styled(FlexBox)({
   alignItems: "center",
@@ -23,6 +25,26 @@ const ContentBox = styled(FlexBox)({
 
 export default function LLMInfo({ llm, projects }) {
   const navigate = useNavigate();
+  const url = process.env.REACT_APP_RESTAI_API_URL || "";
+  const auth = useAuth();
+
+  const handleDeleteClick = () => {
+    if (window.confirm("Are you sure you to delete the llm " + llm.name + "?")) {
+      fetch(url + "/llms/" + llm.name, {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error deleting LLM');
+          }
+          navigate("/llms");
+        }).catch(err => {
+          console.log(err.toString());
+          toast.error("Error deleting LLM");
+        });
+    }
+  };
 
   return (
     <Card sx={{ pt: 3 }} elevation={3}>
@@ -68,6 +90,9 @@ export default function LLMInfo({ llm, projects }) {
       <FlexBetween p={2}>
         <Button variant="outlined" onClick={() => { navigate("/llm/" + llm.name + "/edit") }} startIcon={<Edit fontSize="small" />}>
           Edit
+        </Button>
+        <Button variant="outlined" color="error" onClick={handleDeleteClick} startIcon={<Delete fontSize="small"/>}>
+          Delete
         </Button>
       </FlexBetween>
     </Card>

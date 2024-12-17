@@ -243,15 +243,17 @@ export default function ProjectEdit({ project, projects, info }) {
                   <FormControlLabel
                     label="Tools"
                     sx={{ ml: 0 }}
+                    width="200px"
                     control={
                       <Autocomplete
                         multiple
                         id="tags-standard"
                         name="tools"
+                        fullWidth
                         options={tools.map((tool) => tool.name)}
                         getOptionLabel={(option) => option}
                         onChange={(event, newValue) => {
-                          setState({ ...state, ["tools"]: newValue.join(",") });
+                          setState({ ...state, "tools": newValue.join(",") });
                         }}
                         defaultValue={state.tools ? state.tools.split(",") : []}
                         renderInput={(params) => (
@@ -263,6 +265,7 @@ export default function ProjectEdit({ project, projects, info }) {
                             placeholder=""
                           />
                         )}
+                        sx={{ width: '200px' }}
                       />
                     }
                   />

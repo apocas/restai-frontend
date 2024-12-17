@@ -11,10 +11,10 @@ const Container = styled(FlexAlignCenter)(({ theme }) => ({
   "& span": { fontSize: "4rem" }
 }));
 
-export default function EmptyMessage() {
+export default function EmptyMessage({image}) {
   return (
     <Container>
-      <Avatar style={{width: "200px", height: "200px"}} src="/admin/assets/images/genai.jpg"></Avatar>
+      <Avatar style={{width: "200px", height: "200px"}} src={image || "/admin/assets/images/genai.jpg"}></Avatar>
     </Container>
   );
 }
