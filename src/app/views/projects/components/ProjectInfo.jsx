@@ -38,12 +38,12 @@ export default function ProjectInfo({ project, projects }) {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Error deleting user');
+            throw new Error('Error deleting project');
           }
           navigate("/projects");
         }).catch(err => {
           console.log(err.toString());
-          toast.error("Error deleting user");
+          toast.error("Error deleting project");
         });
     }
   };
