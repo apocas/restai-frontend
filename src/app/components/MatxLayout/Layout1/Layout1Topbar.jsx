@@ -116,7 +116,7 @@ const Layout1Topbar = () => {
                     Hi <strong>{user.username}</strong>
                   </Span>
                 </Hidden>
-                <Avatar src={"http://www.gravatar.com/avatar/" + sha256(user.username)} sx={{ cursor: "pointer" }} />
+                <Avatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} sx={{ cursor: "pointer" }} />
               </UserMenu>
             }>
             <StyledItem>

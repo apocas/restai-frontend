@@ -71,7 +71,7 @@ export default function BasicInformation({user}) {
       window.location.href = "/admin/user/" + user.username;
     }).catch(err => {
       console.log(err.toString());
-      toast.error("Error updating LLM");
+      toast.error("Error updating user");
     });
   }
 

@@ -97,7 +97,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
                 {value.slice(0, 2).map((user, index) => (
                   <div>
                     <Tooltip title={user.username} placement="top">
-                      <StyledAvatar src={"http://www.gravatar.com/avatar/" + sha256(user.username)} />
+                      <StyledAvatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} />
                     </Tooltip>
                   </div>
                 ))}

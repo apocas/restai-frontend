@@ -374,7 +374,7 @@ export default function ChatContainer({
         {messages.map((message, index) => (
           <Fragment>
             <Message key={shortid.generate()}>
-              <ChatAvatar src={"http://www.gravatar.com/avatar/" + sha256(auth.user.username)} />
+              <ChatAvatar src={"https://www.gravatar.com/avatar/" + sha256(auth.user.username)} />
 
               <Box ml={2}>
                 <Paragraph m={0} mb={1} color="text.secondary">
