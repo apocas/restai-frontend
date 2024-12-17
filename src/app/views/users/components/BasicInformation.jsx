@@ -161,7 +161,7 @@ export default function BasicInformation({ user }) {
                 />
               </Grid>
 
-              {user.is_admin === true &&
+              {auth.user.is_admin === true &&
                 <>
                   <Grid item sm={6} xs={12}>
                     <FormControlLabel
