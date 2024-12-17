@@ -131,9 +131,11 @@ export default function Preferences({ user, projects }) {
                     </Box>
                   </FlexBox>
 
-                  <Box m={1} display="flex">
-                    <StyledButton size="small" onClick={() => { diassoc(project) }} >Dissociate</StyledButton>
-                  </Box>
+                  {user.is_admin === true &&
+                    <Box m={1} display="flex">
+                      <StyledButton size="small" onClick={() => { diassoc(project) }} >Dissociate</StyledButton>
+                    </Box>
+                  }
                 </FlexBetween>
               </Card>
             </Grid>
