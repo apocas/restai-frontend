@@ -40,7 +40,9 @@ export default function RAGUpload({ project }) {
     "multiple": false
   });
   const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex2, setTabIndex2] = useState(0);
   const handleTabChange = (e, value) => setTabIndex(value);
+  const handleTabChange2 = (e, value) => setTabIndex2(value);
 
 
   const handleSubmit = (event) => {
@@ -53,6 +55,9 @@ export default function RAGUpload({ project }) {
       formData.append("file", files[0]);
       formData.append("splitter", state.splitter);
       formData.append("chunks", state.chunksize);
+      if (tabIndex2 === 1) {
+        formData.append("classic", "true");
+      }
 
       fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
         method: 'POST',
@@ -129,41 +134,54 @@ export default function RAGUpload({ project }) {
       <Form onSubmit={handleSubmit}>
         <Grid container spacing={3} sx={{ mt: 0 }}>
           <Grid item sm={12} xs={12}>
-            <TextField
-              fullWidth
-              select
-              name="splitter"
-              label="Splitter"
-              variant="outlined"
-              onChange={handleChange}
-              value={state.splitter}
-              defaultValue={state.splitter}
-              sx={{ mb: 2 }}
-            >
-              {["token", "sentence"].map((item, ind) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
+            <Tabs
+              value={tabIndex2}
+              onChange={handleTabChange2}
+              indicatorColor="primary"
+              textColor="primary">
+              {["Docling", "Classic"].map((item, ind) => (
+                <Tab key={ind} value={ind} label={item} sx={{ textTransform: "capitalize" }} />
               ))}
-            </TextField>
+            </Tabs>
 
-            <TextField
-              fullWidth
-              select
-              name="chunksize"
-              label="Chunk Size"
-              variant="outlined"
-              onChange={handleChange}
-              value={state.chunksize}
-              defaultValue={state.chunksize}
-              sx={{ mb: 2 }}
-            >
-              {["126", "256", "512", "1024", "2048"].map((item, ind) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
+            <Divider sx={{ mb: "24px" }} />
+
+            {tabIndex2 === 1 && <>
+              <TextField
+                fullWidth
+                select
+                name="splitter"
+                label="Splitter"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.splitter}
+                defaultValue={state.splitter}
+                sx={{ mb: 2 }}
+              >
+                {["token", "sentence"].map((item, ind) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                fullWidth
+                select
+                name="chunksize"
+                label="Chunk Size"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.chunksize}
+                defaultValue={state.chunksize}
+                sx={{ mb: 2 }}
+              >
+                {["126", "256", "512", "1024", "2048"].map((item, ind) => (
+                  <MenuItem value={item} key={item}>
+                    {item}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </>}
 
             <Tabs
               value={tabIndex}

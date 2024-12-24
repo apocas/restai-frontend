@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Box, Card, Divider } from "@mui/material";
+import { Box, Card, Divider, Button } from "@mui/material";
 import { toast } from 'react-toastify';
 import { H4 } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
 import { FlexBox } from "app/components/FlexBox";
-import { FileUpload } from "@mui/icons-material";
+import { FileUpload, Delete } from "@mui/icons-material";
 import MUIDataTable from "mui-datatables";
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -32,6 +32,24 @@ export default function RAGUpload({ project }) {
         });
     }
   }
+
+  const handleDeleteClick = (embedding) => {
+    if (window.confirm("Are you sure you to delete this embedding " + embedding + "?")) {
+      fetch(url + "/projects/" + project.name+ "/embeddings/" + btoa(embedding), {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error deleting embedding');
+          }
+          window.location.reload();
+        }).catch(err => {
+          console.log(err.toString());
+          toast.error("Error deleting embedding");
+        });
+    }
+  };
 
   const handleViewClick = (source) => {
     fetch(url + "/projects/" + project.name + "/embeddings/source/" + btoa(source), {
@@ -111,14 +129,26 @@ export default function RAGUpload({ project }) {
           },
           onRowExpansionChange: (_, allRowsExpanded) => {
             setRowsExpanded(allRowsExpanded.slice(-1).map(item => item.index))
-            if(allRowsExpanded.length > 0) {
+            if (allRowsExpanded.length > 0) {
               handleViewClick(embeddings[allRowsExpanded[0].dataIndex]);
             }
           }
         }}
-        data={embeddings.map(embedding => [embedding])}
+        data={embeddings.map(embedding => [embedding, <Button variant="outlined" color="error" onClick={function() {handleDeleteClick(embedding)}} startIcon={<Delete fontSize="small"/>}>
+          Delete
+        </Button>])}
         columns={[{
           name: "Name",
+          options: {
+            customBodyRender: (value, tableMeta, updateValue) => (
+              <Box display="flex" alignItems="center" gap={4}>
+                {value}
+              </Box>
+            )
+          }
+        },
+        {
+          name: "Operations",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>
