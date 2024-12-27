@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 
-export default function LLMEdit({ llm }) {
+export default function EmbeddingEdit({ embedding }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
   const [state, setState] = useState({});
@@ -14,26 +14,26 @@ export default function LLMEdit({ llm }) {
 
     var update = {};
 
-    if (state.name !== llm.name) {
+    if (state.name !== embedding.name) {
       update.name = state.name;
     }
-    if (state.class_name !== llm.class_name) {
+    if (state.class_name !== embedding.class_name) {
       update.class_name = state.class_name;
     }
-    if (state.options !== llm.options) {
+    if (state.options !== embedding.options) {
       update.options = state.options;
     }
-    if (state.privacy !== llm.privacy) {
+    if (state.privacy !== embedding.privacy) {
       update.privacy = state.privacy;
     }
-    if (state.description !== llm.description) {
+    if (state.description !== embedding.description) {
       update.description = state.description;
     }
-    if (state.type !== llm.type) {
-      update.type = state.type;
+    if (state.dimension !== embedding.dimension) {
+      update.dimension = state.dimension;
     }
 
-    fetch(url + "/llms/" + llm.name, {
+    fetch(url + "/embeddings/" + embedding.name, {
       method: 'PATCH',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       body: JSON.stringify(update),
@@ -47,10 +47,10 @@ export default function LLMEdit({ llm }) {
         return response.json();
       }
     }).then(response => {
-      window.location.href = "/admin/llm/" + llm.name;
+      window.location.href = "/admin/embedding/" + embedding.name;
     }).catch(err => {
       console.log(err.toString());
-      toast.error("Error updating LLM");
+      toast.error("Error updating embedding");
     });
   }
 
@@ -61,12 +61,12 @@ export default function LLMEdit({ llm }) {
   };
 
   useEffect(() => {
-    setState(llm);
-  }, [llm]);
+    setState(embedding);
+  }, [embedding]);
 
   return (
     <Card elevation={3}>
-      <H4 p={2}>Edit LLM - {llm.name}</H4>
+      <H4 p={2}>Edit Embedding - {embedding.name}</H4>
 
       <Divider sx={{ mb: 1 }} />
 
@@ -137,11 +137,11 @@ export default function LLMEdit({ llm }) {
               <TextField
                 fullWidth
                 InputLabelProps={{ shrink: true }}
-                name="type"
-                label="Type"
+                name="dimension"
+                label="Dimension"
                 variant="outlined"
                 onChange={handleChange}
-                value={state.type}
+                value={state.dimension}
               />
             </Grid>
 

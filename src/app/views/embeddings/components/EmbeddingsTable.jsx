@@ -59,11 +59,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 
-export default function LLMsTable({ llms = [], title = "LLMs" }) {
+export default function EmbeddingsTable({ embeddings = [], title = "Embeddings" }) {
   const { palette } = useTheme();
-  const bgError = palette.error.main;
-  const bgPrimary = palette.primary.main;
-  const bgSecondary = palette.secondary.main;
 
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -99,43 +96,27 @@ export default function LLMsTable({ llms = [], title = "LLMs" }) {
               <TableCell sx={{ px: 0 }}>
                 Privacy
               </TableCell>
-
-              <TableCell sx={{ px: 0 }}>
-                Type
-              </TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {llms.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((llm, index) => (
+            {embeddings.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((embedding, index) => (
               <TableRow key={index} hover>
                 <TableCell align="left" sx={{ px: 0, textTransform: "capitalize" }} colSpan={2}>
                   <Box display="flex" alignItems="center" gap={4}>
-                    <StyledButton onClick={() => { navigate("/llm/" + llm.name) }} color="primary">{llm.name}</StyledButton>
+                    <StyledButton onClick={() => { navigate("/embedding/" + embedding.name) }} color="primary">{embedding.name}</StyledButton>
                   </Box>
                 </TableCell>
 
                 <TableCell align="left" sx={{ px: 0, textTransform: "capitalize" }}>
-                  {llm.class_name}
+                  {embedding.class_name}
                 </TableCell>
 
                 <TableCell align="left" sx={{ px: 0, textTransform: "capitalize" }}>
-                  {llm.privacy === "private" ? (
-                    <Small bgcolor={palette.success.main}>{llm.privacy}</Small>
+                  {embedding.privacy === "private" ? (
+                    <Small bgcolor={palette.success.main}>{embedding.privacy}</Small>
                   ) : (
-                    <Small bgcolor={palette.error.main}>{llm.privacy}</Small>
-                  )}
-                </TableCell>
-
-                <TableCell align="left" sx={{ px: 0, textTransform: "capitalize" }}>
-                  {llm.type === "vision" ? (
-                    <Small bgcolor={bgSecondary}>{llm.type}</Small>
-                  ) : llm.type === "qa" ? (
-                    <Small bgcolor={bgPrimary}>{llm.type}</Small>
-                  ) : llm.type === "chat" ? (
-                    <Small bgcolor={palette.success.light}>{llm.type}</Small>
-                  ) : (
-                    <Small bgcolor={bgError}>{llm.type}</Small>
+                    <Small bgcolor={palette.error.main}>{embedding.privacy}</Small>
                   )}
                 </TableCell>
               </TableRow>
@@ -143,13 +124,13 @@ export default function LLMsTable({ llms = [], title = "LLMs" }) {
           </TableBody>
         </ProductTable>
 
-        {llms && llms.length > 25 && (
+        {embeddings && embeddings.length > 25 && (
           <TablePagination
             sx={{ px: 2 }}
             page={page}
             component="div"
             rowsPerPage={rowsPerPage}
-            count={llms.length}
+            count={embeddings.length}
             onPageChange={handleChangePage}
             rowsPerPageOptions={[25, 50, 100]}
             onRowsPerPageChange={handleChangeRowsPerPage}

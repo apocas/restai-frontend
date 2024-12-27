@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { styled, Box } from "@mui/material";
 import useAuth from "app/hooks/useAuth";
-import LLMInfo from "./components/LLMInfo";
+import EmbeddingInfo from "./components/EmbeddingInfo";
 import Breadcrumb from "app/components/Breadcrumb";
 import { useParams } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -17,19 +17,19 @@ const ContentBox = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("sm")]: { margin: "16px" }
 }));
 
-export default function LLMViewInfo() {
+export default function EmbeddingViewInfo() {
   const { id } = useParams();
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [projects, setProjects] = useState([]);
-  const [llm, setLLM] = useState({});
+  const [embedding, setEmbedding] = useState({});
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const auth = useAuth();
 
   const fetchLLM = (llmName) => {
-    return fetch(url + "/llms/" + llmName, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/embeddings/" + llmName, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then((res) => res.json())
       .then((d) => {
-        setLLM(d)
+        setEmbedding(d)
         return d
       }).catch(err => {
         toast.error(err.toString());
@@ -87,11 +87,11 @@ export default function LLMViewInfo() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "LLMs", path: "/llms" }, { name: id, path: "/llm/" + id }]} />
+        <Breadcrumb routeSegments={[{ name: "Embeddings", path: "/embeddings" }, { name: id, path: "/embedding/" + id }]} />
       </Box>
 
       <ContentBox className="analytics">
-        <LLMInfo llm={llm} projects={projects} info={info} />
+        <EmbeddingInfo embedding={embedding} projects={projects} info={info} />
       </ContentBox>
     </Container>
   );

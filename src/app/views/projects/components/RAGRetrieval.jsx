@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Card, Divider, Button } from "@mui/material";
+import { Box, Card, Divider, Button, TextField, Grid, CircularProgress } from "@mui/material";
 import { toast } from 'react-toastify';
 import { H4 } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
@@ -11,58 +11,55 @@ import TableCell from '@mui/material/TableCell';
 import ReactJson from '@microlink/react-json-view';
 
 
-export default function RAGUpload({ project }) {
+export default function RAGRetrieval({ project }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
-  const [embeddings, setEmbeddings] = useState([]);
+  const [chunks, setChunks] = useState([]);
   const [rowsExpanded, setRowsExpanded] = useState([]);
-  const [embedding, setEmbedding] = useState({ "ids": {}, "metadatas": {}, "documents": {} });
+  const [embedding, setEmbedding] = useState(null);
   const [state, setState] = useState({ "chunksize": "512", "splitter": "token" });
 
-  const fetchEmbeddings = (projectName) => {
-    setEmbeddings([]);
-    if (project.chunks < 30000 || !project.chunks) {
-      return fetch(url + "/projects/" + projectName + "/embeddings", {
-        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+
+  const handleSearchClick = () => {
+    var data = {}
+    data.text = state.search
+    data.k = state.k
+    data.score = state.cutoff
+
+    fetch(url + "/projects/" + project.name + "/embeddings/search", {
+      method: 'POST',
+      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+      body: JSON.stringify(data),
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
       })
-        .then((res) => res.json())
-        .then((d) => setEmbeddings(d.embeddings)
-        ).catch(err => {
-          toast.error(err.toString());
-        });
-    }
+      .then((response) => {
+        if (response.embeddings.length === 0) {
+          toast.warning("No embeddings found for this query. Decrease the score cutoff parameter.");
+        }
+        setChunks(response.embeddings);
+      }).catch(err => {
+        toast.error(err.toString());
+      });
   }
 
-  const handleDeleteClick = (embedding) => {
-    if (window.confirm("Are you sure you to delete this embedding " + embedding + "?")) {
-      fetch(url + "/projects/" + project.name+ "/embeddings/" + btoa(embedding), {
-        method: 'DELETE',
-        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Error deleting embedding');
-          }
-          window.location.reload();
-        }).catch(err => {
-          console.log(err.toString());
-          toast.error("Error deleting embedding");
-        });
-    }
-  };
-
   const handleViewClick = (source) => {
-    fetch(url + "/projects/" + project.name + "/embeddings/source/" + btoa(source), {
+    setEmbedding(null);
+    fetch(url + "/projects/" + project.name + "/embeddings/id/" + source.id, {
       method: 'GET',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
     })
       .then(response => response.json())
       .then(response => {
-        response.source = source;
         setEmbedding(response);
-        setTimeout(() => {
-          //ref.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
       }).catch(err => {
         toast.error(err.toString());
       });
@@ -73,19 +70,54 @@ export default function RAGUpload({ project }) {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  useEffect(() => {
-    fetchEmbeddings(project.name);
-  }, []);
-
   return (
     <Card elevation={3}>
       <FlexBox>
         <FileUpload sx={{ ml: 2, mt: 2 }} />
         <H4 sx={{ p: 2 }}>
-          Embeddings Browser
+          Embeddings Search
         </H4>
       </FlexBox>
 
+      <Grid container spacing={3} sx={{ p: 2 }}>
+        <Grid item sm={12} xs={12}>
+          <TextField
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            name="search"
+            label="Search"
+            variant="outlined"
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <TextField
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            name="cutoff"
+            label="Cutoff"
+            variant="outlined"
+            onChange={handleChange}
+            defaultValue={0.1}
+          />
+        </Grid>
+        <Grid item sm={6} xs={12}>
+          <TextField
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            name="k"
+            label="K"
+            variant="outlined"
+            onChange={handleChange}
+            defaultValue={4}
+          />
+        </Grid>
+        <Grid item sm={12} xs={12}>
+          <Button variant="outlined" color="success" onClick={handleSearchClick} startIcon={<Delete fontSize="small" />}>
+            Search
+          </Button>
+        </Grid>
+      </Grid>
       <Divider />
 
       <MUIDataTable
@@ -117,28 +149,27 @@ export default function RAGUpload({ project }) {
             return (
               <>
                 <TableRow>
-                  <TableCell sx={{ p: 2, backgroundColor: "#f0f0f0" }} colSpan={colSpan}><b>IDS:</b> <ReactJson src={embedding.ids} enableClipboard={false} collapsed={0} /></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ p: 2, backgroundColor: "#f0f0f0" }} colSpan={colSpan}><b>Metadatas:</b> <ReactJson src={embedding.metadatas} enableClipboard={false} /></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ p: 2, backgroundColor: "#f0f0f0" }} colSpan={colSpan}><b>Documents:</b> <ReactJson src={embedding.documents} enableClipboard={false} /></TableCell>
+                  <TableCell sx={{ p: 2, backgroundColor: "#f0f0f0" }} colSpan={colSpan}>
+                    {!embedding &&
+                      <CircularProgress className="circleProgress" />
+                    }
+                    {embedding &&
+                      <ReactJson src={embedding} enableClipboard={false} />
+                    }
+                  </TableCell>
                 </TableRow>
               </>);
           },
           onRowExpansionChange: (_, allRowsExpanded) => {
             setRowsExpanded(allRowsExpanded.slice(-1).map(item => item.index))
             if (allRowsExpanded.length > 0) {
-              handleViewClick(embeddings[allRowsExpanded[0].dataIndex]);
+              handleViewClick(chunks[allRowsExpanded[0].dataIndex]);
             }
           }
         }}
-        data={embeddings.map(embedding => [embedding, <Button variant="outlined" color="error" onClick={function() {handleDeleteClick(embedding)}} startIcon={<Delete fontSize="small"/>}>
-          Delete
-        </Button>])}
+        data={chunks.map(chunk => [chunk.id, chunk.source, chunk.score])}
         columns={[{
-          name: "Name",
+          name: "ID",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>
@@ -148,7 +179,17 @@ export default function RAGUpload({ project }) {
           }
         },
         {
-          name: "Operations",
+          name: "Source",
+          options: {
+            customBodyRender: (value, tableMeta, updateValue) => (
+              <Box display="flex" alignItems="center" gap={4}>
+                {value}
+              </Box>
+            )
+          }
+        },
+        {
+          name: "Score",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>

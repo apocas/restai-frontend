@@ -39,6 +39,15 @@ export const navigations = [
     ]
   },
   {
+    name: "Embeddings",
+    icon: "psychology",
+    path: "/embeddings",
+    children: [
+      { name: "List Embeddings", iconText: "SI", path: "/embeddings" },
+      { name: "New Embedding", iconText: "SU", path: "/embeddings/new", auth: authRoles.admin },
+    ]
+  },
+  {
     name: "Tools",
     icon: "build",
     path: "/projects/tools",

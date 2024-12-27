@@ -14,6 +14,10 @@ const LLMs = Loadable(lazy(() => import("app/views/llms/List")));
 const LLMsNew = Loadable(lazy(() => import("app/views/llms/New")));
 const LLMsInfo = Loadable(lazy(() => import("app/views/llms/Info")));
 const LLMsEdit = Loadable(lazy(() => import("app/views/llms/Edit")));
+const Embeddings = Loadable(lazy(() => import("app/views/embeddings/List")));
+const EmbeddingsNew = Loadable(lazy(() => import("app/views/embeddings/New")));
+const EmbeddingsInfo = Loadable(lazy(() => import("app/views/embeddings/Info")));
+const EmbeddingsEdit = Loadable(lazy(() => import("app/views/embeddings/Edit")));
 const Projects = Loadable(lazy(() => import("app/views/projects/List")));
 const MyProjects = Loadable(lazy(() => import("app/views/projects/MyList")));
 const Library = Loadable(lazy(() => import("app/views/projects/Library")));
@@ -79,6 +83,26 @@ const routes = [
       {
         path: "/llm/:id/edit",
         element: <LLMsEdit />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/embeddings",
+        element: <Embeddings />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/embeddings/new",
+        element: <EmbeddingsNew />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/embedding/:id",
+        element: <EmbeddingsInfo />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/embedding/:id/edit",
+        element: <EmbeddingsEdit />,
         auth: authRoles.admin
       },
       {
