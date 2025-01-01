@@ -21,9 +21,13 @@ const Form = styled("form")(() => ({ padding: "16px" }));
 
 export default function ProjectNew({ projects, info }) {
   const typeList = ["rag", "inference", "agent", "ragsql", "vision", "router"];
-  const vectorstoreList = ["redis", "chroma"];
+  var vectorstoreList = ["redis", "chroma"];
   const auth = useAuth();
   const navigate = useNavigate();
+
+  if (process.env.REACT_APP_RESTAI_VECTOR) {
+    vectorstoreList = process.env.REACT_APP_RESTAI_VECTOR.split(",")
+  }
 
   const [tabIndex, setTabIndex] = useState("0");
   const [state, setState] = useState({});
