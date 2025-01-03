@@ -56,23 +56,23 @@ export default function LLMViewInfo() {
       });
   }
 
-  const fetchInfo = () => {
-    return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            toast.error(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      })
-      .then((d) => setInfo(d)
-      ).catch(err => {
-        toast.error(err.toString());
+  const fetchInfo = async () => {
+    try {
+      const response = await fetch(url + "/info", {
+        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
       });
-  }
+  
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error(data.detail);
+        //throw new Error(response.statusText);
+      } else {
+        setInfo(data);
+      }
+    } catch (err) {
+      toast.error(err.toString());
+    }
+  };
 
   useEffect(() => {
     document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - Project - ' + id;
