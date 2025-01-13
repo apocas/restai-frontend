@@ -31,7 +31,7 @@ export default function UserNew() {
     var opts = {
       "username": state.username,
       "password": state.password,
-      "is_admin": false,
+      "superadmin": false,
       "is_private": false
     }
 

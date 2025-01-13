@@ -81,7 +81,7 @@ export default function Preferences({ user, projects }) {
       <Divider />
 
       <Box margin={3}>
-        {auth.user.is_admin === true &&
+        {auth.user.superadmin === true &&
           <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
               <TextField
@@ -131,7 +131,7 @@ export default function Preferences({ user, projects }) {
                     </Box>
                   </FlexBox>
 
-                  {auth.user.is_admin === true &&
+                  {auth.user.superadmin === true &&
                     <Box m={1} display="flex">
                       <StyledButton size="small" onClick={() => { diassoc(project) }} >Dissociate</StyledButton>
                     </Box>

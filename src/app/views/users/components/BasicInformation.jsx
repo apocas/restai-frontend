@@ -44,8 +44,8 @@ export default function BasicInformation({ user }) {
 
     var update = {};
 
-    if (state.is_admin !== user.is_admin) {
-      update.is_admin = state.is_admin;
+    if (state.superadmin !== user.superadmin) {
+      update.superadmin = state.superadmin;
     }
     if (state.sso !== user.sso) {
       update.sso = state.sso;
@@ -114,7 +114,7 @@ export default function BasicInformation({ user }) {
               <FlexBox alignItems="center" gap={1}>
                 <People sx={{ color: "text.disabled" }} />
                 <Small fontWeight={600} color="text.disabled">
-                  {user.is_admin ? "Admin" : "Regular"}
+                  {user.superadmin ? "Admin" : "Regular"}
                 </Small>
               </FlexBox>
 
@@ -161,15 +161,15 @@ export default function BasicInformation({ user }) {
                 />
               </Grid>
 
-              {auth.user.is_admin === true &&
+              {auth.user.superadmin === true &&
                 <>
                   <Grid item sm={6} xs={12}>
                     <FormControlLabel
                       label="Administrator"
                       control={
                         <Switch
-                          checked={state.is_admin}
-                          name="is_admin"
+                          checked={state.superadmin}
+                          name="superadmin"
                           inputProps={{ "aria-label": "secondary checkbox controlled" }}
                           onChange={handleChange}
                         />
