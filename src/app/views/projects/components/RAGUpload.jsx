@@ -9,6 +9,7 @@ import { FlexAlignCenter, FlexBox } from "app/components/FlexBox";
 import { FileUpload } from "@mui/icons-material";
 import { convertHexToRGB } from "app/utils/utils";
 import { LoadingButton } from "@mui/lab";
+import { use } from "react";
 
 const Form = styled("form")({
   paddingLeft: "16px",
@@ -45,7 +46,7 @@ export default function RAGUpload({ project }) {
   const handleTabChange2 = (e, value) => setTabIndex2(value);
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     setLoading(true);
@@ -53,33 +54,33 @@ export default function RAGUpload({ project }) {
     if (tabIndex === 0) {
       const formData = new FormData();
       formData.append("file", files[0]);
-      formData.append("splitter", state.splitter);
-      formData.append("chunks", state.chunksize);
+
       if (tabIndex2 === 1) {
         formData.append("classic", "true");
+        formData.append("splitter", state.splitter);
+        formData.append("chunks", state.chunksize);
       }
 
-      fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
-        method: 'POST',
-        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
-        body: formData,
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            response.json().then(function (data) {
-              toast.error(data.detail);
-            });
-            throw Error(response.statusText);
-          } else {
-            return response.json();
-          }
-        })
-        .then((response) => {
-          window.location.reload();
-        }).catch(err => {
-          toast.error(err.toString());
-        }).finally(() => {
+      try {
+        const response = await fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
+          method: 'POST',
+          headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
+          body: formData,
         });
+    
+        const data = await response.json();
+        if (!response.ok) {
+          toast.error(data.detail);
+          toast.warning("Retry in classic mode if the error persists.");
+          //throw new Error(response.statusText);
+        } else {
+          window.location.reload();
+        }
+      } catch (err) {
+        toast.error(err.toString());
+      } finally {
+        setLoading(false);
+      }
     } else if (tabIndex === 1) {
       var body = {
         "url": state.url,
@@ -87,27 +88,25 @@ export default function RAGUpload({ project }) {
         "chunks": state.chunksize
       }
 
-      fetch(url + "/projects/" + project.name + "/embeddings/ingest/url", {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
-        body: JSON.stringify(body),
-      })
-        .then(function (response) {
-          if (!response.ok) {
-            response.json().then(function (data) {
-              toast.error(data.detail);
-            });
-            throw Error(response.statusText);
-          } else {
-            return response.json();
-          }
-        })
-        .then((response) => {
-          window.location.reload();
-        }).catch(err => {
-          toast.error(err.toString());
-        }).finally(() => {
+      try {
+        const response = await fetch(url + "/projects/" + project.name + "/embeddings/ingest/url", {
+          method: 'POST',
+          headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+          body: JSON.stringify(body),
         });
+    
+        const data = await response.json();
+        if (!response.ok) {
+          toast.error(data.detail);
+          //throw new Error(response.statusText);
+        } else {
+          window.location.reload();
+        }        
+      } catch (err) {
+        toast.error(err.toString());
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -119,6 +118,12 @@ export default function RAGUpload({ project }) {
   useEffect(() => {
     setFiles(acceptedFiles);
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    if (tabIndex === 1) {
+      setTabIndex2(1);
+    }
+  }, [tabIndex]);
 
   return (
     <Card elevation={3}>

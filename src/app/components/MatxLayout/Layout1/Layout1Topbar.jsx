@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
@@ -21,6 +21,10 @@ import { themeShadows } from "app/components/MatxTheme/themeColors";
 import { topBarHeight } from "app/utils/constant";
 
 import sha256 from 'crypto-js/sha256';
+
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { toast } from 'react-toastify';
 
 import {
   Home,
@@ -82,6 +86,8 @@ const Layout1Topbar = () => {
   const { settings, updateSettings } = useSettings();
   const { logout, user } = useAuth();
   const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const auth = useAuth();
+  const url = process.env.REACT_APP_RESTAI_API_URL || "";
 
   const updateSidebarMode = (sidebarSettings) => {
     updateSettings({ layout1Settings: { leftSidebar: { ...sidebarSettings } } });
@@ -98,6 +104,42 @@ const Layout1Topbar = () => {
     updateSidebarMode({ mode });
   };
 
+  const [team, setTeam] = useState('');
+  const [teams, setTeams] = useState([]);
+
+  const handleChange = (event) => {
+    setTeam(event.target.value);
+  };
+
+  const fetchTeams = () => {
+    fetch(url + "/teams", {
+      method: 'GET',
+      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((response) => {
+
+        setTeams(response)
+      }).catch(err => {
+        toast.error(err.toString());
+      });
+  };
+
+    useEffect(() => {
+      console.log(auth.user.team);
+      fetchTeams();
+      setTeam(auth.user.team);
+    }, []);
+
   return (
     <TopbarRoot>
       <TopbarContainer>
@@ -108,14 +150,31 @@ const Layout1Topbar = () => {
         </Box>
 
         <Box display="flex" alignItems="center">
+          <Hidden xsDown>
+            <Box display="flex" alignItems="center">
+              <Span>
+                Hi <strong>{user.username}</strong>, working on
+              </Span>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={team}
+                  onChange={handleChange}
+                >
+                  {teams.map((item, ind) => (
+                    <MenuItem value={item.name} key={item.id}>
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </Hidden>
           <MatxMenu
             menuButton={
               <UserMenu>
-                <Hidden xsDown>
-                  <Span>
-                    Hi <strong>{user.username}</strong>
-                  </Span>
-                </Hidden>
+
                 <Avatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} sx={{ cursor: "pointer" }} />
               </UserMenu>
             }>

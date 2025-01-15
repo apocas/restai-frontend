@@ -98,7 +98,7 @@ export default function RAGRetrieval({ project }) {
             label="Cutoff"
             variant="outlined"
             onChange={handleChange}
-            defaultValue={0.1}
+            defaultValue={0}
           />
         </Grid>
         <Grid item sm={6} xs={12}>
