@@ -62,7 +62,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
             },
           }
         }}
-        data={projects.map(project => [project.name, project.type, project.llm, project.users, project.name])}
+        data={projects.map(project => [project.name, project.type, project.llm, project.users, project.team.name, project.name])}
         columns={[{
           name: "Name",
           options: {
@@ -111,7 +111,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
               </div>
             )
           }
-        }, {
+        }, "Team", {
           name: "Actions",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
