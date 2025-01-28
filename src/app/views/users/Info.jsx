@@ -25,6 +25,10 @@ import Projects from "./components/Projects";
 import DeleteAccount from "./components/DeleteAccount";
 import BasicInformation from "./components/BasicInformation";
 import { toast } from 'react-toastify';
+import InfoIcon from '@mui/icons-material/Info';
+import KeyIcon from '@mui/icons-material/Key';
+import HttpsIcon from '@mui/icons-material/Https';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: 0,
@@ -196,10 +200,10 @@ export default function UserInfo() {
 }
 
 const tabList = [
-  { id: 1, name: "Basic Information", Icon: ContentCopy },
-  { id: 2, name: "Password", Icon: ContentCopy },
+  { id: 1, name: "Basic Information", Icon: InfoIcon },
+  { id: 2, name: "Password", Icon: HttpsIcon },
   { id: 3, name: "Projects", Icon: ContentCopy },
-  { id: 12, name: "API Key", Icon: ContentCopy },
-  { id: 13, name: "Delete account", Icon: ContentCopy }
+  { id: 12, name: "API Key", Icon: KeyIcon },
+  { id: 13, name: "Delete account", Icon: DeleteForeverIcon }
 ];
 

@@ -323,7 +323,7 @@ export default function ImageChatContainer({
               }}
             >
               <Tooltip title={"Audio loaded. " + (file.name || "Microphone")}>
-                <MusicNote sx={{ fontSize: '3.5rem' }} />
+                <MusicNote sx={{ fontSize: '3.5rem', color: '#4CAF50' }} />
               </Tooltip>
             </Box>
           )}

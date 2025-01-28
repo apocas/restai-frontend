@@ -74,7 +74,7 @@ export default function EmbeddingInfo({ embedding, projects }) {
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Options</TableCell>
-            <TableCell colSpan={4}>{embedding.options && (<ReactJson src={JSON.parse(embedding.options)} enableClipboard={true} name={false}/>)}</TableCell>
+            <TableCell colSpan={4}>{embedding.options && (<ReactJson src={JSON.parse(embedding.options)} enableClipboard={true} name={false} />)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Description</TableCell>
@@ -88,12 +88,16 @@ export default function EmbeddingInfo({ embedding, projects }) {
       </Table>
 
       <FlexBetween p={2}>
-        <Button variant="outlined" onClick={() => { navigate("/embedding/" + embedding.name + "/edit") }} startIcon={<Edit fontSize="small" />}>
-          Edit
-        </Button>
-        <Button variant="outlined" color="error" onClick={handleDeleteClick} startIcon={<Delete fontSize="small"/>}>
-          Delete
-        </Button>
+        {auth.user.is_admin === true &&
+          <>
+            <Button variant="outlined" onClick={() => { navigate("/embedding/" + embedding.name + "/edit") }} startIcon={<Edit fontSize="small" />}>
+              Edit
+            </Button>
+            <Button variant="outlined" color="error" onClick={handleDeleteClick} startIcon={<Delete fontSize="small" />}>
+              Delete
+            </Button>
+          </>
+        }
       </FlexBetween>
     </Card>
   );

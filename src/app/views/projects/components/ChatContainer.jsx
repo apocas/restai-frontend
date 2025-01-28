@@ -305,6 +305,12 @@ export default function ChatContainer({
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (project.type === "vision") {
+      setChat(false);
+    }
+  }, [project]);
+
   return (
     <ChatRoot>
       <CustomizedDialogMessage message={selectedMessage} onclose={handleMessageInfoClose} />
