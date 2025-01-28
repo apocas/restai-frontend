@@ -161,7 +161,11 @@ export default function ProjectEdit({ project, projects, info }) {
                   value={state.llm}
                   defaultValue={state.llm}
                 >
-                  {info.llms.map((item, ind) => (
+                  {info.llms.filter(item =>
+                    state.type === "vision"
+                      ? item.type === "vision"
+                      : item.type !== "vision"
+                  ).map((item, ind) => (
                     <MenuItem value={item.name} key={item.name}>
                       {item.name}
                     </MenuItem>
