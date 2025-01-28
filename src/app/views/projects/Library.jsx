@@ -24,8 +24,8 @@ export default function Library() {
   const auth = useAuth();
 
   const baseUrl = url ? url : window.location.origin;
-  const urlWithParams = new URL("/library", baseUrl);
-  //urlWithParams.searchParams.append('filter', 'public');
+  const urlWithParams = new URL("/projects", baseUrl);
+  urlWithParams.searchParams.append('filter', 'public');
 
   const fetchProjects = () => {
     return fetch(urlWithParams, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })

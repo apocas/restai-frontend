@@ -134,7 +134,7 @@ export default function ProjectsTable({ users = [], title = "Users" }) {
                 </TableCell>
 
                 <TableCell align="left" sx={{ px: 0, textTransform: "capitalize" }}>
-                  {user.superadmin ? (
+                  {user.is_admin ? (
                     <Small bgcolor={palette.error.main}>{"Admin"}</Small>
                   ) : (
                     <Small bgcolor={palette.primary.main}>{"User"}</Small>
