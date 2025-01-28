@@ -28,16 +28,6 @@ export const navigations = [
       { name: "New User", iconText: "SU", path: "/users/new", auth: authRoles.admin },
     ]
   },
-  {
-    name: "Teams",
-    icon: "person",
-    path: "/teams",
-    auth: authRoles.admin,
-    children: [
-      { name: "Team List", iconText: "SI", path: "/teams", auth: authRoles.admin },
-      { name: "New Team", iconText: "SU", path: "/teams/new", auth: authRoles.admin },
-    ]
-  },
   { label: "AI", type: "label" },
   {
     name: "LLMs",

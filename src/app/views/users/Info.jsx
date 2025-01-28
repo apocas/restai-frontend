@@ -22,7 +22,6 @@ import { ContentCopy } from "@mui/icons-material";
 import ApiKeys from "./components/ApiKeys";
 import Password from "./components/Password";
 import Projects from "./components/Projects";
-import Teams from "./components/Teams";
 import DeleteAccount from "./components/DeleteAccount";
 import BasicInformation from "./components/BasicInformation";
 import { toast } from 'react-toastify';
@@ -50,8 +49,8 @@ export default function UserInfo() {
   const { id } = useParams();
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [projects, setProjects] = useState([]);
-  const [teams, setTeams] = useState([]);
   const [user, setUser] = useState({});
+  const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const auth = useAuth();
   const theme = useTheme();
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -122,8 +121,8 @@ export default function UserInfo() {
       });
   }
 
-  const fetchTeams = () => {
-    return fetch(url + "/teams", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+  const fetchInfo = () => {
+    return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
@@ -134,23 +133,20 @@ export default function UserInfo() {
           return response.json();
         }
       })
-      .then((d) => {
-        setTeams(d)
-      }
+      .then((d) => setInfo(d)
       ).catch(err => {
         toast.error(err.toString());
       });
   }
 
-
   useEffect(() => {
-    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - User - ' + id;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - Project - ' + id;
     fetchUser(id);
   }, [id]);
 
   useEffect(() => {
     fetchProjects();
-    fetchTeams();
+    fetchInfo();
   }, []);
 
 
@@ -191,8 +187,7 @@ export default function UserInfo() {
           {active === tabList[1].name && <Password user={user} />}
           {active === tabList[2].name && <Projects user={user} projects={projects} />}
           {active === tabList[3].name && <ApiKeys user={user} />}
-          {active === tabList[4].name && <Teams user={user} teams={teams} />}
-          {active === tabList[5].name && <DeleteAccount user={user} />}
+          {active === tabList[4].name && <DeleteAccount user={user} />}
         </Grid>
       </Grid>
     </Box>
@@ -201,11 +196,10 @@ export default function UserInfo() {
 }
 
 const tabList = [
-  { id: 0, name: "Basic Information", Icon: ContentCopy },
-  { id: 1, name: "Password", Icon: ContentCopy },
-  { id: 2, name: "Projects", Icon: ContentCopy },
-  { id: 3, name: "API Key", Icon: ContentCopy },
-  { id: 4, name: "Teams", Icon: ContentCopy },
-  { id: 5, name: "Delete account", Icon: ContentCopy }
+  { id: 1, name: "Basic Information", Icon: ContentCopy },
+  { id: 2, name: "Password", Icon: ContentCopy },
+  { id: 3, name: "Projects", Icon: ContentCopy },
+  { id: 12, name: "API Key", Icon: ContentCopy },
+  { id: 13, name: "Delete account", Icon: ContentCopy }
 ];
 

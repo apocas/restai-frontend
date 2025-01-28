@@ -32,10 +32,6 @@ const UsersInfo = Loadable(lazy(() => import("app/views/users/Info")));
 const UsersNew = Loadable(lazy(() => import("app/views/users/New")));
 const Image = Loadable(lazy(() => import("app/views/projects/Image")));
 const Audio = Loadable(lazy(() => import("app/views/projects/Audio")));
-const Teams = Loadable(lazy(() => import("app/views/teams/List")));
-const TeamsInfo = Loadable(lazy(() => import("app/views/teams/Info")));
-const TeamsNew = Loadable(lazy(() => import("app/views/teams/New")));
-const TeamsEdit = Loadable(lazy(() => import("app/views/teams/Edit")));
 
 const routes = [
   {
@@ -67,26 +63,6 @@ const routes = [
       {
         path: "/users/new",
         element: <UsersNew />,
-        auth: authRoles.admin
-      },
-      {
-        path: "/teams",
-        element: <Teams />,
-        auth: authRoles.admin
-      },
-      {
-        path: "/team/:id",
-        element: <TeamsInfo />,
-        auth: authRoles.admin
-      },
-      {
-        path: "/teams/new",
-        element: <TeamsNew />,
-        auth: authRoles.admin
-      },
-      {
-        path: "/team/:id/edit",
-        element: <TeamsEdit />,
         auth: authRoles.admin
       },
       {
