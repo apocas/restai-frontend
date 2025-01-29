@@ -287,6 +287,7 @@ export default function ProjectEdit({ project, projects, info }) {
                     K Value
                   </Typography>
                   <Slider
+                    name="k"
                     defaultValue={state.k}
                     onChange={handleChange}
                     aria-labelledby="input-slider"

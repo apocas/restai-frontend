@@ -306,7 +306,7 @@ export default function ChatContainer({
   }, [messages]);
 
   useEffect(() => {
-    if (project.type === "vision") {
+    if (project.type === "vision" || project.type === "router") {
       setChat(false);
     }
   }, [project]);

@@ -44,15 +44,13 @@ export default function Terminal({
           {action.action !== "terminal" &&
             <>
               <TerminalLine>
-              { action.input && action.input.kwargs &&
-                JSON.stringify(action.input.kwargs)
-              }
-              { !action.input && action.name &&
-                action.name
-              }
+                {action.input && action.input.kwargs &&
+                  JSON.stringify(action.input.kwargs)
+                }
               </TerminalLine>
               <TerminalLine marginLeft={"15px"} color={"#a8ffa8"}>
-                {action.output}
+                <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }} value={action.output}>{action.output}
+                </Span>
               </TerminalLine>
             </>
           }
