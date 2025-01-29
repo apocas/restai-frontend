@@ -16,6 +16,7 @@ import {
 
 import { H4 } from "app/components/Typography";
 import { toast } from 'react-toastify';
+import ReactJson from '@microlink/react-json-view';
 
 const Form = styled("form")(() => ({ padding: "16px" }));
 
@@ -83,142 +84,157 @@ export default function ProjectNew({ projects, info }) {
 
       <Divider sx={{ mb: 1 }} />
 
-      <Form onSubmit={handleSubmit}>
-        <Grid container spacing={3} alignItems="center">
-          <Grid item md={2} sm={4} xs={12}>
-            Name
-          </Grid>
+      <Grid container spacing={2}>
 
-          <Grid item md={10} sm={8} xs={12}>
-            <TextField
-              size="small"
-              name="projectname"
-              variant="outlined"
-              label="Project Name"
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item md={2} sm={4} xs={12}>
-            Type
-          </Grid>
-
-          <Grid item md={10} sm={8} xs={12}>
-            <TextField
-              select
-              size="small"
-              name="projecttype"
-              label="Type"
-              variant="outlined"
-              onChange={handleChange}
-              sx={{ minWidth: 188 }}
-            >
-              {typeList.map((item, ind) => (
-                <MenuItem value={item} key={item}>
-                  {item}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-
-          {state.projecttype && (
-            <>
+        <Grid item xs={6}>
+          <Form onSubmit={handleSubmit}>
+            <Grid container spacing={3} alignItems="center">
               <Grid item md={2} sm={4} xs={12}>
-                LLM
+                Name
+              </Grid>
+
+              <Grid item md={10} sm={8} xs={12}>
+                <TextField
+                  size="small"
+                  name="projectname"
+                  variant="outlined"
+                  label="Project Name"
+                  fullWidth
+                  onChange={handleChange}
+                />
+              </Grid>
+
+              <Grid item md={2} sm={4} xs={12}>
+                Type
               </Grid>
 
               <Grid item md={10} sm={8} xs={12}>
                 <TextField
                   select
                   size="small"
-                  name="projectllm"
-                  label="LLM"
+                  name="projecttype"
+                  label="Type"
                   variant="outlined"
                   onChange={handleChange}
-                  sx={{ minWidth: 188 }}
+                  fullWidth
                 >
-                  {info.llms.filter(item =>
-                    state.projecttype === "vision"
-                      ? item.type === "vision"
-                      : item.type !== "vision"
-                  ).map((item, ind) => (
-                    <MenuItem value={item.name} key={item.name}>
-                      {item.name}
+                  {typeList.map((item, ind) => (
+                    <MenuItem value={item} key={item}>
+                      {item}
                     </MenuItem>
                   ))}
                 </TextField>
               </Grid>
-            </>
+
+              {state.projecttype && (
+                <>
+                  <Grid item md={2} sm={4} xs={12}>
+                    LLM
+                  </Grid>
+
+                  <Grid item md={10} sm={8} xs={12}>
+                    <TextField
+                      select
+                      size="small"
+                      name="projectllm"
+                      label="LLM"
+                      variant="outlined"
+                      onChange={handleChange}
+                      fullWidth
+                    >
+                      {info.llms.filter(item =>
+                        state.projecttype === "vision"
+                          ? item.type === "vision"
+                          : item.type !== "vision"
+                      ).map((item, ind) => (
+                        <MenuItem value={item.name} key={item.name}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </>
+              )}
+            </Grid>
+
+            <Tabs
+              value={tabIndex}
+              textColor="primary"
+              indicatorColor="primary"
+              sx={{ mt: 0, mb: 0 }}>
+
+              {state.projecttype === "rag" && (
+                <Tab key="0" value="0" label="RAG" sx={{ textTransform: "capitalize" }} />
+              )}
+            </Tabs>
+
+
+
+            {state.projecttype === "rag" && tabIndex === "0" && (
+              <Grid container spacing={3} alignItems="center">
+                <Grid item md={2} sm={4} xs={12}>
+                  Embeddings
+                </Grid>
+
+                <Grid item md={10} sm={8} xs={12}>
+                  <TextField
+                    select
+                    size="small"
+                    name="projectembeddings"
+                    label="Embeddings"
+                    variant="outlined"
+                    fullWidth
+                    onChange={handleChange}
+                  >
+                    {info.embeddings.map((item, ind) => (
+                      <MenuItem value={item.name} key={item.name}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                <Grid item md={2} sm={4} xs={12}>
+                  Vectorstore
+                </Grid>
+
+                <Grid item md={10} sm={8} xs={12}>
+                  <TextField
+                    select
+                    size="small"
+                    name="projectvectorstore"
+                    label="Vectorstore"
+                    variant="outlined"
+                    fullWidth
+                    onChange={handleChange}
+                  >
+                    {vectorstoreList.map((item, ind) => (
+                      <MenuItem value={item} key={item}>
+                        {item}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
+            )}
+
+
+            <Box mt={3}>
+              <Button color="primary" variant="contained" type="submit">
+                Submit
+              </Button>
+            </Box>
+          </Form>
+        </Grid>
+        <Grid item xs={6}>
+          {state.projectllm && (
+            <ReactJson src={info.llms.find(llm => llm.name === state.projectllm)} enableClipboard={false} name={false} />
+          )}
+          {state.projectembeddings && (
+            <ReactJson src={info.embeddings.find(embedding => embedding.name === state.projectembeddings)} enableClipboard={false} name={false} />
           )}
         </Grid>
-
-        <Tabs
-          value={tabIndex}
-          textColor="primary"
-          indicatorColor="primary"
-          sx={{ mt: 0, mb: 0 }}>
-
-          {state.projecttype === "rag" && (
-            <Tab key="0" value="0" label="RAG" sx={{ textTransform: "capitalize" }} />
-          )}
-        </Tabs>
-
-
-
-        {state.projecttype === "rag" && tabIndex === "0" && (
-          <Grid container spacing={3} alignItems="center">
-            <Grid item md={2} sm={4} xs={12}>
-              Embeddings
-            </Grid>
-
-            <Grid item md={10} sm={8} xs={12}>
-              <TextField
-                select
-                size="small"
-                name="projectembeddings"
-                label="Embeddings"
-                variant="outlined"
-                sx={{ minWidth: 188 }}
-                onChange={handleChange}
-              >
-                {info.embeddings.map((item, ind) => (
-                  <MenuItem value={item.name} key={item.name}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <Grid item md={2} sm={4} xs={12}>
-              Vectorstore
-            </Grid>
-
-            <Grid item md={10} sm={8} xs={12}>
-              <TextField
-                select
-                size="small"
-                name="projectvectorstore"
-                label="Vectorstore"
-                variant="outlined"
-                sx={{ minWidth: 188 }}
-                onChange={handleChange}
-              >
-                {vectorstoreList.map((item, ind) => (
-                  <MenuItem value={item} key={item}>
-                    {item}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-        )}
-
-        <Box mt={3}>
-          <Button color="primary" variant="contained" type="submit">
-            Submit
-          </Button>
-        </Box>
-      </Form>
+      </Grid>
     </Card>
   );
 }

@@ -44,7 +44,12 @@ export default function Terminal({
           {action.action !== "terminal" &&
             <>
               <TerminalLine>
-                {JSON.stringify(action.input.kwargs)}
+              { action.input && action.input.kwargs &&
+                JSON.stringify(action.input.kwargs)
+              }
+              { !action.input && action.name &&
+                action.name
+              }
               </TerminalLine>
               <TerminalLine marginLeft={"15px"} color={"#a8ffa8"}>
                 {action.output}
