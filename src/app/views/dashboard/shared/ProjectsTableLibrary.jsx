@@ -62,7 +62,7 @@ export default function ProjectsTableLibrary({ projects = [], title = "Projects 
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>
-                <StyledButton onClick={() => { navigate("/project/" + value.name) }} color="primary">{value.name || value.human_name}</StyledButton>
+                <StyledButton onClick={() => { navigate("/project/" + value.name) }} color="primary">{value.human_name || value.name}</StyledButton>
               </Box>
             )
           }
