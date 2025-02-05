@@ -2,6 +2,7 @@ import { Fade, Grid } from "@mui/material";
 
 import ProjectInfo from "./ProjectInfo";
 import ProjectAI from "./ProjectAI";
+import ProjectTokens from "./ProjectTokens";
 import ProjectRAG from "./ProjectRAG";
 import RAGUpload from "./RAGUpload";
 import RAGBrowser from "./RAGBrowser";
@@ -40,8 +41,8 @@ export default function ProjectDetails({ project, projects, info }) {
               </Grid>
             )}
             <Grid item lg={12} md={12} xs={12}>
-                <RAGRetrieval project={project} />
-              </Grid>
+              <RAGRetrieval project={project} />
+            </Grid>
           </>
         )}
         {project.type === "agent" && (
@@ -54,6 +55,10 @@ export default function ProjectDetails({ project, projects, info }) {
             <RouterDetails project={project} projects={projects} />
           </Grid>
         )}
+
+        <Grid item lg={8} md={6} xs={12}>
+          <ProjectTokens project={project} />
+        </Grid>
       </Grid>
     </Fade>
   );

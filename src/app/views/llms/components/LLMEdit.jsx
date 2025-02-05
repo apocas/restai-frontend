@@ -32,6 +32,12 @@ export default function LLMEdit({ llm }) {
     if (state.type !== llm.type) {
       update.type = state.type;
     }
+    if (state.input_cost !== llm.input_cost) {
+      update.input_cost = state.input_cost;
+    }
+    if (state.output_cost !== llm.output_cost) {
+      update.output_cost = state.output_cost;
+    }
 
     fetch(url + "/llms/" + llm.name, {
       method: 'PATCH',
@@ -142,6 +148,30 @@ export default function LLMEdit({ llm }) {
                 variant="outlined"
                 onChange={handleChange}
                 value={state.type}
+              />
+            </Grid>
+
+            <Grid item sm={6} xs={12}>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="input_cost"
+                label="Input Cost"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.input_cost}
+              />
+            </Grid>
+
+            <Grid item sm={6} xs={12}>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="output_cost"
+                label="Output Cost"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.output_cost}
               />
             </Grid>
 
