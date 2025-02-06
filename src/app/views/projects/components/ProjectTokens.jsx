@@ -76,10 +76,10 @@ export default function ProjectTokens({ project, tokens }) {
           <YAxis yAxisId="right" orientation="right" unit="€" />
           <Tooltip />
           <Legend />
-          <Line yAxisId="left" type="monotone" dataKey="input_tokens" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Tokens" unit=" tokens" />
-          <Line yAxisId="left" type="monotone" dataKey="output_tokens" stroke="#82ca9d" name="Output Tokens" unit=" tokens" />
-          <Line yAxisId="right" type="monotone" dataKey="input_cost" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Cost" unit="€" />
-          <Line yAxisId="right" type="monotone" dataKey="output_cost" stroke="#82ca9d" name="Output Cost" unit="€" />
+          <Line yAxisId="left" type="monotone" dataKey="input_tokens" stroke="#cd6155" activeDot={{ r: 8 }} name="Input Tokens" unit=" tokens" />
+          <Line yAxisId="left" type="monotone" dataKey="output_tokens" stroke="#52be80" name="Output Tokens" unit=" tokens" />
+          <Line yAxisId="right" type="monotone" dataKey="input_cost" stroke="#922b21" activeDot={{ r: 8 }} name="Input Cost" unit="€" />
+          <Line yAxisId="right" type="monotone" dataKey="output_cost" stroke="#1e8449" name="Output Cost" unit="€" />
         </LineChart>
       </ResponsiveContainer>
 
