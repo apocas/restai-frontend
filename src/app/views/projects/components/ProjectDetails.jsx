@@ -24,7 +24,7 @@ export default function ProjectDetails({ project, projects, info }) {
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
-            toast.error(data.detail);
+            console.log(data);
           });
           throw Error(response.statusText);
         } else {
@@ -33,7 +33,7 @@ export default function ProjectDetails({ project, projects, info }) {
       })
       .then((d) => setTokens(d.tokens)
       ).catch(err => {
-        toast.error(err.toString());
+        console.log(err.toString());
       });
   }
 
