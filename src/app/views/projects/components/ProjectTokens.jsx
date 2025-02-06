@@ -6,10 +6,8 @@ import {
   Typography,
 } from "@mui/material";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import useAuth from "app/hooks/useAuth";
-import { toast } from 'react-toastify';
 import { H4 } from "app/components/Typography";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 
 const FlexBox = styled(Box)({
@@ -17,44 +15,17 @@ const FlexBox = styled(Box)({
   alignItems: "center"
 });
 
-export default function ProjectTokens({ project }) {
-  const [tokens, setTokens] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
-  const auth = useAuth();
-  const url = process.env.REACT_APP_RESTAI_API_URL || "";
-
-  const fetchTokens = () => {
-    return fetch(url + "/projects/" + project.name + "/tokens/daily", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            toast.error(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      })
-      .then((d) => setTokens(d)
-      ).catch(err => {
-        toast.error(err.toString());
-      });
-  }
-
-  useEffect(() => {
-    if (project.name) {
-      fetchTokens();
-    }
-  }, [project]);
+export default function ProjectTokens({ project, tokens }) {
 
   const filledTokens = useMemo(() => {
-    if (!tokens || !tokens.tokens || tokens.tokens.length === 0) return [];
-    const sampleDate = new Date(tokens.tokens[0].date);
+    if (!tokens || tokens.length === 0) return [];
+    const sampleDate = new Date(tokens[0].date);
     const year = sampleDate.getFullYear();
     const month = sampleDate.getMonth(); // 0-indexed month
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     // Map existing tokens by date for quick lookup
     const tokenMap = {};
-    tokens.tokens.forEach((item) => {
+    tokens.forEach((item) => {
       tokenMap[item.date] = item;
     });
     const result = [];
@@ -114,15 +85,14 @@ export default function ProjectTokens({ project }) {
 
       <Divider />
 
-      {tokens && tokens.tokens && tokens.tokens.length > 0 &&
-        <Box p={2}>
-          <Typography variant="h6">Summary for {new Date(tokens.tokens[0].date).toLocaleString('default', { month: 'long' })}</Typography>
-          <Typography>Input Tokens: {sums.input_tokens}</Typography>
-          <Typography>Output Tokens: {sums.output_tokens}</Typography>
-          <Typography>Input Cost: {sums.input_cost}€</Typography>
-          <Typography>Output Cost: {sums.output_cost}€</Typography>
-        </Box>
-      }
+      <Box p={2}>
+        <Typography variant="h6">Summary for {new Date(tokens[0].date).toLocaleString('default', { month: 'long' })}</Typography>
+        <Typography>Input Tokens: {sums.input_tokens}</Typography>
+        <Typography>Output Tokens: {sums.output_tokens}</Typography>
+        <Typography>Input Cost: {sums.input_cost}€</Typography>
+        <Typography>Output Cost: {sums.output_cost}€</Typography>
+      </Box>
+
 
     </Card>
   );

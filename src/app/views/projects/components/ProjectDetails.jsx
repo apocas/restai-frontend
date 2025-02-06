@@ -10,8 +10,39 @@ import RAGRetrieval from "./RAGRetrieval";
 import ProjectAgent from "./ProjectAgent";
 import RouterDetails from "./RouterDetails";
 import ProjectSecurity from "./ProjectSecurity";
+import { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
+import useAuth from "app/hooks/useAuth";
 
 export default function ProjectDetails({ project, projects, info }) {
+  const auth = useAuth();
+  const url = process.env.REACT_APP_RESTAI_API_URL || "";
+  const [tokens, setTokens] = useState({ "tokens": [] });
+
+  const fetchTokens = () => {
+    return fetch(url + "/projects/" + project.name + "/tokens/daily", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => setTokens(d.tokens)
+      ).catch(err => {
+        toast.error(err.toString());
+      });
+  }
+
+  useEffect(() => {
+    if (project.name) {
+      fetchTokens();
+    }
+  }, [project]);
+
   return (
     <Fade in timeout={300}>
       <Grid container spacing={3}>
@@ -56,9 +87,11 @@ export default function ProjectDetails({ project, projects, info }) {
           </Grid>
         )}
 
-        <Grid item lg={12} md={6} xs={12}>
-          <ProjectTokens project={project} />
-        </Grid>
+        {tokens && tokens.length > 0 &&
+          <Grid item lg={12} md={6} xs={12}>
+            <ProjectTokens project={project} tokens={tokens} />
+          </Grid>
+        }
       </Grid>
     </Fade>
   );
