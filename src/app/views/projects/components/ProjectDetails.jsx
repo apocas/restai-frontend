@@ -56,7 +56,7 @@ export default function ProjectDetails({ project, projects, info }) {
           </Grid>
         )}
 
-        <Grid item lg={8} md={6} xs={12}>
+        <Grid item lg={12} md={6} xs={12}>
           <ProjectTokens project={project} />
         </Grid>
       </Grid>

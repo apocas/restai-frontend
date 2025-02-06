@@ -1,19 +1,16 @@
-import { Psychology } from "@mui/icons-material";
 import {
   Card,
-  Table,
   styled,
   Divider,
-  TableRow,
-  TableBody,
-  TableCell,
-  Box
+  Box,
+  Typography,
 } from "@mui/material";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 import { H4 } from "app/components/Typography";
 import { useState, useEffect, useMemo } from "react";
+import DataUsageIcon from '@mui/icons-material/DataUsage';
 
 const FlexBox = styled(Box)({
   display: "flex",
@@ -69,10 +66,23 @@ export default function ProjectTokens({ project }) {
     return result;
   }, [tokens]);
 
+  const sums = useMemo(() => {
+    return filledTokens.reduce(
+      (acc, item) => {
+        acc.input_tokens += item.input_tokens || 0;
+        acc.output_tokens += item.output_tokens || 0;
+        acc.input_cost += item.input_cost || 0;
+        acc.output_cost += item.output_cost || 0;
+        return acc;
+      },
+      { input_tokens: 0, output_tokens: 0, input_cost: 0, output_cost: 0 }
+    );
+  }, [filledTokens]);
+
   return (
     <Card elevation={3}>
       <FlexBox>
-        <Psychology sx={{ ml: 2 }} />
+        <DataUsageIcon sx={{ ml: 2 }} />
         <H4 sx={{ p: 2 }}>
           Usage
         </H4>
@@ -83,42 +93,36 @@ export default function ProjectTokens({ project }) {
         <LineChart
           data={filledTokens}
           margin={{
-            top: 50,
+            top: 30,
             right: 50,
-            left: 50,
-            bottom: 0,
+            left: 20,
+            bottom: 30,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
-          <YAxis />
+          <YAxis yAxisId="left" unit=" tok" />
+          <YAxis yAxisId="right" orientation="right" unit="€" />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="input_tokens" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Tokens" />
-          <Line type="monotone" dataKey="output_tokens" stroke="#82ca9d" name="Output Tokens" />
+          <Line yAxisId="left" type="monotone" dataKey="input_tokens" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Tokens" unit=" tokens" />
+          <Line yAxisId="left" type="monotone" dataKey="output_tokens" stroke="#82ca9d" name="Output Tokens" unit=" tokens" />
+          <Line yAxisId="right" type="monotone" dataKey="input_cost" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Cost" unit="€" />
+          <Line yAxisId="right" type="monotone" dataKey="output_cost" stroke="#82ca9d" name="Output Cost" unit="€" />
         </LineChart>
       </ResponsiveContainer>
 
-      <ResponsiveContainer width='100%' height={300}>
-        <LineChart
-          data={filledTokens}
-          margin={{
-            top: 50,
-            right: 50,
-            left: 50,
-            bottom: 50,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="input_cost" stroke="#8884d8" activeDot={{ r: 8 }} name="Input Cost" unit="€" />
-          <Line type="monotone" dataKey="output_cost" stroke="#82ca9d" name="Output Cost" unit="€" />
-        </LineChart>
-      </ResponsiveContainer>
+      <Divider />
 
+      {tokens && tokens.tokens && tokens.tokens.length > 0 &&
+        <Box p={2}>
+          <Typography variant="h6">Summary for {new Date(tokens.tokens[0].date).toLocaleString('default', { month: 'long' })}</Typography>
+          <Typography>Input Tokens: {sums.input_tokens}</Typography>
+          <Typography>Output Tokens: {sums.output_tokens}</Typography>
+          <Typography>Input Cost: {sums.input_cost}€</Typography>
+          <Typography>Output Cost: {sums.output_cost}€</Typography>
+        </Box>
+      }
 
     </Card>
   );
