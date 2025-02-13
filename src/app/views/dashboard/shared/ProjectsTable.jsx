@@ -94,20 +94,22 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <div>
-                {value.slice(0, 2).map((user, index) => (
-                  <div>
-                    <Tooltip title={user.username} placement="top">
-                      <StyledAvatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} />
-                    </Tooltip>
-                  </div>
-                ))}
-                {value.length >= 3 &&
-                  <div>
-                    <Tooltip title={value.slice(2).map(user => user.username).join(", ")} placement="top">
-                      <StyledAvatar sx={{ fontSize: "14px" }}>+{value.length - 2}</StyledAvatar>
-                    </Tooltip>
-                  </div>
-                }
+                <Box display="flex" alignItems="center" gap={1}>
+                  {value.slice(0, 2).map((user, index) => (
+                    <div>
+                      <Tooltip title={user.username} placement="top">
+                        <StyledAvatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} />
+                      </Tooltip>
+                    </div>
+                  ))}
+                  {value.length >= 3 &&
+                    <div>
+                      <Tooltip title={value.slice(2).map(user => user.username).join(", ")} placement="top">
+                        <StyledAvatar sx={{ fontSize: "14px" }}>+{value.length - 2}</StyledAvatar>
+                      </Tooltip>
+                    </div>
+                  }
+                </Box>
               </div>
             )
           }
