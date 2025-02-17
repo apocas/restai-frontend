@@ -25,6 +25,7 @@ const Tools = Loadable(lazy(() => import("app/views/projects/Tools")));
 const ProjectsInfo = Loadable(lazy(() => import("app/views/projects/Info")));
 const ProjectsNew = Loadable(lazy(() => import("app/views/projects/New")));
 const ProjectsEdit = Loadable(lazy(() => import("app/views/projects/Edit")));
+const ProjectsLogs = Loadable(lazy(() => import("app/views/projects/Logs")));
 const ProjectsPlayground = Loadable(lazy(() => import("app/views/projects/Playground")));
 const ProjectsAPI = Loadable(lazy(() => import("app/views/projects/API")));
 const Users = Loadable(lazy(() => import("app/views/users/List")));
@@ -138,6 +139,11 @@ const routes = [
       {
         path: "/project/:id/edit",
         element: <ProjectsEdit />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/project/:id/logs",
+        element: <ProjectsLogs />,
         auth: authRoles.admin
       },
       {
