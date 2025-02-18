@@ -69,13 +69,14 @@ export default function LLMNew({ projects, info }) {
       <Divider sx={{ mb: 1 }} />
 
       <Form onSubmit={handleSubmit}>
-        <Grid container spacing={3} alignItems="center">
+        <Grid container spacing={3} alignItems="center" xs={8}>
           <Grid item md={2} sm={4} xs={12}>
             Name
           </Grid>
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
               size="small"
               name="name"
               variant="outlined"
@@ -90,12 +91,21 @@ export default function LLMNew({ projects, info }) {
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
+              select
               size="small"
               name="class"
-              variant="outlined"
               label="Class Name"
+              variant="outlined"
               onChange={handleChange}
-            />
+              sx={{ minWidth: 188 }}
+            >
+              {["Ollama", "OllamaMultiModal", "OpenAI", "OpenAILike", "Grok", "Groq", "Anthropic", "LiteLLM", "vLLM", "Gemini", "AzureOpenAI"].map((item, ind) => (
+                <MenuItem value={item} key={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
 
           <Grid item md={2} sm={4} xs={12}>
@@ -104,6 +114,7 @@ export default function LLMNew({ projects, info }) {
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
               select
               size="small"
               name="type"
@@ -126,6 +137,7 @@ export default function LLMNew({ projects, info }) {
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
               select
               size="small"
               name="privacy"
@@ -149,10 +161,13 @@ export default function LLMNew({ projects, info }) {
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
               size="small"
               name="options"
               variant="outlined"
               label="Options"
+              multiline
+              minRows={4}
               onChange={handleChange}
             />
           </Grid>
@@ -164,6 +179,7 @@ export default function LLMNew({ projects, info }) {
 
           <Grid item md={10} sm={8} xs={12}>
             <TextField
+              fullWidth
               size="small"
               name="description"
               variant="outlined"
