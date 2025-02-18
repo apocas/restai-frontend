@@ -62,6 +62,16 @@ export const navigations = [
     icon: "speaker",
     path: "/audio",
   },
+  {
+    name: "Proxy",
+    icon: "psychology",
+    path: "/proxy",
+    auth: authRoles.admin,
+    children: [
+      { name: "API Keys", iconText: "SI", path: "/proxy/keys", auth: authRoles.admin },
+      { name: "New Key", iconText: "SU", path: "/proxy/keys/new", auth: authRoles.admin },
+    ]
+  },
   { label: "Docs", type: "label" },
   {
     name: "API",
