@@ -36,14 +36,14 @@ export default function Logs() {
   }
 
   useEffect(() => {
-    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - Project - ' + id;
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - Logs - ' + id;
     fetchProject(id);
   }, [id]);
 
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }, { name: id, path: "/project/" + id }]} />
+        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }, { name: id, path: "/project/" + id }, { name: "Logs", path: "/project/" + id + "/logs" }]} />
       </Box>
 
       <ContentBox className="analytics">

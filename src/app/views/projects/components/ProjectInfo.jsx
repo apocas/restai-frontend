@@ -18,7 +18,7 @@ import { FlexBetween, FlexBox } from "app/components/FlexBox";
 import QRCode from "react-qr-code";
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { SportsEsports, Delete, Code } from "@mui/icons-material";
+import { SportsEsports, Delete, Code, Article } from "@mui/icons-material";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 import sha256 from 'crypto-js/sha256';
@@ -131,6 +131,9 @@ export default function ProjectInfo({ project, projects }) {
         </Button>
         <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/playground") }} startIcon={<SportsEsports fontSize="small" />}>
           Playground
+        </Button>
+        <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/logs") }} startIcon={<Article fontSize="small" />}>
+          Logs
         </Button>
       </FlexBetween>
     </Card>
