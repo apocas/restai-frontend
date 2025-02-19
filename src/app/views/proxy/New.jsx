@@ -20,7 +20,7 @@ const ContentBox = styled("div")(({ theme }) => ({
 
 export default function ProjectNewView() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
+  const [info, setInfo] = useState({ "models": [], "url": "" });
   const auth = useAuth();
 
 
@@ -51,7 +51,7 @@ export default function ProjectNewView() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }, { name: "New Project", path: "/projects/new" }]} />
+        <Breadcrumb routeSegments={[{ name: "Proxy", path: "/proxy" }, { name: "New Key", path: "/proxy/keys/new" }]} />
       </Box>
 
       <ContentBox className="analytics">

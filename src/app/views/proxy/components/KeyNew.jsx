@@ -7,11 +7,9 @@ import {
   Card,
   Divider,
   Grid,
-  MenuItem,
   styled,
-  Tab,
-  Tabs,
-  TextField
+  TextField,
+  Autocomplete
 } from "@mui/material";
 
 import { H4 } from "app/components/Typography";
@@ -21,33 +19,20 @@ import ReactJson from '@microlink/react-json-view';
 const Form = styled("form")(() => ({ padding: "16px" }));
 
 export default function KeyNew({ info }) {
-  const typeList = ["rag", "inference", "agent", "ragsql", "vision", "router"];
-  var vectorstoreList = ["redis", "chroma"];
   const auth = useAuth();
   const navigate = useNavigate();
 
-  if (process.env.REACT_APP_RESTAI_VECTOR) {
-    vectorstoreList = process.env.REACT_APP_RESTAI_VECTOR.split(",")
-  }
 
-  const [tabIndex, setTabIndex] = useState("0");
+
   const [state, setState] = useState({});
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(state);
-
     var opts = {
-      "name": state.projectname,
-      "llm": state.projectllm,
-      "type": state.projecttype
-    }
-
-    if (state.projecttype === "rag") {
-      opts.embeddings = state.projectembeddings;
-      opts.vectorstore = state.projectvectorstore;
+      "name": state.name,
+      "models": state.models
     }
 
     fetch(url + "/proxy/keys", {
@@ -66,6 +51,8 @@ export default function KeyNew({ info }) {
         }
       })
       .then((response) => {
+        toast.success("Key created successfully");
+        alert(response.key);
         navigate("/proxy/keys");
       }).catch(err => {
         toast.error(err.toString());
@@ -80,148 +67,62 @@ export default function KeyNew({ info }) {
 
   return (
     <Card elevation={3}>
-      <H4 p={2}>Add a New Project</H4>
+      <H4 p={2}>Add a New Key</H4>
 
       <Divider sx={{ mb: 1 }} />
 
       <Grid container spacing={2}>
 
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Form onSubmit={handleSubmit}>
             <Grid container spacing={3} alignItems="center">
               <Grid item md={2} sm={4} xs={12}>
                 Name
               </Grid>
 
-              <Grid item md={10} sm={8} xs={12}>
+              <Grid item md={10} sm={4} xs={12}>
                 <TextField
                   size="small"
-                  name="projectname"
+                  name="name"
                   variant="outlined"
-                  label="Project Name"
+                  label="Key Name"
                   fullWidth
+                  sx={{ maxWidth: 500 }}
                   onChange={handleChange}
                 />
               </Grid>
 
               <Grid item md={2} sm={4} xs={12}>
-                Type
+                Models
               </Grid>
-
-              <Grid item md={10} sm={8} xs={12}>
-                <TextField
-                  select
-                  size="small"
-                  name="projecttype"
-                  label="Type"
-                  variant="outlined"
-                  onChange={handleChange}
-                  fullWidth
-                >
-                  {typeList.map((item, ind) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-
-              {state.projecttype && (
-                <>
-                  <Grid item md={2} sm={4} xs={12}>
-                    LLM
-                  </Grid>
-
-                  <Grid item md={10} sm={8} xs={12}>
-                    <TextField
-                      select
-                      size="small"
-                      name="projectllm"
-                      label="LLM"
-                      variant="outlined"
-                      onChange={handleChange}
+              <Grid item sm={6} xs={12}>
+                    <Autocomplete
+                      multiple
+                      id="tags-standard"
+                      name="Models"
                       fullWidth
-                    >
-                      {info.llms.filter(item =>
-                        state.projecttype === "vision"
-                          ? item.type === "vision"
-                          : item.type !== "vision"
-                      ).map((item, ind) => (
-                        <MenuItem value={item.name} key={item.name}>
-                          {item.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                </>
-              )}
-            </Grid>
-
-            <Tabs
-              value={tabIndex}
-              textColor="primary"
-              indicatorColor="primary"
-              sx={{ mt: 0, mb: 0 }}>
-
-              {state.projecttype === "rag" && (
-                <Tab key="0" value="0" label="RAG" sx={{ textTransform: "capitalize" }} />
-              )}
-            </Tabs>
-
-
-
-            {state.projecttype === "rag" && tabIndex === "0" && (
-              <Grid container spacing={3} alignItems="center">
-                <Grid item md={2} sm={4} xs={12}>
-                  Embeddings
-                </Grid>
-
-                <Grid item md={10} sm={8} xs={12}>
-                  <TextField
-                    select
-                    size="small"
-                    name="projectembeddings"
-                    label="Embeddings"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange}
-                  >
-                    {info.embeddings.map((item, ind) => (
-                      <MenuItem value={item.name} key={item.name}>
-                        {item.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-
-                <Grid item md={2} sm={4} xs={12}>
-                  Vectorstore
-                </Grid>
-
-                <Grid item md={10} sm={8} xs={12}>
-                  <TextField
-                    select
-                    size="small"
-                    name="projectvectorstore"
-                    label="Vectorstore"
-                    variant="outlined"
-                    fullWidth
-                    onChange={handleChange}
-                  >
-                    {vectorstoreList.map((item, ind) => (
-                      <MenuItem value={item} key={item}>
-                        {item}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
+                      options={info.models.map((model) => model)}
+                      getOptionLabel={(option) => option}
+                      onChange={(event, newValue) => {
+                        setState({ ...state, "models": newValue });
+                      }}
+                      defaultValue={state.models ? state.models : []}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          variant="standard"
+                          label=""
+                          placeholder=""
+                        />
+                      )}
+                    />
               </Grid>
-            )}
 
-
+            </Grid>
             <Box mt={3}>
               <Button color="primary" variant="contained" type="submit">
-                Submit
+                Create
               </Button>
             </Box>
           </Form>

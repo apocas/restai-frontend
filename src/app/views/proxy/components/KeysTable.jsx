@@ -1,16 +1,12 @@
-import { Delete } from "@mui/icons-material";
+import { Delete, Key } from "@mui/icons-material";
 import {
-  Box,
   Card,
-  Avatar,
   styled,
   useTheme,
   IconButton,
-  Button,
   Tooltip,
+  Box
 } from "@mui/material";
-import sha256 from 'crypto-js/sha256';
-import { useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
@@ -26,29 +22,19 @@ const Small = styled("small")(({ bgcolor }) => ({
   boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)"
 }));
 
-const StyledAvatar = styled(Avatar)(() => ({
-  width: "32px !important",
-  height: "32px !important"
-}));
+const FlexBox = styled(Box)({
+  display: "flex",
+  alignItems: "center"
+});
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  margin: theme.spacing(1)
-}));
-
-
-export default function KeysTable({ keys = [], title = "API Keys" }) {
+export default function KeysTable({ keys = [], info, title = "API Keys" }) {
   const { palette } = useTheme();
-  const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
-  const bgSecondary = palette.secondary.main;
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
 
-  const navigate = useNavigate();
-
-
   const handleDeleteClick = (key_id) => {
-    if (window.confirm("Are you sure you to the key" + key_id + "?")) {
+    if (window.confirm("Are you sure you to delete the key" + key_id + "?")) {
       fetch(url + "/proxy/keys/" + key_id, {
         method: 'DELETE',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
@@ -68,7 +54,7 @@ export default function KeysTable({ keys = [], title = "API Keys" }) {
   return (
     <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
       <MUIDataTable
-        title={title}
+        title={<FlexBox><Key sx={{ mr: 2}} />{title}</FlexBox>}
         options={{
           "print": false,
           "selectableRows": "none",
