@@ -97,7 +97,7 @@ export default function KeysTable({ keys = [], title = "API Keys" }) {
                       bgcolor={bgPrimary}
                       key={index}
                       sx={{
-                        whiteSpace: 'normal',
+                        whiteSpace: 'nowrap',
                         wordBreak: 'break-word',
                       }}
                     >
@@ -108,8 +108,26 @@ export default function KeysTable({ keys = [], title = "API Keys" }) {
               )
             }
           },
-          "Spend",
-          "Budget",
+          {
+            name: "Spend",
+            options: {
+              customBodyRender: (value, tableMeta, updateValue) => (
+                <div>
+                  {value || 0} €
+                </div>
+              )
+            }
+          },
+          {
+            name: "Budget",
+            options: {
+              customBodyRender: (value, tableMeta, updateValue) => (
+                <div>
+                  {value || 0} €
+                </div>
+              )
+            }
+          },
           "Budget Duration",
           "TPM",
           "RPM",
@@ -120,7 +138,7 @@ export default function KeysTable({ keys = [], title = "API Keys" }) {
                 <div>
                   <Tooltip title="Delete" placement="top">
                     <IconButton onClick={() => handleDeleteClick(value)}>
-                      <Delete color="primary" />
+                      <Delete color="error" />
                     </IconButton>
                   </Tooltip>
                 </div>

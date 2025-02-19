@@ -63,8 +63,8 @@ export const navigations = [
     path: "/audio",
   },
   {
-    name: "Proxy",
-    icon: "psychology",
+    name: "AI Proxy",
+    icon: "route",
     path: "/proxy",
     auth: authRoles.admin,
     children: [

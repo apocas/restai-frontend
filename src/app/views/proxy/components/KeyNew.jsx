@@ -20,7 +20,7 @@ import ReactJson from '@microlink/react-json-view';
 
 const Form = styled("form")(() => ({ padding: "16px" }));
 
-export default function ProjectNew({ projects, info }) {
+export default function KeyNew({ info }) {
   const typeList = ["rag", "inference", "agent", "ragsql", "vision", "router"];
   var vectorstoreList = ["redis", "chroma"];
   const auth = useAuth();
@@ -50,7 +50,7 @@ export default function ProjectNew({ projects, info }) {
       opts.vectorstore = state.projectvectorstore;
     }
 
-    fetch(url + "/projects", {
+    fetch(url + "/proxy/keys", {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       body: JSON.stringify(opts),
@@ -66,7 +66,7 @@ export default function ProjectNew({ projects, info }) {
         }
       })
       .then((response) => {
-        navigate("/project/" + response.project);
+        navigate("/proxy/keys");
       }).catch(err => {
         toast.error(err.toString());
       });

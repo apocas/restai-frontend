@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Grid, styled, Box } from "@mui/material";
 import useAuth from "app/hooks/useAuth";
-import ProjectNew from "./components/ProjectNew";
+import KeyNew from "./components/KeyNew";
 import Breadcrumb from "app/components/Breadcrumb";
 import { toast } from 'react-toastify';
 
@@ -20,33 +20,12 @@ const ContentBox = styled("div")(({ theme }) => ({
 
 export default function ProjectNewView() {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
-  const [projects, setProjects] = useState([]);
   const [info, setInfo] = useState({ "version": "", "embeddings": [], "llms": [], "loaders": [] });
   const auth = useAuth();
 
 
-  const fetchProjects = () => {
-    return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
-      .then(function (response) {
-        if (!response.ok) {
-          response.json().then(function (data) {
-            toast.error(data.detail);
-          });
-          throw Error(response.statusText);
-        } else {
-          return response.json();
-        }
-      })
-      .then((d) => {
-        setProjects(d.projects)
-      }
-      ).catch(err => {
-        toast.error(err.toString());
-      });
-  }
-
   const fetchInfo = () => {
-    return fetch(url + "/info", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/proxy/info", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
@@ -64,8 +43,7 @@ export default function ProjectNewView() {
   }
 
   useEffect(() => {
-    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - New Project';
-    fetchProjects();
+    document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - New Proxy API Key';
     fetchInfo();
   }, []);
 
@@ -79,7 +57,7 @@ export default function ProjectNewView() {
       <ContentBox className="analytics">
         <Grid container spacing={3}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
-            <ProjectNew projects={projects} info={info} />
+            <KeyNew info={info} />
           </Grid>
         </Grid>
       </ContentBox>
