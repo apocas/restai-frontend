@@ -27,12 +27,23 @@ export default function RAGRetrieval({ project }) {
   const fetchLogs = (projectName) => {
     auth.checkAuth();
     return fetch(url + "/projects/" + projectName + "/logs?start=" + start + "&end=" + end, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 404) {
+            throw new Error('Logs not found. Permissions?');
+          }
+          throw new Error('Error fetching logs');
+        }
+        return res.json();
+      })
       .then((d) => {
-        setLogs(d.logs)
-        if (d.logs.length === 0) {
-          setCount(page * rows);
-          setPage(page - 1);
+
+        if (d.logs) {
+          setLogs(d.logs)
+          if (d.logs.length === 0) {
+            setCount(page * rows);
+            setPage(page - 1);
+          }
         }
         return d
       }).catch(err => {
@@ -91,7 +102,7 @@ export default function RAGRetrieval({ project }) {
           "serverSide": true,
           "textLabels": {
             body: {
-              noMatch: "No embeddings found",
+              noMatch: "No logs found",
               toolTip: "Sort",
               columnHeaderTooltip: column => `Sort for ${column.label}`
             },
