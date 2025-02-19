@@ -99,7 +99,7 @@ export default function KeysTable({ keys = [], info, title = "API Keys" }) {
             options: {
               customBodyRender: (value, tableMeta, updateValue) => (
                 <div>
-                  {value || 0} €
+                  {(value || 0).toFixed(3)} €
                 </div>
               )
             }
