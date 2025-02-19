@@ -101,11 +101,7 @@ export default function Keys() {
       </Box>
 
       <ContentBox className="analytics">
-        <Grid container spacing={3}>
-          <Grid item lg={12} md={8} sm={12} xs={12}>
-            <KeysTable keys={keys} info={info} />
-          </Grid>
-        </Grid>
+
         <Grid item lg={8} md={6} xs={12}>
           <Card elevation={3}>
             <FlexBox>
@@ -140,6 +136,12 @@ export default function Keys() {
               </TableBody>
             </Table>
           </Card>
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid item lg={12} md={8} sm={12} xs={12}>
+            <KeysTable keys={keys} info={info} />
+          </Grid>
         </Grid>
       </ContentBox>
     </Container>
