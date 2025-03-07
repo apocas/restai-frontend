@@ -4,6 +4,7 @@ import ProjectsStats from "./shared/ProjectsStats";
 import ProjectsTypesChart from "./shared/ProjectsTypesChart";
 import ProjectsLLMsChart from "./shared/ProjectsLLMsChart";
 import ProjectsTable from "./shared/ProjectsTable";
+import TopProjectsTable from "./shared/TopProjectsTable";
 import useAuth from "app/hooks/useAuth";
 import Breadcrumb from "app/components/Breadcrumb";
 import { toast } from 'react-toastify';
@@ -38,10 +39,14 @@ export default function Analytics() {
   const { palette } = useTheme();
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const [projects, setProjects] = useState([]);
+  const [topProjects, setTopProjects] = useState([]);
   const auth = useAuth();
 
   const fetchProjects = () => {
-    return fetch(url + "/projects", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/projects", { 
+      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
+      credentials: 'include'
+    })
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {
@@ -59,9 +64,36 @@ export default function Analytics() {
         toast.error(err.toString());
       });
   }
+
+  const fetchTopProjects = () => {
+    if (!auth.user.is_admin) return;
+
+    return fetch(url + "/statistics/top-projects", { 
+      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
+      credentials: 'include'
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => {
+        setTopProjects(d.projects)
+      }
+      ).catch(err => {
+        toast.error(err.toString());
+      });
+  }
+
   useEffect(() => {
     document.title = (process.env.REACT_APP_RESTAI_NAME || "RESTai") + ' - Home';
     fetchProjects();
+    fetchTopProjects();
   }, []);
 
   return (
@@ -75,6 +107,7 @@ export default function Analytics() {
           <Grid container spacing={3}>
             <Grid item lg={8} md={8} sm={12} xs={12}>
               <ProjectsStats projects={projects} />
+              {auth.user.is_admin && <TopProjectsTable projects={topProjects} />}
               <ProjectsTable projects={projects.slice(Math.max(projects.length - 5, 0)).reverse()} title={"Latest 5 Projects"} />
             </Grid>
 
