@@ -1,7 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import { MatxLoading } from "app/components";
-import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode'
 
 const initialState = {
@@ -47,14 +46,16 @@ export const AuthProvider = ({ children }) => {
       basicAuth = btoa(email + ":" + password);
     }
 
-    const response = await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + email, { headers: { "Authorization": "Basic " + basicAuth } });
+    const response = await axios.get(
+      (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + email, 
+      { 
+        headers: { "Authorization": "Basic " + basicAuth },
+        withCredentials: true // Enable sending cookies
+      }
+    );
 
     const user = response.data;
-
-    if (Cookies.get('restai_token')) {
-    } else {
-      user.token = basicAuth;
-    }
+    user.token = basicAuth;
 
     if (user.is_admin === true) {
       user.role = "ADMIN";
@@ -63,20 +64,23 @@ export const AuthProvider = ({ children }) => {
     }
 
     localStorage.setItem("user", JSON.stringify(user));
-
     dispatch({ type: "LOGIN", payload: { user } });
   };
 
   const checkAuth = async () => {
-    var user;
-    if (Cookies.get('restai_token') !== undefined) {
-      user = jwtDecode(Cookies.get('restai_token'));
-    } else {
-      user = JSON.parse(localStorage.getItem("user"));
-    }
-
     try {
-      await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, { headers: { "Authorization": "Basic " + user.token } });
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        throw new Error('No user data found');
+      }
+
+      await axios.get(
+        (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, 
+        { 
+          headers: { "Authorization": "Basic " + user.token },
+          withCredentials: true
+        }
+      );
       Promise.resolve();
     } catch (err) {
       dispatch({ type: "LOGOUT" });
@@ -85,43 +89,45 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.setItem("user", null);
-    Cookies.remove('restai_token');
+    localStorage.removeItem("user");
+    // The backend will handle clearing the HTTP-only cookie
+    axios.post(
+      (process.env.REACT_APP_RESTAI_API_URL || "") + "/logout",
+      {},
+      { withCredentials: true }
+    ).catch(console.error);
     dispatch({ type: "LOGOUT" });
   };
 
   useEffect(() => {
     (async () => {
-      var user;
-      if (Cookies.get('restai_token') !== undefined) {
-        user = jwtDecode(Cookies.get('restai_token'));
-      } else {
-        user = JSON.parse(localStorage.getItem("user"));
-      }
-
-      if (user) {
-        try {
-          const response = await axios.get((process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, { headers: { "Authorization": "Basic " + user.token } });
-          response.data.token = user.token;
-
-          if (response.data.is_admin === true) {
-            response.data.role = "ADMIN";
-          } else {
-            response.data.role = "USER";
-          }
-
-          if (Cookies.get('restai_redirect')) {
-            var redirect = Cookies.get('restai_redirect');
-            Cookies.remove('restai_redirect');
-            window.location.href = redirect;
-          }
-
-          dispatch({ type: "INIT", payload: { isAuthenticated: true, user: response.data } });
-        } catch (err) {
-          console.error(err);
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
           dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
+          return;
         }
-      } else {
+
+        const response = await axios.get(
+          (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username,
+          { 
+            headers: { "Authorization": "Basic " + user.token },
+            withCredentials: true
+          }
+        );
+
+        const userData = response.data;
+        userData.token = user.token;
+
+        if (userData.is_admin === true) {
+          userData.role = "ADMIN";
+        } else {
+          userData.role = "USER";
+        }
+
+        dispatch({ type: "INIT", payload: { isAuthenticated: true, user: userData } });
+      } catch (err) {
+        console.error(err);
         dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
       }
     })();
