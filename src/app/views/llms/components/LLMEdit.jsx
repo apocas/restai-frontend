@@ -3,11 +3,13 @@ import { H4 } from "app/components/Typography";
 import { useState, useEffect } from "react";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 export default function LLMEdit({ llm }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
   const [state, setState] = useState({});
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -179,7 +181,7 @@ export default function LLMEdit({ llm }) {
               <Button type="submit" variant="contained">
                 Save Changes
               </Button>
-              <Button variant="outlined" sx={{ ml: 2 }}>
+              <Button variant="outlined" sx={{ ml: 2 }} onClick={() => { navigate("/llms") }}>
                 Cancel
               </Button>
             </Grid>

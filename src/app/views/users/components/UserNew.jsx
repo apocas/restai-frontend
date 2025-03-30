@@ -93,6 +93,7 @@ export default function UserNew() {
             <TextField
               size="small"
               name="password"
+              type="password"
               variant="outlined"
               label="Password"
               onChange={handleChange}
