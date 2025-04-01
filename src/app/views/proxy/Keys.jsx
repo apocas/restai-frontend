@@ -12,7 +12,7 @@ import Breadcrumb from "app/components/Breadcrumb";
 import { toast } from 'react-toastify';
 
 import { Route } from "@mui/icons-material";
-
+import { CopyBlock, monoBlue } from "react-code-blocks";
 import { H4 } from "app/components/Typography";
 
 const FlexBox = styled(Box)({
@@ -49,6 +49,29 @@ export default function Keys() {
   const [info, setInfo] = useState({ "models": [], "url": "" });
   const auth = useAuth();
   const bgPrimary = palette.primary.main;
+
+  const replaceVars = (code) => {
+    code = code.replaceAll('<RESTAI_PROXY>', process.env.REACT_APP_RESTAI_PROXY || "127.0.0.1");
+    return code;
+  }
+
+  const proxycode = () => {
+    return replaceVars(`from openai import OpenAI
+client = OpenAI(
+    api_key="xxxxxxxxxxxxxxxxxxxxx",
+    base_url="<RESTAI_PROXY>"
+)
+
+completion = client.chat.completions.create(
+  model="llama33-70b",
+  messages=[
+    {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
+    {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
+  ]
+)
+
+print(completion)`);
+  }
 
   const fetchKeys = () => {
     return auth.checkAuth().then(fetch(url + "/proxy/keys", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
@@ -141,6 +164,26 @@ export default function Keys() {
         <Grid container spacing={3} sx={{ mt: 1 }}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
             <KeysTable keys={keys} info={info} />
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3}>
+          <Grid item lg={12} md={8} sm={12} xs={12}>
+            <Card elevation={3}>
+              <FlexBox>
+                <Route sx={{ ml: 2 }} />
+                <H4 sx={{ p: 2 }}>
+                  Usage Example
+                </H4>
+              </FlexBox>
+              <Divider />
+              <CopyBlock
+                text={proxycode()}
+                language="python"
+                theme={monoBlue}
+                codeBlock
+              />
+            </Card>
           </Grid>
         </Grid>
       </ContentBox>
