@@ -137,8 +137,12 @@ print(completion)`);
 
             <Table>
               <TableBody>
+              <TableRow>
+                  <TableCell sx={{ pl: 2 }}>External Proxy</TableCell>
+                  <TableCell colSpan={4}>{process.env.REACT_APP_RESTAI_PROXY || info.url}</TableCell>
+                </TableRow>
                 <TableRow>
-                  <TableCell sx={{ pl: 2 }}>URL</TableCell>
+                  <TableCell sx={{ pl: 2 }}>Internal Proxy</TableCell>
                   <TableCell colSpan={4}>{info.url}</TableCell>
                 </TableRow>
                 <TableRow>
