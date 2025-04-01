@@ -84,8 +84,12 @@ export default function Footer() {
         <AppFooter>
           <FooterContent style={{ textAlign: "center" }}>
             <Paragraph alignItems="center" width={"100%"}>
-              Powered by <b><a href="https://github.com/apocas/restai">RESTai</a></b>, so many 'A's and 'I's, so little time...
-              <br />
+              {!process.env.REACT_APP_RESTAI_NAME && (
+                <>
+                  Powered by <b><a href="https://github.com/apocas/restai">RESTai</a></b>, so many 'A's and 'I's, so little time...
+                  <br />
+                </>
+              )}
               {(version) && <span style={{ fontSize: "0.7rem" }}>Core v{version + ', UI v' + process.env.REACT_APP_VERSION}</span>}
             </Paragraph>
           </FooterContent>
