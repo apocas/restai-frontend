@@ -33,8 +33,12 @@ export default function KeysTable({ keys = [], info, title = "API Keys" }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
   const auth = useAuth();
 
-  const handleDeleteClick = (key_id) => {
-    if (window.confirm("Are you sure you to delete the key" + key_id + "?")) {
+  const handleDeleteClick = (key_id, key_name) => {
+    if (key_name === "default") {
+      toast.error("Cannot delete the default key");
+      return;
+    }
+    if (window.confirm("Are you sure you to delete the key " + key_name + "?")) {
       fetch(url + "/proxy/keys/" + key_id, {
         method: 'DELETE',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
@@ -123,7 +127,7 @@ export default function KeysTable({ keys = [], info, title = "API Keys" }) {
               customBodyRender: (value, tableMeta, updateValue) => (
                 <div>
                   <Tooltip title="Delete" placement="top">
-                    <IconButton onClick={() => handleDeleteClick(value)}>
+                    <IconButton onClick={() => handleDeleteClick(value, tableMeta.rowData[0])}>
                       <Delete color="error" />
                     </IconButton>
                   </Tooltip>
