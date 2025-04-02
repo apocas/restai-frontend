@@ -24,7 +24,10 @@ export default function ProjectEdit({ project, projects, info }) {
       "guard": state.guard || "",
       "censorship": state.censorship || "",
       "public": state.public,
-      "default_prompt": state.default_prompt || ""
+      "default_prompt": state.default_prompt || "",
+      "options": {
+        "logging": state.logging
+      }
     }
 
     if (project.type === "rag" || project.type === "inference" || project.type === "ragsql" || project.type === "agent") {
@@ -148,6 +151,20 @@ export default function ProjectEdit({ project, projects, info }) {
                 />
               </Grid>
             )}
+
+            <Grid item sm={6} xs={12}>
+              <FormControlLabel
+                label="Logging"
+                control={
+                  <Switch
+                    checked={state.logging !== undefined ? state.logging : (project.options?.logging || false)}
+                    name="logging"
+                    inputProps={{ "aria-label": "logging checkbox" }}
+                    onChange={handleChange}
+                  />
+                }
+              />
+            </Grid>
 
             {state.llm !== undefined && (
               <Grid item sm={6} xs={12}>

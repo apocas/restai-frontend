@@ -84,7 +84,7 @@ export default function Footer() {
         <AppFooter>
           <FooterContent style={{ textAlign: "center" }}>
             <Paragraph alignItems="center" width={"100%"}>
-              {!process.env.REACT_APP_RESTAI_NAME && (
+              {!process.env.REACT_APP_RESTAI_HIDE && (
                 <>
                   Powered by <b><a href="https://github.com/apocas/restai">RESTai</a></b>, so many 'A's and 'I's, so little time...
                   <br />

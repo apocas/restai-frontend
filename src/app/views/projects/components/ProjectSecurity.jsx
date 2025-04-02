@@ -8,6 +8,7 @@ import {
   TableBody,
   TableCell,
   useTheme,
+  Switch,
   Box
 } from "@mui/material";
 
@@ -75,6 +76,18 @@ export default function ProjectRAG({ project, projects, info }) {
             <TableCell sx={{ pl: 2 }}>Censorship Message</TableCell>
             <TableCell>{project.censorship}</TableCell>
           </TableRow>
+          {project.options && (
+            <TableRow>
+              <TableCell sx={{ pl: 2 }}>Logging</TableCell>
+              <TableCell>
+                <Switch
+                  disabled
+                  checked={project.options.logging !== undefined ? project.options.logging : false}
+                  inputProps={{ "aria-label": "logging checkbox" }}
+                />
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </Card>
