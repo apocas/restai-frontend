@@ -20,7 +20,7 @@ export default function ProjectDetails({ project, projects, info }) {
   const [tokens, setTokens] = useState({ "tokens": [] });
 
   const fetchTokens = () => {
-    return fetch(url + "/projects/" + project.name + "/tokens/daily", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/projects/" + project.id + "/tokens/daily", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then(function (response) {
         if (!response.ok) {
           response.json().then(function (data) {

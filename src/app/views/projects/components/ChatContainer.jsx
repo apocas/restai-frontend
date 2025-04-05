@@ -138,7 +138,7 @@ export default function ChatContainer({
 
     if (canSubmit) {
       setCanSubmit(false);
-      fetchEventSource(url + "/projects/" + project.name + "/" + endpoint, {
+      fetchEventSource(url + "/projects/" + project.id + "/" + endpoint, {
         method: "POST",
         headers: { 'Accept': 'text/event-stream', 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token },
         body: JSON.stringify(body),
@@ -197,7 +197,7 @@ export default function ChatContainer({
     if (canSubmit) {
       setCanSubmit(false);
       setMessages([...messages, { id: body.id, question: question, answer: null, sources: [] }]);
-      fetch(url + "/projects/" + project.name + "/" + endpoint, {
+      fetch(url + "/projects/" + project.id + "/" + endpoint, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
         body: JSON.stringify(body),

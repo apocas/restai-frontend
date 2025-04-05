@@ -40,7 +40,7 @@ export default function RouterDetails({ project, projects }) {
         "entrances": project.entrances
       }
 
-      fetch(url + "/projects/" + project.name, {
+      fetch(url + "/projects/" + project.id, {
         method: 'PATCH',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
         body: JSON.stringify(opts),
@@ -57,7 +57,7 @@ export default function RouterDetails({ project, projects }) {
         })
         .then(() => {
           setLoading(false);
-          //window.location.href = "/admin/project/" + project.name;
+          //window.location.href = "/admin/project/" + project.id;
         }).catch(err => {
           setLoading(false);
           toast.error(err.toString());

@@ -62,13 +62,22 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
             },
           }
         }}
-        data={projects.map(project => [project.name, project.type, project.llm, project.users, project.name])}
+        data={projects.map(project => [project.id, project.name, project.type, project.llm, project.users, project.id])}
         columns={[{
+          name: "ID",
+          options: {
+            customBodyRender: (value, tableMeta, updateValue) => (
+              <Box display="flex" alignItems="center" gap={4}>
+                {value}
+              </Box>
+            )
+          }
+        }, {
           name: "Name",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>
-                <StyledButton onClick={() => { navigate("/project/" + value) }} color="primary">{value}</StyledButton>
+                <StyledButton onClick={() => { navigate("/project/" + tableMeta.rowData[0]) }} color="primary">{value}</StyledButton>
               </Box>
             )
           }

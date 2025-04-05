@@ -24,9 +24,9 @@ export default function RAGRetrieval({ project }) {
   const [count, setCount] = useState(1000000);
 
 
-  const fetchLogs = (projectName) => {
+  const fetchLogs = (projectID) => {
     auth.checkAuth();
-    return fetch(url + "/projects/" + projectName + "/logs?start=" + start + "&end=" + end, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/projects/" + projectID + "/logs?start=" + start + "&end=" + end, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then((res) => {
         if (!res.ok) {
           if (res.status === 404) {
@@ -68,7 +68,7 @@ export default function RAGRetrieval({ project }) {
 
   useEffect(() => {
     if (project.name)
-      fetchLogs(project.name);
+      fetchLogs(project.id);
   }, [project, start, end]);
 
   useEffect(() => {

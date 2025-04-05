@@ -80,6 +80,10 @@ export default function ProjectInfo({ project, projects }) {
             <TableCell>{project.human_name}</TableCell>
           </TableRow>
           <TableRow>
+            <TableCell sx={{ pl: 2 }}>ID</TableCell>
+            <TableCell>{project.id}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell sx={{ pl: 2 }}>Description</TableCell>
             <TableCell>{project.human_description}</TableCell>
           </TableRow>
@@ -118,7 +122,7 @@ export default function ProjectInfo({ project, projects }) {
       </Table>
 
       <FlexBetween p={2}>
-        <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/edit") }} startIcon={<Edit fontSize="small" />}>
+        <Button variant="outlined" onClick={() => { navigate("/project/" + project.id + "/edit") }} startIcon={<Edit fontSize="small" />}>
           Edit
         </Button>
         <Button variant="outlined" color="error" onClick={handleDeleteClick} startIcon={<Delete fontSize="small" />}>
@@ -126,13 +130,13 @@ export default function ProjectInfo({ project, projects }) {
         </Button>
       </FlexBetween>
       <FlexBetween p={2} pt={0}>
-        <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/api") }} startIcon={<Code fontSize="small" />}>
+        <Button variant="outlined" onClick={() => { navigate("/project/" + project.id + "/api") }} startIcon={<Code fontSize="small" />}>
           API
         </Button>
-        <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/playground") }} startIcon={<SportsEsports fontSize="small" />}>
+        <Button variant="outlined" onClick={() => { navigate("/project/" + project.id + "/playground") }} startIcon={<SportsEsports fontSize="small" />}>
           Playground
         </Button>
-        <Button variant="outlined" onClick={() => { navigate("/project/" + project.name + "/logs") }} startIcon={<Article fontSize="small" />}>
+        <Button variant="outlined" onClick={() => { navigate("/project/" + project.id + "/logs") }} startIcon={<Article fontSize="small" />}>
           Logs
         </Button>
       </FlexBetween>

@@ -23,9 +23,9 @@ export default function Logs() {
   const [project, setProject] = useState({});
   const auth = useAuth();
 
-  const fetchProject = (projectName) => {
+  const fetchProject = (projectID) => {
     auth.checkAuth();
-    return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+    return fetch(url + "/projects/" + projectID, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then((res) => res.json())
       .then((d) => {
         setProject(d)

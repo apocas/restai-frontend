@@ -62,7 +62,7 @@ export default function RAGUpload({ project }) {
       }
 
       try {
-        const response = await fetch(url + "/projects/" + project.name + "/embeddings/ingest/upload", {
+        const response = await fetch(url + "/projects/" + project.id + "/embeddings/ingest/upload", {
           method: 'POST',
           headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }),
           body: formData,
@@ -89,7 +89,7 @@ export default function RAGUpload({ project }) {
       }
 
       try {
-        const response = await fetch(url + "/projects/" + project.name + "/embeddings/ingest/url", {
+        const response = await fetch(url + "/projects/" + project.id + "/embeddings/ingest/url", {
           method: 'POST',
           headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
           body: JSON.stringify(body),

@@ -26,7 +26,7 @@ export default function RAGRetrieval({ project }) {
     data.k = state.k
     data.score = state.cutoff
 
-    fetch(url + "/projects/" + project.name + "/embeddings/search", {
+    fetch(url + "/projects/" + project.id + "/embeddings/search", {
       method: 'POST',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       body: JSON.stringify(data),
@@ -53,7 +53,7 @@ export default function RAGRetrieval({ project }) {
 
   const handleViewClick = (source) => {
     setEmbedding(null);
-    fetch(url + "/projects/" + project.name + "/embeddings/id/" + source.id, {
+    fetch(url + "/projects/" + project.id + "/embeddings/id/" + source.id, {
       method: 'GET',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
     })

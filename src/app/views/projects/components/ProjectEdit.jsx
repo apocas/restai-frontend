@@ -56,7 +56,7 @@ export default function ProjectEdit({ project, projects, info }) {
       }
     }
 
-    fetch(url + "/projects/" + project.name, {
+    fetch(url + "/projects/" + project.id, {
       method: 'PATCH',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       body: JSON.stringify(opts),
@@ -72,7 +72,7 @@ export default function ProjectEdit({ project, projects, info }) {
         }
       })
       .then(() => {
-        navigate("/project/" + project.name);
+        navigate("/project/" + project.id);
       }).catch(err => {
         toast.error(err.toString());
       });

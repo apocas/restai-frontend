@@ -66,8 +66,8 @@ export default function ProjectNewView() {
       });
   }
 
-  const fetchProject = (projectName) => {
-    return fetch(url + "/projects/" + projectName, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+  const fetchProject = (projectID) => {
+    return fetch(url + "/projects/" + projectID, { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
       .then((res) => res.json())
       .then((d) => {
         setProject(d)

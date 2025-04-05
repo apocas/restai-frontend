@@ -19,10 +19,10 @@ export default function RAGBrowser({ project }) {
   const [embedding, setEmbedding] = useState({ "ids": {}, "metadatas": {}, "documents": {} });
   const [state, setState] = useState({ "chunksize": "512", "splitter": "token" });
 
-  const fetchEmbeddings = (projectName) => {
+  const fetchEmbeddings = (projectID) => {
     setEmbeddings([]);
     if (project.chunks < 30000 || !project.chunks) {
-      return fetch(url + "/projects/" + projectName + "/embeddings", {
+      return fetch(url + "/projects/" + projectID + "/embeddings", {
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       })
         .then((res) => res.json())
@@ -35,7 +35,7 @@ export default function RAGBrowser({ project }) {
 
   const handleDeleteClick = (embedding) => {
     if (window.confirm("Are you sure you to delete this embedding " + embedding + "?")) {
-      fetch(url + "/projects/" + project.name+ "/embeddings/" + btoa(embedding), {
+      fetch(url + "/projects/" + project.id+ "/embeddings/" + btoa(embedding), {
         method: 'DELETE',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       })
@@ -52,7 +52,7 @@ export default function RAGBrowser({ project }) {
   };
 
   const handleViewClick = (source) => {
-    fetch(url + "/projects/" + project.name + "/embeddings/source/" + btoa(source), {
+    fetch(url + "/projects/" + project.id + "/embeddings/source/" + btoa(source), {
       method: 'GET',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
     })
@@ -74,7 +74,7 @@ export default function RAGBrowser({ project }) {
   };
 
   useEffect(() => {
-    fetchEmbeddings(project.name);
+    fetchEmbeddings(project.id);
   }, []);
 
   return (

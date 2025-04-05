@@ -40,11 +40,11 @@ export default function Preferences({ user, projects }) {
   }));
 
   const findProject = (project) => {
-    return projects.find((p) => p.name === project);
+    return projects.find((p) => p.id === project);
   };
 
   const diassoc = (project) => {
-    var updatedProjects = user.projects.filter((p) => p.name !== project.name);
+    var updatedProjects = user.projects.filter((p) => p.id !== project.id);
     user.projects = updatedProjects;
     //setProjs(updatedProjects);
     onSubmitHandler();
@@ -126,7 +126,7 @@ export default function Preferences({ user, projects }) {
                     <Box ml={2}>
                       <H5>{project.name}</H5>
                       <StyledP sx={{ mt: 1, fontWeight: "normal", textTransform: "capitalize" }}>
-                        {(findProject(project.name).human_name || "").toLowerCase()}
+                        {(findProject(project.id).human_name || "").toLowerCase()}
                       </StyledP>
                     </Box>
                   </FlexBox>
