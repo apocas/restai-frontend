@@ -45,18 +45,18 @@ export default function ProjectRAG({ project, projects }) {
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>K</TableCell>
-            <TableCell>{project.k}</TableCell>
+            <TableCell>{project.options.k}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Cutoff</TableCell>
-            <TableCell>{project.score}</TableCell>
+            <TableCell>{project.options.score}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Colbert Rerank</TableCell>
             <TableCell>
               <Switch
                 disabled
-                checked={project.colbert_rerank}
+                checked={project.options.colbert_rerank}
                 inputProps={{ "aria-label": "secondary checkbox" }}
               />
             </TableCell>
@@ -66,21 +66,21 @@ export default function ProjectRAG({ project, projects }) {
             <TableCell>
               <Switch
                 disabled
-                checked={project.llm_rerank}
+                checked={project.options.llm_rerank}
                 inputProps={{ "aria-label": "secondary checkbox" }}
               />
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Cache Threshold</TableCell>
-            <TableCell>{project.cache_threshold}</TableCell>
+            <TableCell>{project.options.cache_threshold}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell sx={{ pl: 2 }}>Cache</TableCell>
             <TableCell>
               <Switch
                 disabled
-                checked={project.cache}
+                checked={project.options.cache}
                 inputProps={{ "aria-label": "secondary checkbox" }}
               />
             </TableCell>

@@ -61,9 +61,9 @@ export default function ProjectAgent({ project, projects }) {
                 multiple
                 disabled
                 id="tags-standard"
-                options={(project.tools || "").split(",")}
+                options={(project.options.tools || "").split(",")}
                 getOptionLabel={(option) => option}
-                defaultValue={(project.tools || "").split(",")}
+                defaultValue={(project.options.tools || "").split(",")}
                 renderInput={(params) => (
                   <TextField
                     {...params}
