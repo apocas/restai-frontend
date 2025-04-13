@@ -40,7 +40,7 @@ export default function ProjectEdit({ project, projects, info }) {
     //}
 
     if (project.type === "agent") {
-      opts.tools = state.tools
+      opts.options.tools = state.tools
     }
 
     if (project.type === "rag") {
