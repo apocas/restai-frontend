@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Checkbox, Grid, TextField, Box, styled } from "@mui/material";
+import { Card, Checkbox, Grid, TextField, Box, styled, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-
+import GitHubIcon from '@mui/icons-material/GitHub';
 import useAuth from "app/hooks/useAuth";
 import { Paragraph, Span } from "app/components/Typography";
 import { toast } from 'react-toastify';
@@ -77,6 +77,10 @@ export default function JwtLogin() {
     setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
   };
 
+  const handleGitHubLogin = () => {
+    window.location.href = "https://github.com/login/oauth/authorize?client_id=Iv23liOIORqeH1OgJZYW";
+  };
+
   return (
     <StyledRoot>
       <Card className="card">
@@ -140,6 +144,17 @@ export default function JwtLogin() {
                     sx={{ my: 2 }}>
                     Login
                   </LoadingButton>
+
+                  <Button
+                    onClick={handleGitHubLogin}
+                    type="submit"
+                    color="primary"
+                    loading={loading}
+                    variant="contained"
+                    sx={{ my: 2, ml: 0.2 }}>
+                    Login with GitHub
+                    <GitHubIcon sx={{ ml: 1 }} />
+                  </Button>
 
                 </form>
               </Grid>
