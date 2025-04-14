@@ -53,39 +53,15 @@ export default function JwtLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({});
-  const url = process.env.REACT_APP_RESTAI_API_URL || "";
 
   const { login } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
     if (type === null) {
-      setType("processsing");
-      fetch(url + "/users/" + state.email + "/sso", {
-        method: 'GET'
-      })
-        .then(function (response) {
-          setLoading(false);
-          if (!response.ok) {
-            setType("password");
-          } else {
-            return response.json();
-          }
-        })
-        .then((response) => {
-          setLoading(false);
-          if (response && response.sso) {
-            window.location.href = response.sso;
-          } else {
-            setType("password");
-          }
-        }).catch(err => {
-          setType(null);
-          toast.error(err.toString());
-        });
+      setType("password");
     }
-
+      
     if (type === "password") {
       try {
         await login(state.email, state.password);
