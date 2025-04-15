@@ -65,7 +65,7 @@ export default function JwtLogin() {
     if (type === "password") {
       try {
         await login(state.email, state.password);
-        navigate("/");
+        window.location.href = "/admin";
       } catch (e) {
         setLoading(false);
       }
@@ -77,8 +77,8 @@ export default function JwtLogin() {
     setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
   };
 
-  const handleGitHubLogin = () => {
-    window.location.href = "https://github.com/login/oauth/authorize?client_id=Iv23liOIORqeH1OgJZYW";
+  const handleGitHubLogin = async () => {
+    window.location.href = "/oauth/github/login";
   };
 
   return (

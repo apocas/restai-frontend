@@ -1,7 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import axios from "axios";
 import { MatxLoading } from "app/components";
-import { jwtDecode } from 'jwt-decode'
 
 const initialState = {
   user: null,
@@ -41,91 +40,68 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const login = async (email, password) => {
-    var basicAuth = "";
-    if (email !== undefined && password !== undefined) {
-      basicAuth = btoa(email + ":" + password);
+    let basicAuth = "";
+    if (email && password) {
+      basicAuth = btoa(`${email}:${password}`);
     }
 
-    const response = await axios.get(
-      (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + email, 
-      { 
-        headers: { "Authorization": "Basic " + basicAuth },
-        withCredentials: true // Enable sending cookies
+    const response = await axios.post(
+      `${process.env.REACT_APP_RESTAI_API_URL || ""}/auth/login`,
+      {},
+      {
+        auth: {
+          username: email,
+          password: password
+        }
       }
     );
 
     const user = response.data;
-    user.token = basicAuth;
+    user.role = user.is_admin ? "ADMIN" : "USER";
 
-    if (user.is_admin === true) {
-      user.role = "ADMIN";
-    } else {
-      user.role = "USER";
-    }
-
-    localStorage.setItem("user", JSON.stringify(user));
-    dispatch({ type: "LOGIN", payload: { user } });
+    dispatch({ type: "INIT", payload: { isAuthenticated: true, user } });
   };
 
   const checkAuth = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user) {
-        throw new Error('No user data found');
-      }
-
-      await axios.get(
-        (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username, 
-        { 
-          headers: { "Authorization": "Basic " + user.token },
-          withCredentials: true
-        }
+      const response = await axios.get(
+        `${process.env.REACT_APP_RESTAI_API_URL || ""}/auth/whoami`,
+        { withCredentials: true }
       );
-      Promise.resolve();
+
+      const user = response.data;
+      user.role = user.is_admin ? "ADMIN" : "USER";
+
+      dispatch({ type: "INIT", payload: { isAuthenticated: true, user } });
     } catch (err) {
       dispatch({ type: "LOGOUT" });
-      Promise.reject();
     }
   };
 
   const logout = () => {
     localStorage.removeItem("user");
-    // The backend will handle clearing the HTTP-only cookie
-    axios.post(
-      (process.env.REACT_APP_RESTAI_API_URL || "") + "/logout",
-      {},
-      { withCredentials: true }
-    ).catch(console.error);
+    axios
+      .post(
+        `${process.env.REACT_APP_RESTAI_API_URL || ""}/auth/logout`,
+        {},
+        { withCredentials: true }
+      )
+      .catch(console.error);
     dispatch({ type: "LOGOUT" });
   };
 
   useEffect(() => {
     (async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
-          dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
-          return;
-        }
-
         const response = await axios.get(
-          (process.env.REACT_APP_RESTAI_API_URL || "") + "/users/" + user.username,
-          { 
-            headers: { "Authorization": "Basic " + user.token },
-            withCredentials: true
-          }
+          `${process.env.REACT_APP_RESTAI_API_URL || ""}/auth/whoami`,
+          { withCredentials: true }
         );
 
-        const userData = response.data;
-        userData.token = user.token;
+        const user = response.data;
+        user.role = user.is_admin ? "ADMIN" : "USER";
 
-        if (userData.is_admin === true) {
-          userData.role = "ADMIN";
-        } else {
-          userData.role = "USER";
-        }
-
-        dispatch({ type: "INIT", payload: { isAuthenticated: true, user: userData } });
+        dispatch({ type: "INIT", payload: { isAuthenticated: true, user } });
       } catch (err) {
         console.error(err);
         dispatch({ type: "INIT", payload: { isAuthenticated: false, user: null } });
