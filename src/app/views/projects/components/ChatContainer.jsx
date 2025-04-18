@@ -309,6 +309,9 @@ export default function ChatContainer({
     if (project.type === "vision" || project.type === "router") {
       setChat(false);
     }
+    if (project.default_prompt) {
+      setMessage(project.default_prompt);
+    }
   }, [project]);
 
   return (
