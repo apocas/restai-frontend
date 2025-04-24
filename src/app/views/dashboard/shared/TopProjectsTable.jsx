@@ -36,7 +36,7 @@ const TopProjectsTable = ({ projects }) => {
           "viewColumns": false,
           "elevation": 0,
           "onRowClick": (rowData) => {
-            navigate("/project/" + rowData[1]); // Updated index since we added rank column
+            navigate("/project/" + rowData[1]);
           },
           "textLabels": {
             body: {
@@ -46,7 +46,14 @@ const TopProjectsTable = ({ projects }) => {
             },
           }
         }}
-        data={projects.map((project, index) => [index + 1, project.name, project.type, project.total_tokens, project.total_cost])}
+        data={projects.map((project, index) => [
+          index + 1, 
+          project.id,
+          project.name, 
+          project.type, 
+          project.total_tokens, 
+          project.total_cost
+        ])}
         columns={[{
           name: "Rank",
           options: {
@@ -63,11 +70,16 @@ const TopProjectsTable = ({ projects }) => {
             })
           }
         }, {
+          name: "ID",
+          options: {
+            display: false
+          }
+        }, {
           name: "Name",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
               <Box display="flex" alignItems="center" gap={4}>
-                <StyledButton onClick={() => navigate("/project/" + value)} color="primary">{value}</StyledButton>
+                <StyledButton onClick={() => navigate("/project/" + tableMeta.rowData[1])} color="primary">{value}</StyledButton>
               </Box>
             )
           }
@@ -108,4 +120,4 @@ const TopProjectsTable = ({ projects }) => {
   );
 };
 
-export default TopProjectsTable; 
+export default TopProjectsTable;
