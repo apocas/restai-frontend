@@ -12,9 +12,9 @@ import { useState } from "react";
 import { H5, Paragraph } from "app/components/Typography";
 import { FlexBetween, FlexBox } from "app/components/FlexBox";
 import { convertHexToRGB } from "app/utils/utils";
-import QRCode from "react-qr-code";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
+import BAvatar from "boring-avatars";
 
 export default function Preferences({ user, projects }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -120,12 +120,7 @@ export default function Preferences({ user, projects }) {
               <Card>
                 <FlexBetween p="24px" m={-1} flexWrap="wrap">
                   <FlexBox alignItems="center" m={1}>
-                    <QRCode
-                      size={128}
-                      style={{ width: 55, height: 55 }}
-                      value={project.name}
-                      viewBox={`0 0 256 256`}
-                    />
+                    <BAvatar name={project.name} size={55} variant="pixel" colors={["#73c5aa", "#c6c085", "#f9a177", "#f76157", "#4c1b05"]} square/>
 
                     <Box ml={2}>
                       <H5>{project.name} <span style={{fontWeight: 'normal', fontSize: '0.9em', color: '#888'}}> (ID: {project.id})</span></H5>

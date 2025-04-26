@@ -86,7 +86,7 @@ export default function Playground() {
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects"}, { name: id, path: "/project/" + id }]} />
+                <Breadcrumb routeSegments={[{ name: "Projects", path: "/projects" }, { name: id, path: "/project/" + id }, { name: "Playground", path: "/project/" + id + "/playground" }]} />
       </Box>
 
       <Card elevation={6}>

@@ -56,7 +56,7 @@ export default function MyProjects() {
       <ContentBox className="analytics">
         <Grid container spacing={3}>
           <Grid item lg={12} md={8} sm={12} xs={12}>
-            <ProjectsTable projects={projects.filter(project => project.users.some(user => user.username === auth.user.username)).reverse()} />
+            <ProjectsTable projects={projects.filter(project => project.users.some(user => user.username === auth.user.username)).reverse()} title={"My Projects"} />
           </Grid>
         </Grid>
       </ContentBox>
