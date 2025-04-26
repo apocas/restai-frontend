@@ -15,13 +15,13 @@ import {
 
 import { H4, Small } from "app/components/Typography";
 import { FlexBetween, FlexBox } from "app/components/FlexBox";
-import QRCode from "react-qr-code";
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { SportsEsports, Delete, Code, Article } from "@mui/icons-material";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 import sha256 from 'crypto-js/sha256';
+import BAvatar from "boring-avatars";
 
 const ContentBox = styled(FlexBox)({
   alignItems: "center",
@@ -60,12 +60,7 @@ export default function ProjectInfo({ project, projects }) {
   return (
     <Card sx={{ pt: 3 }} elevation={3}>
       <ContentBox mb={3} alignContent="center">
-        <QRCode
-          size={256}
-          style={{ width: 84, height: 84 }}
-          value={window.location.href || "RESTai"}
-          viewBox={`0 0 256 256`}
-        />
+        <BAvatar name={project.name} size={84} variant="pixel" colors={["#73c5aa", "#c6c085", "#f9a177", "#f76157", "#4c1b05"]}/>
 
         <H4 sx={{ mt: "16px", mb: "8px" }}>{project.name}</H4>
         <Small color="text.secondary">{project.type}</Small>

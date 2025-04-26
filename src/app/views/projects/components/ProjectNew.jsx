@@ -17,6 +17,7 @@ import {
 import { H4 } from "app/components/Typography";
 import { toast } from 'react-toastify';
 import ReactJson from '@microlink/react-json-view';
+import BAvatar from "boring-avatars";
 
 const Form = styled("form")(() => ({ padding: "16px" }));
 
@@ -87,7 +88,11 @@ export default function ProjectNew({ projects, info }) {
       <Grid container spacing={2}>
 
         <Grid item xs={6}>
+          <H4 p={2}>Project Info</H4>
           <Form onSubmit={handleSubmit}>
+            <Grid item md={2} sm={4} xs={12} sx={{ mb: 2 }}>
+              <BAvatar name={state.projectname || "Default"} size={84} variant="pixel" colors={["#73c5aa", "#c6c085", "#f9a177", "#f76157", "#4c1b05"]}/>
+            </Grid>
             <Grid container spacing={3} alignItems="center">
               <Grid item md={2} sm={4} xs={12}>
                 Name
@@ -228,10 +233,16 @@ export default function ProjectNew({ projects, info }) {
         </Grid>
         <Grid item xs={6}>
           {state.projectllm && (
-            <ReactJson src={info.llms.find(llm => llm.name === state.projectllm)} enableClipboard={false} name={false} />
+            <>
+              <H4 p={2}>LLM Model</H4>
+              <ReactJson src={info.llms.find(llm => llm.name === state.projectllm)} enableClipboard={false} name={false} />
+            </>
           )}
           {state.projectembeddings && (
-            <ReactJson src={info.embeddings.find(embedding => embedding.name === state.projectembeddings)} enableClipboard={false} name={false} />
+            <>
+              <H4 p={2}>Embeddings Model</H4>
+              <ReactJson src={info.embeddings.find(embedding => embedding.name === state.projectembeddings)} enableClipboard={false} name={false} />
+            </>
           )}
         </Grid>
       </Grid>

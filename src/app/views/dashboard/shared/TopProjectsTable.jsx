@@ -1,7 +1,7 @@
 import { Card, Box, Button, styled, useTheme } from "@mui/material";
-import { H6 } from "app/components/Typography";
 import { useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
+import BAvatar from "boring-avatars";
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1)
@@ -55,11 +55,11 @@ const TopProjectsTable = ({ projects }) => {
           project.total_cost
         ])}
         columns={[{
-          name: "Rank",
+          name: "",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
-              <Box display="flex" alignItems="center" gap={4}>
-                {value}
+              <Box display="flex" alignItems="center" gap={4} ml={2}>
+                <BAvatar name={tableMeta.rowData[2]} size={32} variant="pixel" colors={["#73c5aa", "#c6c085", "#f9a177", "#f76157", "#4c1b05"]}/>
               </Box>
             ),
             setCellHeaderProps: () => ({
@@ -78,7 +78,7 @@ const TopProjectsTable = ({ projects }) => {
           name: "Name",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (
-              <Box display="flex" alignItems="center" gap={4}>
+              <Box display="flex" alignItems="left" gap={4}>
                 <StyledButton onClick={() => navigate("/project/" + tableMeta.rowData[1])} color="primary">{value}</StyledButton>
               </Box>
             )

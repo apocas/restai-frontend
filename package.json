@@ -38,6 +38,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.6.7",
+    "boring-avatars": "^1.11.2",
     "clsx": "^2.1.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.3.1",
