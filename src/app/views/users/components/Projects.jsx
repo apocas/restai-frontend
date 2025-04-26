@@ -39,21 +39,25 @@ export default function Preferences({ user, projects }) {
     },
   }));
 
-  const findProject = (project) => {
-    return projects.find((p) => p.id === project);
-  };
+  const projectMap = projects.reduce((acc, p) => {
+    acc[p.id] = p;
+    return acc;
+  }, {});
+
+  const userProjectsDetailed = user.projects.map((p) => ({
+    ...p,
+    ...projectMap[p.id],
+  }));
 
   const diassoc = (project) => {
     var updatedProjects = user.projects.filter((p) => p.id !== project.id);
     user.projects = updatedProjects;
-    //setProjs(updatedProjects);
     onSubmitHandler();
   }
 
   const onSubmitHandler = (event) => {
     if (event)
       event.preventDefault();
-
 
     fetch(url + "/users/" + user.username, {
       method: 'PATCH',
@@ -95,7 +99,7 @@ export default function Preferences({ user, projects }) {
               >
                 {projects.map((item, ind) => (
                   <MenuItem value={item.name} key={item.name}>
-                    {item.name}
+                    {item.name} (ID: {item.id})
                   </MenuItem>
                 ))}
               </TextField>
@@ -111,8 +115,8 @@ export default function Preferences({ user, projects }) {
       <Divider />
       <Box margin={3}>
         <Grid container spacing={3}>
-          {user.projects.map((project) => (
-            <Grid item sm={6} xs={12}>
+          {userProjectsDetailed.map((project) => (
+            <Grid item sm={6} xs={12} key={project.id}>
               <Card>
                 <FlexBetween p="24px" m={-1} flexWrap="wrap">
                   <FlexBox alignItems="center" m={1}>
@@ -124,9 +128,9 @@ export default function Preferences({ user, projects }) {
                     />
 
                     <Box ml={2}>
-                      <H5>{project.name}</H5>
+                      <H5>{project.name} <span style={{fontWeight: 'normal', fontSize: '0.9em', color: '#888'}}> (ID: {project.id})</span></H5>
                       <StyledP sx={{ mt: 1, fontWeight: "normal", textTransform: "capitalize" }}>
-                        {(findProject(project.id).human_name || "").toLowerCase()}
+                        {(project.human_name || "").toLowerCase()}
                       </StyledP>
                     </Box>
                   </FlexBox>
