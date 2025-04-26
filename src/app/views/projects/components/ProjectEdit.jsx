@@ -11,6 +11,7 @@ export default function ProjectEdit({ project, projects, info }) {
   const auth = useAuth();
   const [state, setState] = useState({});
   const [tools, setTools] = useState([]);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -28,6 +29,10 @@ export default function ProjectEdit({ project, projects, info }) {
       "options": {
         "logging": state.logging
       }
+    }
+
+    if (state.selectedUsers && state.selectedUsers.length > 0) {
+      opts.users = state.selectedUsers.map(user => user.username);
     }
 
     if (project.type === "rag" || project.type === "inference" || project.type === "ragsql" || project.type === "agent") {
@@ -89,6 +94,26 @@ export default function ProjectEdit({ project, projects, info }) {
       });
   }
 
+  const fetchUsers = () => {
+    return fetch(url + "/users", { headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token }) })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => {
+        setUsers(d.users);
+      }).catch(err => {
+        console.log(err.toString());
+        toast.error("Error fetching Users");
+      });
+  }
+
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
     setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
@@ -97,7 +122,20 @@ export default function ProjectEdit({ project, projects, info }) {
   useEffect(() => {
     setState(project);
     fetchTools();
+    fetchUsers();
   }, [project]);
+
+  useEffect(() => {
+    if (project && project.users) {
+      const projectUsers = users.filter(user => 
+        project.users.includes(user.username)
+      );
+      setState(prev => ({
+        ...prev,
+        selectedUsers: projectUsers
+      }));
+    }
+  }, [users, project]);
 
   return (
     <Card elevation={3}>
@@ -166,6 +204,36 @@ export default function ProjectEdit({ project, projects, info }) {
               />
             </Grid>
 
+            <Grid item sm={12} xs={12}>
+              <Divider sx={{ mb: 1 }} />
+            </Grid>
+            
+            {auth.user.is_admin && (
+              <Grid item sm={12} xs={12}>
+                <Autocomplete
+                  multiple
+                  id="users-select"
+                  options={users}
+                  getOptionLabel={(option) => option.username}
+                  value={state.selectedUsers || []}
+                  onChange={(event, newValue) => {
+                    setState({ ...state, selectedUsers: newValue });
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Users with access"
+                      placeholder="Select users"
+                    />
+                  )}
+                />
+                <Typography variant="caption" color="textSecondary">
+                  Select users who should have access to this project
+                </Typography>
+              </Grid>
+            )}
+            
             {state.llm !== undefined && (
               <Grid item sm={6} xs={12}>
                 <TextField
