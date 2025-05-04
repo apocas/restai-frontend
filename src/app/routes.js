@@ -36,6 +36,11 @@ const Audio = Loadable(lazy(() => import("app/views/projects/Audio")));
 const Keys = Loadable(lazy(() => import("app/views/proxy/Keys")));
 const KeysNew = Loadable(lazy(() => import("app/views/proxy/New")));
 
+// Team routes
+const Teams = Loadable(lazy(() => import("app/views/teams/Teams")));
+const TeamView = Loadable(lazy(() => import("app/views/teams/TeamView")));
+const TeamEdit = Loadable(lazy(() => import("app/views/teams/TeamEdit")));
+
 const routes = [
   {
     path: "/",
@@ -176,6 +181,26 @@ const routes = [
       {
         path: "/audio",
         element: <Audio />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/teams",
+        element: <Teams />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/teams/new",
+        element: <TeamEdit />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/team/:id",
+        element: <TeamView />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/team/:id/edit",
+        element: <TeamEdit />,
         auth: authRoles.admin
       }
     ]

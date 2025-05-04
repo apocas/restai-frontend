@@ -19,6 +19,15 @@ export const navigations = [
     path: "/projects/library",
   },
   {
+    name: "Teams",
+    icon: "groups",
+    path: "/teams",
+    children: [
+      { name: "Team List", iconText: "TL", path: "/teams" },
+      { name: "New Team", iconText: "NT", path: "/teams/new", auth: authRoles.admin },
+    ]
+  },
+  {
     name: "Users",
     icon: "person",
     path: "/users",

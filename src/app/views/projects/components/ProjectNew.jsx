@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "app/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -33,8 +33,91 @@ export default function ProjectNew({ projects, info }) {
 
   const [tabIndex, setTabIndex] = useState("0");
   const [state, setState] = useState({});
+  const [teams, setTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [teamLLMs, setTeamLLMs] = useState([]);
+  const [teamEmbeddings, setTeamEmbeddings] = useState([]);
 
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
+
+  // Fetch teams the user belongs to
+  const fetchTeams = () => {
+    fetch(url + "/teams", { 
+      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => {
+        setTeams(d.teams || []);
+      })
+      .catch(err => {
+        console.log("Error fetching teams:", err.toString());
+      });
+  };
+
+  // Fetch team details including available LLMs and embeddings
+  const fetchTeamDetails = (teamId) => {
+    fetch(url + "/teams/" + teamId, { 
+      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((team) => {
+        setSelectedTeam(team);
+        
+        // Get the team's available LLMs from the team response
+        const availableLLMs = team.llms || [];
+        // Map LLM ids/names to full LLM objects by matching with info.llms
+        const filteredLLMs = info.llms.filter(llm => 
+          availableLLMs.some(teamLLM => teamLLM.name === llm.name)
+        );
+        setTeamLLMs(filteredLLMs);
+        
+        // Get the team's available embeddings from the team response
+        const availableEmbeddings = team.embeddings || [];
+        // Map embedding ids/names to full embedding objects by matching with info.embeddings
+        const filteredEmbeddings = info.embeddings.filter(embedding => 
+          availableEmbeddings.some(teamEmbedding => teamEmbedding.name === embedding.name)
+        );
+        setTeamEmbeddings(filteredEmbeddings);
+      })
+      .catch(err => {
+        console.log("Error fetching team details:", err.toString());
+        toast.error("Failed to load team models");
+      });
+  };
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
+  const handleTeamChange = (e) => {
+    const teamId = e.target.value;
+    setState({ ...state, team_id: teamId, projectllm: '', projectembeddings: '' }); // Reset model selections
+    if (teamId) {
+      fetchTeamDetails(teamId);
+    } else {
+      setSelectedTeam(null);
+      setTeamLLMs([]);
+      setTeamEmbeddings([]);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,6 +132,10 @@ export default function ProjectNew({ projects, info }) {
     if (state.projecttype === "rag") {
       opts.embeddings = state.projectembeddings;
       opts.vectorstore = state.projectvectorstore;
+    }
+
+    if (state.team_id) {
+      opts.team_id = state.team_id;
     }
 
     fetch(url + "/projects", {
@@ -71,7 +158,6 @@ export default function ProjectNew({ projects, info }) {
       }).catch(err => {
         toast.error(err.toString());
       });
-
   };
 
   const handleChange = (event) => {
@@ -110,28 +196,56 @@ export default function ProjectNew({ projects, info }) {
               </Grid>
 
               <Grid item md={2} sm={4} xs={12}>
-                Type
+                Team
               </Grid>
 
               <Grid item md={10} sm={8} xs={12}>
                 <TextField
                   select
                   size="small"
-                  name="projecttype"
-                  label="Type"
+                  name="team_id"
+                  label="Team"
                   variant="outlined"
-                  onChange={handleChange}
+                  onChange={handleTeamChange}
                   fullWidth
+                  required
+                  helperText="A project can only belong to one team"
                 >
-                  {typeList.map((item, ind) => (
-                    <MenuItem value={item} key={item}>
-                      {item}
+                  {teams.map((team) => (
+                    <MenuItem value={team.id} key={team.id}>
+                      {team.name}
                     </MenuItem>
                   ))}
                 </TextField>
               </Grid>
 
-              {state.projecttype && (
+              {selectedTeam && (
+                <>
+                  <Grid item md={2} sm={4} xs={12}>
+                    Type
+                  </Grid>
+
+                  <Grid item md={10} sm={8} xs={12}>
+                    <TextField
+                      select
+                      size="small"
+                      name="projecttype"
+                      label="Type"
+                      variant="outlined"
+                      onChange={handleChange}
+                      fullWidth
+                    >
+                      {typeList.map((item) => (
+                        <MenuItem value={item} key={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </>
+              )}
+
+              {selectedTeam && state.projecttype && (
                 <>
                   <Grid item md={2} sm={4} xs={12}>
                     LLM
@@ -146,16 +260,20 @@ export default function ProjectNew({ projects, info }) {
                       variant="outlined"
                       onChange={handleChange}
                       fullWidth
+                      helperText={teamLLMs.length === 0 ? "No LLMs available for this team" : ""}
                     >
-                      {info.llms.filter(item =>
-                        state.projecttype === "vision"
-                          ? item.type === "vision"
-                          : item.type !== "vision"
-                      ).map((item, ind) => (
-                        <MenuItem value={item.name} key={item.name}>
-                          {item.name}
-                        </MenuItem>
-                      ))}
+                      {teamLLMs
+                        .filter(item =>
+                          state.projecttype === "vision"
+                            ? item.type === "vision"
+                            : item.type !== "vision"
+                        )
+                        .map((item) => (
+                          <MenuItem value={item.name} key={item.name}>
+                            {item.name}
+                          </MenuItem>
+                        ))
+                      }
                     </TextField>
                   </Grid>
                 </>
@@ -173,9 +291,7 @@ export default function ProjectNew({ projects, info }) {
               )}
             </Tabs>
 
-
-
-            {state.projecttype === "rag" && tabIndex === "0" && (
+            {selectedTeam && state.projecttype === "rag" && tabIndex === "0" && (
               <Grid container spacing={3} alignItems="center">
                 <Grid item md={2} sm={4} xs={12}>
                   Embeddings
@@ -190,8 +306,9 @@ export default function ProjectNew({ projects, info }) {
                     variant="outlined"
                     fullWidth
                     onChange={handleChange}
+                    helperText={teamEmbeddings.length === 0 ? "No embeddings available for this team" : ""}
                   >
-                    {info.embeddings.map((item, ind) => (
+                    {teamEmbeddings.map((item) => (
                       <MenuItem value={item.name} key={item.name}>
                         {item.name}
                       </MenuItem>
@@ -213,7 +330,7 @@ export default function ProjectNew({ projects, info }) {
                     fullWidth
                     onChange={handleChange}
                   >
-                    {vectorstoreList.map((item, ind) => (
+                    {vectorstoreList.map((item) => (
                       <MenuItem value={item} key={item}>
                         {item}
                       </MenuItem>
@@ -222,7 +339,6 @@ export default function ProjectNew({ projects, info }) {
                 </Grid>
               </Grid>
             )}
-
 
             <Box mt={3}>
               <Button color="primary" variant="contained" type="submit">
@@ -235,13 +351,13 @@ export default function ProjectNew({ projects, info }) {
           {state.projectllm && (
             <>
               <H4 p={2}>LLM Model</H4>
-              <ReactJson src={info.llms.find(llm => llm.name === state.projectllm)} enableClipboard={false} name={false} />
+              <ReactJson src={teamLLMs.find(llm => llm.name === state.projectllm)} enableClipboard={false} name={false} />
             </>
           )}
           {state.projectembeddings && (
             <>
               <H4 p={2}>Embeddings Model</H4>
-              <ReactJson src={info.embeddings.find(embedding => embedding.name === state.projectembeddings)} enableClipboard={false} name={false} />
+              <ReactJson src={teamEmbeddings.find(embedding => embedding.name === state.projectembeddings)} enableClipboard={false} name={false} />
             </>
           )}
         </Grid>
