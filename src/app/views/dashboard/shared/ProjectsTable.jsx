@@ -62,7 +62,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
             },
           }
         }}
-        data={projects.map(project => [project.id, project.name, project.type, project.llm, project.users, project.id])}
+        data={projects.map(project => [project.id, project.name, project.type, project.llm, project.users, project.team.name, project.id])}
         columns={[{
           name: "ID",
           options: {
@@ -122,7 +122,20 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
               </div>
             )
           }
-        }, {
+        },
+        {
+          name: "Team",
+          options: {
+            customBodyRender: (value, tableMeta, updateValue) => (
+              <div>
+                <Box display="flex" alignItems="center" gap={1}>
+                  {value}
+                </Box>
+              </div>
+            )
+          }
+        },
+        {
           name: "Actions",
           options: {
             customBodyRender: (value, tableMeta, updateValue) => (

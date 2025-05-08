@@ -12,6 +12,7 @@ export default function ProjectEdit({ project, projects, info }) {
   const [state, setState] = useState({});
   const [tools, setTools] = useState([]);
   const [users, setUsers] = useState([]);
+  const [teams, setTeams] = useState([]);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -29,6 +30,10 @@ export default function ProjectEdit({ project, projects, info }) {
       "options": {
         "logging": state.logging
       }
+    }
+
+    if (state.team && state.team.id) {
+      opts.team_id = state.team.id;
     }
 
     if (state.selectedUsers && state.selectedUsers.length > 0) {
@@ -114,6 +119,29 @@ export default function ProjectEdit({ project, projects, info }) {
       });
   }
 
+  const fetchTeams = () => {
+    return fetch(url + "/teams", { 
+      headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          response.json().then(function (data) {
+            toast.error(data.detail);
+          });
+          throw Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then((d) => {
+        setTeams(d.teams || []);
+      })
+      .catch(err => {
+        console.log("Error fetching teams:", err.toString());
+        toast.error("Error fetching teams");
+      });
+  };
+
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
     setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
@@ -123,6 +151,7 @@ export default function ProjectEdit({ project, projects, info }) {
     setState(project);
     fetchTools();
     fetchUsers();
+    fetchTeams();
   }, [project]);
 
   useEffect(() => {
@@ -218,130 +247,156 @@ export default function ProjectEdit({ project, projects, info }) {
                   value={state.selectedUsers || []}
                   onChange={(event, newValue) => {
                     setState({ ...state, selectedUsers: newValue });
-                  }}
-                  renderInput={(params) => (
+                    }}
+                    renderInput={(params) => (
                     <TextField
                       {...params}
                       variant="outlined"
                       label="Users with access"
                       placeholder="Select users"
                     />
-                  )}
-                />
-                <Typography variant="caption" color="textSecondary">
-                  Select users who should have access to this project
-                </Typography>
-              </Grid>
-            )}
-            
-            {state.llm !== undefined && (
-              <Grid item sm={6} xs={12}>
-                <TextField
-                  fullWidth
+                    )}
+                  />
+                  <Typography variant="caption" color="textSecondary">
+                    Select users who should have access to this project
+                  </Typography>
+                  </Grid>
+                )}
+                
+                <Grid item sm={12} xs={12}>
+                  <Divider sx={{ mb: 1 }} />
+                </Grid>
+                
+                <Grid item sm={6} xs={12}>
+                  <TextField
                   select
-                  name="llm"
-                  label="LLM"
+                  fullWidth
+                  name="team_id"
+                  label="Team"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.llm}
-                  defaultValue={state.llm}
-                >
-                  {info.llms.filter(item =>
+                  value={(state.team && state.team.id) || ''}
+                  >
+                  {teams.map((team) => (
+                    <MenuItem value={team.id} key={team.id}>
+                    {team.name}
+                    </MenuItem>
+                  ))}
+                  </TextField>
+                </Grid>
+                
+                <Grid item sm={12} xs={12}>
+                  <Divider sx={{ mb: 1 }} />
+                </Grid>
+
+                {state.llm !== undefined && (
+                  <Grid item sm={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    select
+                    name="llm"
+                    label="LLM"
+                    variant="outlined"
+                    onChange={handleChange}
+                    value={state.llm}
+                    defaultValue={state.llm}
+                  >
+                    {info.llms.filter(item =>
                     state.type === "vision"
                       ? item.type === "vision"
                       : item.type !== "vision"
-                  ).map((item, ind) => (
+                    ).map((item, ind) => (
                     <MenuItem value={item.name} key={item.name}>
                       {item.name}
                     </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-            )}
+                    ))}
+                  </TextField>
+                  </Grid>
+                )}
 
-            {(state.type === "rag" || state.type === "inference" || state.type === "ragsql" || state.type === "agent") && (
-              <Grid item sm={6} xs={12}>
-                <TextField
+                {(state.type === "rag" || state.type === "inference" || state.type === "ragsql" || state.type === "agent") && (
+                  <Grid item sm={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    name="system"
+                    label="System Message"
+                    variant="outlined"
+                    onChange={handleChange}
+                    value={state.system}
+                    multiline={true}
+                  />
+                  </Grid>
+                )}
+
+
+                <Grid item sm={6} xs={12}>
+                  <TextField
                   fullWidth
                   InputLabelProps={{ shrink: true }}
-                  name="system"
-                  label="System Message"
+                  name="default_prompt"
+                  label="Default Prompt"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.system}
-                  multiline={true}
-                />
-              </Grid>
-            )}
+                  value={state.default_prompt}
+                  />
+                </Grid>
 
-
-            <Grid item sm={6} xs={12}>
-              <TextField
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                name="default_prompt"
-                label="Default Prompt"
-                variant="outlined"
-                onChange={handleChange}
-                value={state.default_prompt}
-              />
-            </Grid>
-
-            <Grid item sm={12} xs={12}>
-              <Divider sx={{ mb: 1 }} />
-            </Grid>
-
-            <Grid item sm={6} xs={12}>
-              <TextField
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                name="guard"
-                label="Prompt Guard Project"
-                variant="outlined"
-                onChange={handleChange}
-                value={state.guard}
-              />
-            </Grid>
-
-            <Grid item sm={6} xs={12}>
-              <TextField
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                name="censorship"
-                label="Censhorship Message"
-                variant="outlined"
-                onChange={handleChange}
-                value={state.censorship}
-              />
-            </Grid>
-
-            {state.type === "rag" && (
-              <div>
                 <Grid item sm={12} xs={12}>
                   <Divider sx={{ mb: 1 }} />
                 </Grid>
-              </div>
-            )}
 
-            {state.type === "agent" && (
-              <Fragment>
-                <Grid item sm={12} xs={12}>
-                  <Divider sx={{ mb: 1 }} />
-                </Grid>
                 <Grid item sm={6} xs={12}>
-                  <FormControlLabel
+                  <TextField
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  name="guard"
+                  label="Prompt Guard Project"
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={state.guard}
+                  />
+                </Grid>
+
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  name="censorship"
+                  label="Censhorship Message"
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={state.censorship}
+                  />
+                </Grid>
+
+                {state.type === "rag" && (
+                  <div>
+                  <Grid item sm={12} xs={12}>
+                    <Divider sx={{ mb: 1 }} />
+                  </Grid>
+                  </div>
+                )}
+
+                {state.type === "agent" && (
+                  <Fragment>
+                  <Grid item sm={12} xs={12}>
+                    <Divider sx={{ mb: 1 }} />
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <FormControlLabel
                     label="Tools"
                     sx={{ ml: 0 }}
                     width="200px"
                     control={
                       <Autocomplete
-                        multiple
-                        id="tags-standard"
-                        name="tools"
-                        fullWidth
-                        options={tools.map((tool) => tool.name)}
-                        getOptionLabel={(option) => option}
-                        onChange={(event, newValue) => {
+                      multiple
+                      id="tags-standard"
+                      name="tools"
+                      fullWidth
+                      options={tools.map((tool) => tool.name)}
+                      getOptionLabel={(option) => option}
+                      onChange={(event, newValue) => {
                           setState({ ...state, "tools": newValue.join(",") });
                         }}
                         defaultValue={state.tools ? state.tools.split(",") : []}

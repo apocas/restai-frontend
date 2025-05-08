@@ -48,7 +48,7 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
           {teams.map((team) => (
             <TableRow key={team.id}>
               <TableCell>
-                <Typography variant="subtitle1">{team.name}</Typography>
+                <Typography variant="subtitle2" ml={1}>{team.name}</Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="body2" noWrap style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>

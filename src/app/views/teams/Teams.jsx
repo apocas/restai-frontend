@@ -75,7 +75,7 @@ export default function Teams() {
     if (!window.confirm("Are you sure you want to delete this team?")) {
       return;
     }
-    
+
     try {
       const response = await fetch(`${url}/teams/${teamId}`, {
         method: 'DELETE',
