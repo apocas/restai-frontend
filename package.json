@@ -45,6 +45,7 @@
     "echarts": "^5.4.3",
     "echarts-for-react": "^3.0.2",
     "js-cookie": "^3.0.5",
+    "json-edit-react": "^1.26.2",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "mui-datatables": "^4.3.0",

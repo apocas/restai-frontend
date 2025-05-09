@@ -5,6 +5,7 @@ import { useState, useEffect, Fragment } from "react";
 import useAuth from "app/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { JsonEditor } from 'json-edit-react';
 
 export default function ProjectEdit({ project, projects, info }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -27,9 +28,12 @@ export default function ProjectEdit({ project, projects, info }) {
       "censorship": state.censorship || "",
       "public": state.public,
       "default_prompt": state.default_prompt || "",
-      "options": {
-        "logging": state.logging
-      }
+      "options": state.options || {}
+    }
+
+    // Make sure we preserve the logging option if it exists in the state
+    if (state.options.logging !== undefined) {
+      opts.options.logging = state.options.logging;
     }
 
     if (state.team && state.team.id) {
@@ -50,7 +54,7 @@ export default function ProjectEdit({ project, projects, info }) {
     //}
 
     if (project.type === "agent") {
-      opts.options.tools = state.tools
+      opts.options.tools = state.options.tools
     }
 
     if (project.type === "rag") {
@@ -144,7 +148,19 @@ export default function ProjectEdit({ project, projects, info }) {
 
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
-    setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
+    
+    // Special handling for options properties like logging
+    if (event.target.name === "logging") {
+      setState({ 
+        ...state, 
+        options: {
+          ...state.options,
+          logging: event.target.checked
+        }
+      });
+    } else {
+      setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
+    }
   };
 
   useEffect(() => {
@@ -224,7 +240,7 @@ export default function ProjectEdit({ project, projects, info }) {
                 label="Logging"
                 control={
                   <Switch
-                    checked={state.logging !== undefined ? state.logging : (project.options?.logging || false)}
+                    checked={state.options && state.options.logging !== undefined ? state.options.logging : (project.options?.logging || false)}
                     name="logging"
                     inputProps={{ "aria-label": "logging checkbox" }}
                     onChange={handleChange}
@@ -397,9 +413,15 @@ export default function ProjectEdit({ project, projects, info }) {
                       options={tools.map((tool) => tool.name)}
                       getOptionLabel={(option) => option}
                       onChange={(event, newValue) => {
-                          setState({ ...state, "tools": newValue.join(",") });
+                          setState({ 
+                            ...state, 
+                            options: {
+                              ...state.options,
+                              tools: newValue.join(",")
+                            }
+                          });
                         }}
-                        defaultValue={state.tools ? state.tools.split(",") : []}
+                        defaultValue={state.options.tools ? state.options.tools.split(",") : []}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -499,6 +521,20 @@ export default function ProjectEdit({ project, projects, info }) {
                 </Grid>
               </Fragment>
             )}
+
+            <Grid item sm={12} xs={12}>
+              <Divider sx={{ mb: 1 }} />
+            </Grid>
+
+            <Grid item sm={12} xs={12}>
+              <Typography variant="h6">Options</Typography>
+              <JsonEditor
+                data={state.options || {}}
+                setData={(updatedOptions) => setState({ ...state, options: updatedOptions })}
+                restrictDelete={false}
+                rootName="Options"
+              />
+            </Grid>
 
             <Grid item xs={12}>
               <Button type="submit" variant="contained">
