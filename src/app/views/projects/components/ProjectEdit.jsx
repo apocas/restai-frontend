@@ -146,6 +146,51 @@ export default function ProjectEdit({ project, projects, info }) {
       });
   };
 
+  // Add a specific handler for team selection that fetches team details
+  const handleTeamChange = (event) => {
+    const teamId = event.target.value;
+    
+    // First update the team_id in state
+    setState(prevState => ({ 
+      ...prevState, 
+      team_id: teamId 
+    }));
+    
+    // Then fetch the complete team details to get LLMs and embeddings
+    if (teamId) {
+      fetch(url + "/teams/" + teamId, { 
+        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            response.json().then(function (data) {
+              toast.error(data.detail);
+            });
+            throw Error(response.statusText);
+          } else {
+            return response.json();
+          }
+        })
+        .then((teamData) => {
+          // Update state with the full team object
+          setState(prevState => ({
+            ...prevState,
+            team: teamData
+          }));
+        })
+        .catch(err => {
+          console.log("Error fetching team details:", err.toString());
+          toast.error("Error loading team details");
+        });
+    } else {
+      // If no team is selected, clear the team object
+      setState(prevState => ({
+        ...prevState,
+        team: null
+      }));
+    }
+  };
+
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
     
@@ -168,7 +213,30 @@ export default function ProjectEdit({ project, projects, info }) {
     fetchTools();
     fetchUsers();
     fetchTeams();
-  }, [project]);
+    
+    // If the project has a team, fetch its complete details
+    if (project && project.team && project.team.id) {
+      fetch(url + "/teams/" + project.team.id, { 
+        headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then(teamData => {
+          // Update state with full team details, preserving other state properties
+          setState(prevState => ({
+            ...prevState,
+            team: teamData
+          }));
+        })
+        .catch(err => {
+          console.log("Error fetching team details:", err.toString());
+        });
+    }
+  }, [project, url, auth.user.token]);
 
   useEffect(() => {
     if (project && project.users) {
@@ -291,8 +359,8 @@ export default function ProjectEdit({ project, projects, info }) {
                   name="team_id"
                   label="Team"
                   variant="outlined"
-                  onChange={handleChange}
-                  value={(state.team && state.team.id) ?? ''}
+                  onChange={handleTeamChange}
+                  value={state.team ? state.team.id : (project.team ? project.team.id : '')}
                   >
                   {teams.map((team) => (
                     <MenuItem value={team.id} key={team.id}>
@@ -308,26 +376,40 @@ export default function ProjectEdit({ project, projects, info }) {
 
                 {state.llm !== undefined && (
                   <Grid item sm={6} xs={12}>
-                  <TextField
-                    fullWidth
-                    select
-                    name="llm"
-                    label="LLM"
-                    variant="outlined"
-                    onChange={handleChange}
-                    value={state.llm ?? ''}
-                    defaultValue={state.llm ?? ''}
-                  >
-                    {info.llms.filter(item =>
-                    state.type === "vision"
-                      ? item.type === "vision"
-                      : item.type !== "vision"
-                    ).map((item, ind) => (
-                    <MenuItem value={item.name} key={item.name}>
-                      {item.name}
-                    </MenuItem>
-                    ))}
-                  </TextField>
+                    <TextField
+                      fullWidth
+                      select
+                      name="llm"
+                      label="LLM"
+                      variant="outlined"
+                      onChange={handleChange}
+                      value={state.llm ?? ''}
+                      defaultValue={state.llm ?? ''}
+                    >
+                      {/* Only show LLMs the project's team has access to */}
+                      {info.llms
+                        .filter(item => {
+                          // If no team is selected, show LLMs based on project type only
+                          if (!state.team) return true;
+                          
+                          // Get team LLMs - convert to array of names if they're objects
+                          const teamLLMs = state.team.llms || [];
+                          const teamLLMNames = teamLLMs.map(llm => typeof llm === 'string' ? llm : llm.name);
+                          
+                          // Filter by both team access and project type
+                          return teamLLMNames.includes(item.name);
+                        })
+                        .filter(item =>
+                          state.type === "vision"
+                            ? item.type === "vision"
+                            : item.type !== "vision"
+                        )
+                        .map((item) => (
+                          <MenuItem value={item.name} key={item.name}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                    </TextField>
                   </Grid>
                 )}
 
