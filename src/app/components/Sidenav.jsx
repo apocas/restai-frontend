@@ -1,10 +1,10 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { styled } from "@mui/material/styles";
 import Scrollbar from "react-perfect-scrollbar";
 
 import { MatxVerticalNav } from "app/components";
 import useSettings from "app/hooks/useSettings";
-import { navigations } from "app/navigations";
+import { useNavigations } from "app/navigations";
 import useAuth from "app/hooks/useAuth";
 import { navGuard } from "app/auth/navGuard";
 
@@ -29,12 +29,9 @@ const SideNavMobile = styled("div")(({ theme }) => ({
 export default function Sidenav({ children }) {
   const { settings, updateSettings } = useSettings();
   const { user } = useAuth();
-  const [navItems, setNavItems] = useState([]);
-  
-  useEffect(() => {
-    setNavItems(navGuard(navigations, user))
-  }, []);
-  
+  const navigationItems = useNavigations();
+  const navItems = navGuard(navigationItems, user);
+
   const updateSidebarMode = (sidebarSettings) => {
     let activeLayoutSettingsName = settings.activeLayout + "Settings";
     let activeLayoutSettings = settings[activeLayoutSettingsName];

@@ -87,7 +87,7 @@ export default function ProjectInfo({ project, projects }) {
             <TableCell>
               <Switch
                 disabled
-                checked={project.public}
+                checked={project.public ?? false}
                 inputProps={{ "aria-label": "secondary checkbox" }}
               />
             </TableCell>
@@ -97,7 +97,7 @@ export default function ProjectInfo({ project, projects }) {
             <TableCell>
               <Box display="flex" alignItems="center" gap={1}>
                 {(project.users || []).map((user, index) => (
-                  <div>
+                  <div key={user || index}>
                     <Tooltip title={user} placement="top">
                       <StyledAvatar src={"https://www.gravatar.com/avatar/" + sha256(user)} />
                     </Tooltip>

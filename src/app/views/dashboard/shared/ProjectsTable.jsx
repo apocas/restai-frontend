@@ -52,7 +52,8 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
           "download": false,
           "filter": true,
           "viewColumns": false,
-          "rowsPerPage": 25,
+          "rowsPerPage": 10,
+          "rowsPerPageOptions": [10, 15, 100],
           "elevation": 0,
           "textLabels": {
             body: {
@@ -105,7 +106,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
               <div>
                 <Box display="flex" alignItems="center" gap={1}>
                   {value.slice(0, 2).map((user, index) => (
-                    <div>
+                    <div key={user.id || user.username || index}>
                       <Tooltip title={user.username} placement="top">
                         <StyledAvatar src={"https://www.gravatar.com/avatar/" + sha256(user.username)} />
                       </Tooltip>

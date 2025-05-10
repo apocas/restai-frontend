@@ -38,24 +38,25 @@ export default function ProjectsLLMsChart({ projects = [], height, color = [] })
         hoverOffset: 5,
         stillShowZeroSum: false,
         bottom: 20,
-        label: {
-          normal: {
-            show: false,
-            position: "center",
-            textStyle: { color: theme.palette.text.secondary, fontSize: 13, fontFamily: "roboto" },
-            formatter: "{a}"
-          },
-          emphasis: {
+        emphasis: {
+          label: {
             show: true,
-            textStyle: { fontSize: "14", fontWeight: "normal" },
+            fontSize: "14",
+            fontWeight: "normal",
             formatter: "{b} \n{c} ({d}%)"
-          }
+          },
+          itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: "rgba(0, 0, 0, 0.5)" }
         },
-        labelLine: { normal: { show: false } },
+        label: {
+          show: false,
+          position: "center",
+          color: theme.palette.text.secondary,
+          fontSize: 13,
+          fontFamily: "roboto",
+          formatter: "{a}"
+        },
+        labelLine: { show: false },
         data: data,
-        itemStyle: {
-          emphasis: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: "rgba(0, 0, 0, 0.5)" }
-        }
       }
     ]
   };

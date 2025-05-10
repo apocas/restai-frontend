@@ -32,9 +32,6 @@ const Container = styled("div")(({ theme }) => ({
   "& .breadcrumb": { marginBottom: 30, [theme.breakpoints.down("sm")]: { marginBottom: 16 } }
 }));
 
-
-
-
 export default function Analytics() {
   const { palette } = useTheme();
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -98,7 +95,7 @@ export default function Analytics() {
 
   return (
     <Container>
-      <Fragment sx={{ my: 3 }}>
+      <Box sx={{ my: 3 }}>
         <Box className="breadcrumb">
           <Breadcrumb routeSegments={[{ name: "Home", path: "/home" }]} />
         </Box>
@@ -136,7 +133,7 @@ export default function Analytics() {
             </Grid>
           </Grid>
         </ContentBox>
-      </Fragment>
+      </Box>
     </Container>
   );
 }

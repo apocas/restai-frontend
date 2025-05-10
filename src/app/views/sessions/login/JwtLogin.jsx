@@ -6,6 +6,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import useAuth from "app/hooks/useAuth";
 import { Paragraph, Span } from "app/components/Typography";
 import { toast } from 'react-toastify';
+import { usePlatformCapabilities } from "app/contexts/PlatformContext";
 
 const FlexBox = styled(Box)(() => ({
   display: "flex"
@@ -53,6 +54,8 @@ export default function JwtLogin() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({});
+  const { platformCapabilities } = usePlatformCapabilities();
+  const ssoProviders = platformCapabilities?.sso || [];
 
   const { login } = useAuth();
 
@@ -145,16 +148,17 @@ export default function JwtLogin() {
                     Login
                   </LoadingButton>
 
-                  <Button
-                    onClick={handleGitHubLogin}
-                    type="submit"
-                    color="primary"
-                    loading={loading}
-                    variant="contained"
-                    sx={{ my: 2, ml: 0.2 }}>
-                    Login with GitHub
-                    <GitHubIcon sx={{ ml: 1 }} />
-                  </Button>
+                  {ssoProviders.includes("github") && (
+                    <Button
+                      onClick={handleGitHubLogin}
+                      type="button"
+                      color="primary"
+                      variant="contained"
+                      sx={{ my: 2, ml: 0.2 }}>
+                      Login with GitHub
+                      <GitHubIcon sx={{ ml: 1 }} />
+                    </Button>
+                  )}
 
                 </form>
               </Grid>
