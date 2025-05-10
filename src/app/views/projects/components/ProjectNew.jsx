@@ -206,6 +206,7 @@ export default function ProjectNew({ projects, info }) {
                   name="team_id"
                   label="Team"
                   variant="outlined"
+                  value={state.team_id ?? ''}
                   onChange={handleTeamChange}
                   fullWidth
                   required

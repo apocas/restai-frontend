@@ -94,6 +94,7 @@ export default function Preferences({ user, projects }) {
                 name="addproject"
                 label="Project"
                 variant="outlined"
+                value={state.addproject ?? ''}
                 onChange={handleChange}
                 sx={{ minWidth: 188 }}
               >

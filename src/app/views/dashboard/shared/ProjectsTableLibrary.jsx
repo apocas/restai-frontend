@@ -46,7 +46,8 @@ export default function ProjectsTableLibrary({ projects = [], title = "Projects 
           "download": false,
           "filter": true,
           "viewColumns": false,
-          "rowsPerPage": 25,
+          "rowsPerPage": 10,
+          "rowsPerPageOptions": [10, 15, 100],
           "elevation": 0,
           "textLabels": {
             body: {

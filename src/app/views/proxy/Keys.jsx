@@ -185,7 +185,7 @@ print(completion)`);
                 text={proxycode()}
                 language="python"
                 theme={monoBlue}
-                codeBlock
+                $codeBlock
               />
             </Card>
           </Grid>

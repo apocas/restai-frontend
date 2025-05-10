@@ -78,7 +78,7 @@ else:
             text={pythonquestioncode()}
             language="php"
             theme={monoBlue}
-            codeBlock
+            $codeBlock
           />
         </AccordionDetails>
       </Accordion>
@@ -95,7 +95,7 @@ else:
             text={pythonchatcode()}
             language="php"
             theme={monoBlue}
-            codeBlock
+            $codeBlock
           />
         </AccordionDetails>
       </Accordion>

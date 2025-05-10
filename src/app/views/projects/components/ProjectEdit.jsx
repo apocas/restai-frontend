@@ -199,7 +199,7 @@ export default function ProjectEdit({ project, projects, info }) {
                 label="Project Human Name"
                 variant="outlined"
                 onChange={handleChange}
-                value={state.human_name}
+                value={state.human_name ?? ''}
               />
             </Grid>
 
@@ -211,7 +211,7 @@ export default function ProjectEdit({ project, projects, info }) {
                 label="Project Human Description"
                 variant="outlined"
                 onChange={handleChange}
-                value={state.human_description}
+                value={state.human_description ?? ''}
               />
             </Grid>
 
@@ -261,6 +261,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   options={users}
                   getOptionLabel={(option) => option.username}
                   value={state.selectedUsers || []}
+                  isOptionEqualToValue={(option, value) => option.username === value.username}
                   onChange={(event, newValue) => {
                     setState({ ...state, selectedUsers: newValue });
                     }}
@@ -291,7 +292,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   label="Team"
                   variant="outlined"
                   onChange={handleChange}
-                  value={(state.team && state.team.id) || ''}
+                  value={(state.team && state.team.id) ?? ''}
                   >
                   {teams.map((team) => (
                     <MenuItem value={team.id} key={team.id}>
@@ -314,8 +315,8 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="LLM"
                     variant="outlined"
                     onChange={handleChange}
-                    value={state.llm}
-                    defaultValue={state.llm}
+                    value={state.llm ?? ''}
+                    defaultValue={state.llm ?? ''}
                   >
                     {info.llms.filter(item =>
                     state.type === "vision"
@@ -339,7 +340,7 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="System Message"
                     variant="outlined"
                     onChange={handleChange}
-                    value={state.system}
+                    value={state.system ?? ''}
                     multiline={true}
                   />
                   </Grid>
@@ -354,7 +355,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   label="Default Prompt"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.default_prompt}
+                  value={state.default_prompt ?? ''}
                   />
                 </Grid>
 
@@ -370,7 +371,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   label="Prompt Guard Project"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.guard}
+                  value={state.guard ?? ''}
                   />
                 </Grid>
 
@@ -382,7 +383,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   label="Censhorship Message"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.censorship}
+                  value={state.censorship ?? ''}
                   />
                 </Grid>
 
@@ -412,6 +413,7 @@ export default function ProjectEdit({ project, projects, info }) {
                       fullWidth
                       options={tools.map((tool) => tool.name)}
                       getOptionLabel={(option) => option}
+                      isOptionEqualToValue={(option, value) => option === value}
                       onChange={(event, newValue) => {
                           setState({ 
                             ...state, 
@@ -468,7 +470,7 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="Cutoff Score"
                     variant="outlined"
                     onChange={handleChange}
-                    value={state.score}
+                    value={state.score ?? ''}
                   />
                 </Grid>
                 <Grid item sm={6} xs={12}>

@@ -69,7 +69,7 @@ export default function LLMNew({ projects, info }) {
       <Divider sx={{ mb: 1 }} />
 
       <Form onSubmit={handleSubmit}>
-        <Grid container spacing={3} alignItems="center" xs={8}>
+        <Grid container spacing={3} alignItems="center">
           <Grid item md={2} sm={4} xs={12}>
             Name
           </Grid>
@@ -97,6 +97,7 @@ export default function LLMNew({ projects, info }) {
               name="class"
               label="Class Name"
               variant="outlined"
+              value={state.class ?? ''}
               onChange={handleChange}
               sx={{ minWidth: 188 }}
             >
@@ -120,6 +121,7 @@ export default function LLMNew({ projects, info }) {
               name="type"
               label="Type"
               variant="outlined"
+              value={state.type ?? ''}
               onChange={handleChange}
               sx={{ minWidth: 188 }}
             >
@@ -143,6 +145,7 @@ export default function LLMNew({ projects, info }) {
               name="privacy"
               label="Privacy"
               variant="outlined"
+              value={state.privacy ?? ''}
               onChange={handleChange}
               sx={{ minWidth: 188 }}
             >

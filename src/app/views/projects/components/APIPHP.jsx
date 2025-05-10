@@ -95,7 +95,7 @@ export default function APIPython({ project }) {
             text={phpquestioncode()}
             language="php"
             theme={monoBlue}
-            codeBlock
+            $codeBlock
           />
         </AccordionDetails>
       </Accordion>
@@ -112,7 +112,7 @@ export default function APIPython({ project }) {
             text={phpchatcode()}
             language="php"
             theme={monoBlue}
-            codeBlock
+            $codeBlock
           />
         </AccordionDetails>
       </Accordion>

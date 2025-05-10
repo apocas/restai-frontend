@@ -73,7 +73,7 @@ const SystemMessage = styled("div")(() => ({
   display: "flex",
   alignItems: "flex-start",
   padding: "20px 100px 0px 100px",
-  "white-space": "pre-wrap"
+  whiteSpace: "pre-wrap"
 }));
 
 const MessageBox = styled(FlexAlignCenter)(() => ({
@@ -328,27 +328,11 @@ export default function ChatContainer({
         </Box>
 
 
-        <Box>
-          {stream &&
-            <Tooltip title="Stream mode ON">
-              <Cast display="flex" alignItems="center" sx={{ color: stream ? palette.success.light : palette.error.main }} />
-            </Tooltip>
-          }
-          {!stream &&
-            <Tooltip title="Stream mode OFF">
-              <Cast display="flex" alignItems="center" sx={{ color: stream ? palette.success.light : palette.error.main }} />
-            </Tooltip>
-          }
-          {chat &&
-            <Tooltip title="Chat mode" ml={3}>
-              <Chat display="flex" alignItems="center" sx={{ color: chat ? palette.success.light : palette.error.main }} />
-            </Tooltip>
-          }
-          {!chat &&
-            <Tooltip title="QA mode" ml={3}>
-              <Chat display="flex" alignItems="center" sx={{ color: chat ? palette.success.light : palette.error.main }} />
-            </Tooltip>
-          }
+        <Box display="flex" alignItems="center">
+          <Cast sx={{ color: stream ? palette.success.light : palette.error.main }} />
+          <Tooltip title={chat ? "Chat mode" : "QA mode"} ml={3}>
+            <Chat sx={{ color: chat ? palette.success.light : palette.error.main, ml: 2 }} />
+          </Tooltip>
           <MatxMenu
             menuButton={
               <IconButton size="large" sx={{ verticalAlign: "baseline !important" }}>
@@ -381,8 +365,8 @@ export default function ChatContainer({
         )}
 
         {messages.map((message, index) => (
-          <Fragment>
-            <Message key={shortid.generate()}>
+          <Fragment key={message.id || index}>
+            <Message>
               <ChatAvatar src={"https://www.gravatar.com/avatar/" + sha256(auth.user.username)} />
 
               <Box ml={2}>
@@ -396,7 +380,7 @@ export default function ChatContainer({
               </Box>
             </Message>
 
-            <Message key={shortid.generate()}>
+            <Message>
               <ChatAvatar src={opponent.avatar} />
 
               <Box ml={2}>

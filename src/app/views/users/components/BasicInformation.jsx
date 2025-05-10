@@ -145,7 +145,7 @@ export default function BasicInformation({ user }) {
                   label="Username"
                   variant="outlined"
                   onChange={handleChange}
-                  value={user.username}
+                  value={user.username ?? ''}
                 />
               </Grid>
 
@@ -157,7 +157,7 @@ export default function BasicInformation({ user }) {
                   label="SSO"
                   variant="outlined"
                   onChange={handleChange}
-                  value={user.sso}
+                  value={user.sso ?? ''}
                 />
               </Grid>
 
@@ -168,7 +168,7 @@ export default function BasicInformation({ user }) {
                       label="Administrator"
                       control={
                         <Switch
-                          checked={state.is_admin}
+                          checked={state.is_admin ?? false}
                           name="is_admin"
                           inputProps={{ "aria-label": "secondary checkbox controlled" }}
                           onChange={handleChange}
@@ -182,7 +182,7 @@ export default function BasicInformation({ user }) {
                       label="Local AI only"
                       control={
                         <Switch
-                          checked={state.is_private}
+                          checked={state.is_private ?? false}
                           name="is_private"
                           inputProps={{ "aria-label": "secondary checkbox controlled" }}
                           onChange={handleChange}
