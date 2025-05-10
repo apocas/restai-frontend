@@ -124,7 +124,7 @@ export default function ProjectEdit({ project, projects, info }) {
   }
 
   const fetchTeams = () => {
-    return fetch(url + "/teams", { 
+    return fetch(url + "/teams", {
       headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
     })
       .then(function (response) {
@@ -149,16 +149,16 @@ export default function ProjectEdit({ project, projects, info }) {
   // Add a specific handler for team selection that fetches team details
   const handleTeamChange = (event) => {
     const teamId = event.target.value;
-    
+
     // First update the team_id in state
-    setState(prevState => ({ 
-      ...prevState, 
-      team_id: teamId 
+    setState(prevState => ({
+      ...prevState,
+      team_id: teamId
     }));
-    
+
     // Then fetch the complete team details to get LLMs and embeddings
     if (teamId) {
-      fetch(url + "/teams/" + teamId, { 
+      fetch(url + "/teams/" + teamId, {
         headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
       })
         .then(function (response) {
@@ -193,11 +193,11 @@ export default function ProjectEdit({ project, projects, info }) {
 
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
-    
+
     // Special handling for options properties like logging
     if (event.target.name === "logging") {
-      setState({ 
-        ...state, 
+      setState({
+        ...state,
         options: {
           ...state.options,
           logging: event.target.checked
@@ -213,10 +213,10 @@ export default function ProjectEdit({ project, projects, info }) {
     fetchTools();
     fetchUsers();
     fetchTeams();
-    
+
     // If the project has a team, fetch its complete details
     if (project && project.team && project.team.id) {
-      fetch(url + "/teams/" + project.team.id, { 
+      fetch(url + "/teams/" + project.team.id, {
         headers: new Headers({ 'Authorization': 'Basic ' + auth.user.token })
       })
         .then(response => {
@@ -240,7 +240,7 @@ export default function ProjectEdit({ project, projects, info }) {
 
   useEffect(() => {
     if (project && project.users) {
-      const projectUsers = users.filter(user => 
+      const projectUsers = users.filter(user =>
         project.users.includes(user.username)
       );
       setState(prev => ({
@@ -320,185 +320,184 @@ export default function ProjectEdit({ project, projects, info }) {
             <Grid item sm={12} xs={12}>
               <Divider sx={{ mb: 1 }} />
             </Grid>
-            
-            {auth.user.is_admin && (
-              <Grid item sm={12} xs={12}>
-                <Autocomplete
-                  multiple
-                  id="users-select"
-                  options={users}
-                  getOptionLabel={(option) => option.username}
-                  value={state.selectedUsers || []}
-                  isOptionEqualToValue={(option, value) => option.username === value.username}
-                  onChange={(event, newValue) => {
-                    setState({ ...state, selectedUsers: newValue });
-                    }}
-                    renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Users with access"
-                      placeholder="Select users"
-                    />
-                    )}
-                  />
-                  <Typography variant="caption" color="textSecondary">
-                    Select users who should have access to this project
-                  </Typography>
-                  </Grid>
-                )}
-                
-                <Grid item sm={12} xs={12}>
-                  <Divider sx={{ mb: 1 }} />
-                </Grid>
-                
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                  select
-                  fullWidth
-                  name="team_id"
-                  label="Team"
-                  variant="outlined"
-                  onChange={handleTeamChange}
-                  value={state.team ? state.team.id : (project.team ? project.team.id : '')}
-                  >
-                  {teams.map((team) => (
-                    <MenuItem value={team.id} key={team.id}>
-                    {team.name}
-                    </MenuItem>
-                  ))}
-                  </TextField>
-                </Grid>
-                
-                <Grid item sm={12} xs={12}>
-                  <Divider sx={{ mb: 1 }} />
-                </Grid>
 
-                {state.llm !== undefined && (
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      fullWidth
-                      select
-                      name="llm"
-                      label="LLM"
-                      variant="outlined"
-                      onChange={handleChange}
-                      value={state.llm ?? ''}
-                      defaultValue={state.llm ?? ''}
-                    >
-                      {/* Only show LLMs the project's team has access to */}
-                      {info.llms
-                        .filter(item => {
-                          // If no team is selected, show LLMs based on project type only
-                          if (!state.team) return true;
-                          
-                          // Get team LLMs - convert to array of names if they're objects
-                          const teamLLMs = state.team.llms || [];
-                          const teamLLMNames = teamLLMs.map(llm => typeof llm === 'string' ? llm : llm.name);
-                          
-                          // Filter by both team access and project type
-                          return teamLLMNames.includes(item.name);
-                        })
-                        .filter(item =>
-                          state.type === "vision"
-                            ? item.type === "vision"
-                            : item.type !== "vision"
-                        )
-                        .map((item) => (
-                          <MenuItem value={item.name} key={item.name}>
-                            {item.name}
-                          </MenuItem>
-                        ))}
-                    </TextField>
-                  </Grid>
-                )}
 
-                {(state.type === "rag" || state.type === "inference" || state.type === "ragsql" || state.type === "agent") && (
-                  <Grid item sm={6} xs={12}>
+            <Grid item sm={12} xs={12}>
+              <Autocomplete
+                multiple
+                id="users-select"
+                options={users}
+                getOptionLabel={(option) => option.username}
+                value={state.selectedUsers || []}
+                isOptionEqualToValue={(option, value) => option.username === value.username}
+                onChange={(event, newValue) => {
+                  setState({ ...state, selectedUsers: newValue });
+                }}
+                renderInput={(params) => (
                   <TextField
-                    fullWidth
-                    InputLabelProps={{ shrink: true }}
-                    name="system"
-                    label="System Message"
+                    {...params}
                     variant="outlined"
-                    onChange={handleChange}
-                    value={state.system ?? ''}
-                    multiline={true}
+                    label="Users with access"
+                    placeholder="Select users"
                   />
-                  </Grid>
                 )}
+              />
+              <Typography variant="caption" color="textSecondary">
+                Select users who should have access to this project
+              </Typography>
+            </Grid>
 
+            <Grid item sm={12} xs={12}>
+              <Divider sx={{ mb: 1 }} />
+            </Grid>
 
-                <Grid item sm={6} xs={12}>
-                  <TextField
+            <Grid item sm={6} xs={12}>
+              <TextField
+                select
+                fullWidth
+                name="team_id"
+                label="Team"
+                variant="outlined"
+                onChange={handleTeamChange}
+                value={state.team ? state.team.id : (project.team ? project.team.id : '')}
+              >
+                {teams.map((team) => (
+                  <MenuItem value={team.id} key={team.id}>
+                    {team.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item sm={12} xs={12}>
+              <Divider sx={{ mb: 1 }} />
+            </Grid>
+
+            {state.llm !== undefined && (
+              <Grid item sm={6} xs={12}>
+                <TextField
                   fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  name="default_prompt"
-                  label="Default Prompt"
+                  select
+                  name="llm"
+                  label="LLM"
                   variant="outlined"
                   onChange={handleChange}
-                  value={state.default_prompt ?? ''}
-                  />
-                </Grid>
+                  value={state.llm ?? ''}
+                  defaultValue={state.llm ?? ''}
+                >
+                  {/* Only show LLMs the project's team has access to */}
+                  {info.llms
+                    .filter(item => {
+                      // If no team is selected, show LLMs based on project type only
+                      if (!state.team) return true;
 
+                      // Get team LLMs - convert to array of names if they're objects
+                      const teamLLMs = state.team.llms || [];
+                      const teamLLMNames = teamLLMs.map(llm => typeof llm === 'string' ? llm : llm.name);
+
+                      // Filter by both team access and project type
+                      return teamLLMNames.includes(item.name);
+                    })
+                    .filter(item =>
+                      state.type === "vision"
+                        ? item.type === "vision"
+                        : item.type !== "vision"
+                    )
+                    .map((item) => (
+                      <MenuItem value={item.name} key={item.name}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+            )}
+
+            {(state.type === "rag" || state.type === "inference" || state.type === "ragsql" || state.type === "agent") && (
+              <Grid item sm={6} xs={12}>
+                <TextField
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  name="system"
+                  label="System Message"
+                  variant="outlined"
+                  onChange={handleChange}
+                  value={state.system ?? ''}
+                  multiline={true}
+                />
+              </Grid>
+            )}
+
+
+            <Grid item sm={6} xs={12}>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="default_prompt"
+                label="Default Prompt"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.default_prompt ?? ''}
+              />
+            </Grid>
+
+            <Grid item sm={12} xs={12}>
+              <Divider sx={{ mb: 1 }} />
+            </Grid>
+
+            <Grid item sm={6} xs={12}>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="guard"
+                label="Prompt Guard Project"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.guard ?? ''}
+              />
+            </Grid>
+
+            <Grid item sm={6} xs={12}>
+              <TextField
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                name="censorship"
+                label="Censhorship Message"
+                variant="outlined"
+                onChange={handleChange}
+                value={state.censorship ?? ''}
+              />
+            </Grid>
+
+            {state.type === "rag" && (
+              <div>
                 <Grid item sm={12} xs={12}>
                   <Divider sx={{ mb: 1 }} />
                 </Grid>
+              </div>
+            )}
 
-                <Grid item sm={6} xs={12}>
-                  <TextField
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  name="guard"
-                  label="Prompt Guard Project"
-                  variant="outlined"
-                  onChange={handleChange}
-                  value={state.guard ?? ''}
-                  />
+            {state.type === "agent" && (
+              <Fragment>
+                <Grid item sm={12} xs={12}>
+                  <Divider sx={{ mb: 1 }} />
                 </Grid>
-
                 <Grid item sm={6} xs={12}>
-                  <TextField
-                  fullWidth
-                  InputLabelProps={{ shrink: true }}
-                  name="censorship"
-                  label="Censhorship Message"
-                  variant="outlined"
-                  onChange={handleChange}
-                  value={state.censorship ?? ''}
-                  />
-                </Grid>
-
-                {state.type === "rag" && (
-                  <div>
-                  <Grid item sm={12} xs={12}>
-                    <Divider sx={{ mb: 1 }} />
-                  </Grid>
-                  </div>
-                )}
-
-                {state.type === "agent" && (
-                  <Fragment>
-                  <Grid item sm={12} xs={12}>
-                    <Divider sx={{ mb: 1 }} />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <FormControlLabel
+                  <FormControlLabel
                     label="Tools"
                     sx={{ ml: 0 }}
                     width="200px"
                     control={
                       <Autocomplete
-                      multiple
-                      id="tags-standard"
-                      name="tools"
-                      fullWidth
-                      options={tools.map((tool) => tool.name)}
-                      getOptionLabel={(option) => option}
-                      isOptionEqualToValue={(option, value) => option === value}
-                      onChange={(event, newValue) => {
-                          setState({ 
-                            ...state, 
+                        multiple
+                        id="tags-standard"
+                        name="tools"
+                        fullWidth
+                        options={tools.map((tool) => tool.name)}
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option, value) => option === value}
+                        onChange={(event, newValue) => {
+                          setState({
+                            ...state,
                             options: {
                               ...state.options,
                               tools: newValue.join(",")
