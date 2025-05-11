@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme, Card, styled, Tooltip, IconButton, Chip, Box } from "@mui/material";
+import { useTheme, Card, styled, Tooltip, IconButton, Chip, Box, Button as StyledButton } from "@mui/material";
 import { Visibility, Edit, Delete } from "@mui/icons-material";
 import MUIDataTable from "mui-datatables";
 import useAuth from "app/hooks/useAuth";
@@ -21,9 +21,25 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
   const { palette } = useTheme();
   const navigate = useNavigate();
 
+  // Custom toolbar for the top right
+  const CustomToolbar = () => (
+    isAdmin && (
+      <Tooltip title="Create New Team">
+        <StyledButton
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/teams/new")}
+          sx={{ ml: 2 }}
+        >
+          New Team
+        </StyledButton>
+      </Tooltip>
+    )
+  );
+
   if (!teams || teams.length === 0) {
     return (
-      <Card elevation={3}>
+      <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
         <Box p={3} textAlign="center">
           No teams found. {isAdmin && "Click 'New Team' to create one."}
         </Box>
@@ -32,7 +48,7 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
   }
 
   return (
-    <Card elevation={3}>
+    <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
       <MUIDataTable
         title={"Teams"}
         options={{
@@ -51,6 +67,7 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
               columnHeaderTooltip: column => `Sort for ${column.label}`
             },
           },
+          customToolbar: CustomToolbar
         }}
         data={teams.map(team => [
           team.name,

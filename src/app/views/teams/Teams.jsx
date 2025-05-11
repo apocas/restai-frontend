@@ -102,22 +102,6 @@ export default function Teams() {
         <Breadcrumb routeSegments={[{ name: "Teams", path: "/teams" }]} />
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box>
-          <h2>Teams</h2>
-          <p>Manage your organization's teams</p>
-        </Box>
-        {user.is_admin && (
-          <StyledButton
-            color="primary"
-            variant="contained"
-            onClick={handleNewTeam}
-          >
-            New Team
-          </StyledButton>
-        )}
-      </Box>
-
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TeamTable

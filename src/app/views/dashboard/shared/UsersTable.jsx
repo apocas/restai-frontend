@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Card, Button, styled, Avatar } from "@mui/material";
+import { Card, Button, styled, Avatar, Tooltip } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import sha256 from 'crypto-js/sha256';
 import { useTheme } from "@mui/material/styles";
@@ -25,10 +25,23 @@ const StyledAvatar = styled(Avatar)(() => ({
   marginRight: "10px"
 }));
 
-
 export default function UsersTable({ users = [], title = "Users" }) {
   const navigate = useNavigate();
   const { palette } = useTheme();
+
+  // Custom toolbar for the top right
+  const CustomToolbar = () => (
+    <Tooltip title="Create New User">
+      <StyledButton
+        variant="contained"
+        color="primary"
+        onClick={() => navigate("/user/new")}
+        sx={{ ml: 2 }}
+      >
+        New User
+      </StyledButton>
+    </Tooltip>
+  );
 
   return (
     <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
@@ -79,7 +92,8 @@ export default function UsersTable({ users = [], title = "Users" }) {
               toolTip: "Sort",
               columnHeaderTooltip: column => `Sort for ${column.label}`
             },
-          }
+          },
+          customToolbar: CustomToolbar
         }}
       />
     </Card>
