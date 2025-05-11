@@ -62,6 +62,9 @@ export const defaultNavigations = [
     name: "Tools",
     icon: "build",
     path: "/projects/tools",
+    children: [
+      { name: "Ollama Models", iconText: "OM", path: "/tools/ollama", auth: authRoles.admin },
+    ]
   },
   { label: "Docs", type: "label" },
   {
