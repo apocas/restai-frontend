@@ -1,9 +1,10 @@
-import { Card, Divider, Box, Grid, TextField, Button } from "@mui/material";
+import { Card, Divider, Box, Grid, TextField, Button, Typography } from "@mui/material";
 import { H4 } from "app/components/Typography";
 import { useState, useEffect } from "react";
 import useAuth from "app/hooks/useAuth";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { JsonEditor } from 'json-edit-react';
 
 export default function LLMEdit({ llm }) {
   const url = process.env.REACT_APP_RESTAI_API_URL || "";
@@ -69,6 +70,7 @@ export default function LLMEdit({ llm }) {
   };
 
   useEffect(() => {
+    //llm.options = JSON.parse(llm.options || "{}");
     setState(llm);
   }, [llm]);
 
@@ -106,14 +108,13 @@ export default function LLMEdit({ llm }) {
             </Grid>
 
             <Grid item sm={6} xs={12}>
-              <TextField
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                name="options"
-                label="Options"
-                variant="outlined"
-                onChange={handleChange}
-                value={state.options}
+              <Typography variant="h6">Options</Typography>
+              <JsonEditor
+                data={state.options || {}}
+                setData={(updatedOptions) => setState({ ...state, options: updatedOptions })}
+                restrictDelete={false}
+                rootName="Options"
+                numberType="float"
               />
             </Grid>
 

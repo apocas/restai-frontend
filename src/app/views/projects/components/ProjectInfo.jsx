@@ -41,7 +41,7 @@ export default function ProjectInfo({ project, projects }) {
 
   const handleDeleteClick = () => {
     if (window.confirm("Are you sure you to delete the project " + project.name + "?")) {
-      fetch(url + "/projects/" + project.name, {
+      fetch(url + "/projects/" + project.id, {
         method: 'DELETE',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       })

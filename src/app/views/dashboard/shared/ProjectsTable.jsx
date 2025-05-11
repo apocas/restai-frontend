@@ -48,7 +48,7 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
       <StyledButton
         variant="contained"
         color="primary"
-        onClick={() => navigate("/project/new")}
+        onClick={() => navigate("/projects/new")}
         sx={{ ml: 2 }}
       >
         New Project
