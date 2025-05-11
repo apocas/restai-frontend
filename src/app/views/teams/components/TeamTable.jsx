@@ -120,22 +120,22 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
               customBodyRender: (team) => (
                 <Box display="flex" alignItems="center" gap={1}>
                   <Tooltip title="View Team">
-                    <IconButton onClick={() => onView(team.id)}>
-                      <Visibility color="primary" />
-                    </IconButton>
+                    <StyledButton onClick={() => onView(team.id)} color="primary" variant="outlined" sx={{ minWidth: 0, p: 1 }}>
+                      <Visibility fontSize="small" />
+                    </StyledButton>
                   </Tooltip>
                   {(isAdmin || team.admins?.some(admin => admin.id === user?.id)) && (
                     <Tooltip title="Edit Team">
-                      <IconButton onClick={() => onEdit(team.id)}>
-                        <Edit color="secondary" />
-                      </IconButton>
+                      <StyledButton onClick={() => onEdit(team.id)} color="secondary" variant="outlined" sx={{ minWidth: 0, p: 1 }}>
+                        <Edit fontSize="small" />
+                      </StyledButton>
                     </Tooltip>
                   )}
                   {isAdmin && (
                     <Tooltip title="Delete Team">
-                      <IconButton onClick={() => onDelete(team.id)}>
-                        <Delete color="error" />
-                      </IconButton>
+                      <StyledButton onClick={() => onDelete(team.id)} color="error" variant="outlined" sx={{ minWidth: 0, p: 1 }}>
+                        <Delete fontSize="small" />
+                      </StyledButton>
                     </Tooltip>
                   )}
                 </Box>

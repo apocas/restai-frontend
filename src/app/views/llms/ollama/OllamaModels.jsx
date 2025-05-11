@@ -7,13 +7,6 @@ import {
   TextField,
   Button,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Chip,
   Divider,
   Typography,
@@ -27,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import ReactJson from '@microlink/react-json-view';
+import MUIDataTable from "mui-datatables";
 
 const Container = styled("div")(({ theme }) => ({
   margin: 10,
@@ -285,63 +279,90 @@ export default function OllamaModels() {
 
           {models.length > 0 && (
             <Grid item xs={12}>
-              <Card elevation={3} sx={{ p: 3 }}>
-                <H4>Available Ollama Models</H4>
-                <Divider sx={{ my: 2 }} />
-
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Size</TableCell>
-                        <TableCell>Modified</TableCell>
-                        <TableCell>Details</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {models.map((model) => (
-                        <TableRow key={model.name}>
-                          <TableCell>
-                            <strong>{model.name}</strong>
-                          </TableCell>
-                          <TableCell>
-                            {model.size ? `${(model.size / (1024 * 1024 * 1024)).toFixed(2)} GB` : 'Unknown'}
-                          </TableCell>
-                          <TableCell>
-                            {model.modified_at ? new Date(model.modified_at).toLocaleDateString() : 'Unknown'}
-                          </TableCell>
-                          <TableCell>
-                            {model.details?.families && (
-                              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                                {model.details.families.map((family) => (
-                                  <Chip key={family} label={family} size="small" />
-                                ))}
-                              </Box>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              color="primary"
-                              title="Add to System"
-                              onClick={() => handleAddModel(model)}
-                            >
+              <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
+                <MUIDataTable
+                  title={"Available Ollama Models"}
+                  data={models.map((model) => [
+                    model.name,
+                    model.size ? `${(model.size / (1024 * 1024 * 1024)).toFixed(2)} GB` : 'Unknown',
+                    model.modified_at ? new Date(model.modified_at).toLocaleDateString() : 'Unknown',
+                    model.details?.families || [],
+                    model
+                  ])}
+                  columns={[
+                    {
+                      name: "Name",
+                      options: {
+                        customBodyRender: (value) => <strong>{value}</strong>,
+                        sort: true,
+                        filter: true
+                      }
+                    },
+                    {
+                      name: "Size",
+                      options: {
+                        sort: true,
+                        filter: false
+                      }
+                    },
+                    {
+                      name: "Modified",
+                      options: {
+                        sort: true,
+                        filter: false
+                      }
+                    },
+                    {
+                      name: "Details",
+                      options: {
+                        customBodyRender: (families) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            {families.map((family) => (
+                              <Chip key={family} label={family} size="small" />
+                            ))}
+                          </Box>
+                        ),
+                        sort: false,
+                        filter: false
+                      }
+                    },
+                    {
+                      name: "Actions",
+                      options: {
+                        customBodyRender: (model) => (
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <IconButton color="primary" title="Add to System" onClick={() => handleAddModel(model)}>
                               <AddCircleIcon />
                             </IconButton>
-                            <IconButton
-                              color="secondary"
-                              title="Pull/Update Model"
-                              onClick={() => pullOllamaModel(model.name)}
-                            >
+                            <IconButton color="secondary" title="Pull/Update Model" onClick={() => pullOllamaModel(model.name)}>
                               <CloudDownloadIcon />
                             </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                          </Box>
+                        ),
+                        sort: false,
+                        filter: false
+                      }
+                    }
+                  ]}
+                  options={{
+                    print: false,
+                    selectableRows: "none",
+                    download: false,
+                    filter: true,
+                    viewColumns: false,
+                    rowsPerPage: 10,
+                    rowsPerPageOptions: [10, 15, 100],
+                    elevation: 0,
+                    textLabels: {
+                      body: {
+                        noMatch: "No models found",
+                        toolTip: "Sort",
+                        columnHeaderTooltip: column => `Sort for ${column.label}`
+                      },
+                    },
+                    sort: true
+                  }}
+                />
               </Card>
             </Grid>
           )}
