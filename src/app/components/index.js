@@ -8,5 +8,4 @@ export { default as MatxLoading } from "./MatxLoading";
 export { default as MatxSuspense } from "./MatxSuspense";
 export { default as MatxTheme } from "./MatxTheme/MatxTheme";
 export { default as MatxLayout } from "./MatxLayout/MatxLayout";
-export { default as ConfirmationDialog } from "./ConfirmationDialog";
 export { default as MatxVerticalNav } from "./MatxVerticalNav/MatxVerticalNav";

@@ -6,11 +6,7 @@ import useSettings from "app/hooks/useSettings";
 import { topBarHeight } from "app/utils/constant";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
 import { useNavigate } from "react-router-dom";
-import { Description } from "@mui/icons-material";
 
 const AppFooter = styled(Toolbar)(() => ({
   display: "flex",
@@ -62,10 +58,6 @@ export default function Footer() {
     fetchVersion();
   }, []);
 
-  const actions = [
-    { icon: <Description />, name: 'New Project' },
-  ];
-
   return (
     <ThemeProvider theme={footerTheme}>
       <ToastContainer
@@ -93,23 +85,6 @@ export default function Footer() {
               {(version) && <span style={{ fontSize: "0.7rem" }}>Core v{version + ', UI v' + process.env.REACT_APP_VERSION}</span>}
             </Paragraph>
           </FooterContent>
-
-          <SpeedDial
-            ariaLabel="SpeedDial basic example"
-            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-            icon={<SpeedDialIcon />}
-            theme={footerTheme}
-          >
-            {actions.map((action) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                onClick={() => { navigate("/projects/new");}}
-              />
-            ))}
-          </SpeedDial>
-
         </AppFooter>
       </AppBar>
     </ThemeProvider >
