@@ -9,7 +9,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
-import { Edit } from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
+import useAuth from "app/hooks/useAuth";
+import { toast } from 'react-toastify';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1)
@@ -27,11 +29,32 @@ const Small = styled("small")(({ bgcolor }) => ({
 }));
 
 export default function LLMsTable({ llms = [], title = "LLMs" }) {
+  const url = process.env.REACT_APP_RESTAI_API_URL || "";
+  const auth = useAuth();
   const { palette } = useTheme();
   const bgError = palette.error.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
   const navigate = useNavigate();
+
+  const handleDeleteClick = (llm) => {
+    if (window.confirm(`Are you sure you want to delete '${llm.name}'?`)) {
+      fetch(url + "/llms/" + llm.name, {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error deleting LLM');
+          }
+          toast.success(`Successfully deleted ${llm.name}`);
+          window.location.reload();
+        }).catch(err => {
+          console.log(err.toString());
+          toast.error("Error deleting LLM");
+        });
+    }
+  };
 
   // Custom toolbar for the top right
   const CustomToolbar = () => (
@@ -119,6 +142,11 @@ export default function LLMsTable({ llms = [], title = "LLMs" }) {
                   <Tooltip title="Edit">
                     <StyledButton onClick={() => navigate("/llm/" + llm.name + "/edit")} color="secondary" variant="outlined" sx={{ minWidth: 0, p: 1 }}>
                       <Edit fontSize="small" />
+                    </StyledButton>
+                  </Tooltip>
+                  <Tooltip title="Delete">
+                    <StyledButton onClick={() => handleDeleteClick(llm)} color="error" variant="outlined" sx={{ minWidth: 0, p: 1 }}>
+                      <Delete fontSize="small" />
                     </StyledButton>
                   </Tooltip>
                 </Box>
