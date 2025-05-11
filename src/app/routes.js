@@ -40,7 +40,8 @@ const KeysNew = Loadable(lazy(() => import("app/views/proxy/New")));
 const Teams = Loadable(lazy(() => import("app/views/teams/Teams")));
 const TeamView = Loadable(lazy(() => import("app/views/teams/TeamView")));
 const TeamEdit = Loadable(lazy(() => import("app/views/teams/TeamEdit")));
-const OllamaModels = Loadable(lazy(() => import("app/views/tools/ollama/OllamaModels")));
+const OllamaModels = Loadable(lazy(() => import("app/views/llms/ollama/OllamaModels")));
+const ManualLLM = Loadable(lazy(() => import("app/views/llms/manual/ManualLLM")));
 
 const routes = [
   {
@@ -82,6 +83,16 @@ const routes = [
       {
         path: "/llms/new",
         element: <LLMsNew />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/llms/new/manual",
+        element: <ManualLLM />,
+        auth: authRoles.admin
+      },
+      {
+        path: "/llms/new/ollama",
+        element: <OllamaModels />,
         auth: authRoles.admin
       },
       {
@@ -202,11 +213,6 @@ const routes = [
       {
         path: "/team/:id/edit",
         element: <TeamEdit />,
-        auth: authRoles.admin
-      },
-      {
-        path: "/tools/ollama",
-        element: <OllamaModels />,
         auth: authRoles.admin
       }
     ]

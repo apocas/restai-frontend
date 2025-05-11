@@ -46,7 +46,16 @@ export const defaultNavigations = [
     path: "/llms",
     children: [
       { name: "List LLMs", iconText: "SI", path: "/llms" },
-      { name: "New LLM", iconText: "SU", path: "/llms/new", auth: authRoles.admin },
+      { 
+        name: "New LLM", 
+        iconText: "SU", 
+        path: "/llms/new",
+        auth: authRoles.admin,
+        children: [
+          { name: "Manual", iconText: "MA", path: "/llms/new/manual", auth: authRoles.admin },
+          { name: "Import from Ollama", iconText: "IO", path: "/llms/new/ollama", auth: authRoles.admin },
+        ] 
+      },
     ]
   },
   {
@@ -62,9 +71,6 @@ export const defaultNavigations = [
     name: "Tools",
     icon: "build",
     path: "/projects/tools",
-    children: [
-      { name: "Ollama Models", iconText: "OM", path: "/tools/ollama", auth: authRoles.admin },
-    ]
   },
   { label: "Docs", type: "label" },
   {

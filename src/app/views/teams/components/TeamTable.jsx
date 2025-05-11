@@ -1,31 +1,31 @@
 import React from "react";
-import {
-  Card,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  IconButton,
-  Typography,
-  Tooltip,
-  Chip,
-  Button,
-  Box
-} from "@mui/material";
+import { useTheme, Card, styled, Tooltip, IconButton, Chip, Box } from "@mui/material";
 import { Visibility, Edit, Delete } from "@mui/icons-material";
+import MUIDataTable from "mui-datatables";
 import useAuth from "app/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
+const Small = styled("small")(({ bgcolor }) => ({
+  width: 50,
+  height: 15,
+  color: "#fff",
+  padding: "2px 8px",
+  borderRadius: "4px",
+  overflow: "hidden",
+  background: bgcolor,
+  boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)"
+}));
 
 export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) {
   const { user } = useAuth();
-  
+  const { palette } = useTheme();
+  const navigate = useNavigate();
+
   if (!teams || teams.length === 0) {
     return (
       <Card elevation={3}>
         <Box p={3} textAlign="center">
-          <Typography variant="body1" color="textSecondary">
-            No teams found. {isAdmin && "Click 'New Team' to create one."}
-          </Typography>
+          No teams found. {isAdmin && "Click 'New Team' to create one."}
         </Box>
       </Card>
     );
@@ -33,68 +33,100 @@ export default function TeamTable({ teams, onView, onEdit, onDelete, isAdmin }) 
 
   return (
     <Card elevation={3}>
-      <Table style={{ tableLayout: "fixed", minWidth: 750 }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Users</TableCell>
-            <TableCell>Projects</TableCell>
-            <TableCell>Your Role</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {teams.map((team) => (
-            <TableRow key={team.id}>
-              <TableCell>
-                <Typography variant="subtitle2" ml={1}>{team.name}</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2" noWrap style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {team.description || "No description"}
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2">{team.users?.length || 0}</Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2">{team.projects?.length || 0}</Typography>
-              </TableCell>
-              <TableCell>
-                {isAdmin ? (
-                  <Chip label="Platform Admin" color="primary" variant="outlined" size="small" />
-                ) : team.admins?.some(admin => admin.id === user?.id) ? (
-                  <Chip label="Team Admin" color="secondary" variant="outlined" size="small" />
-                ) : (
-                  <Chip label="Member" color="default" variant="outlined" size="small" />
-                )}
-              </TableCell>
-              <TableCell align="center">
-                <Tooltip title="View Team">
-                  <IconButton onClick={() => onView(team.id)}>
-                    <Visibility color="primary" />
-                  </IconButton>
-                </Tooltip>
-                {(isAdmin || team.admins?.some(admin => admin.id === user?.id)) && (
-                  <Tooltip title="Edit Team">
-                    <IconButton onClick={() => onEdit(team.id)}>
-                      <Edit color="secondary" />
+      <MUIDataTable
+        title={"Teams"}
+        options={{
+          print: false,
+          selectableRows: "none",
+          download: false,
+          filter: true,
+          viewColumns: false,
+          rowsPerPage: 10,
+          rowsPerPageOptions: [10, 15, 100],
+          elevation: 0,
+          textLabels: {
+            body: {
+              noMatch: "No teams found",
+              toolTip: "Sort",
+              columnHeaderTooltip: column => `Sort for ${column.label}`
+            },
+          },
+        }}
+        data={teams.map(team => [
+          team.name,
+          team.description || "No description",
+          team.users?.length || 0,
+          team.projects?.length || 0,
+          isAdmin ? (
+            <Chip label="Platform Admin" color="primary" variant="outlined" size="small" />
+          ) : team.admins?.some(admin => admin.id === user?.id) ? (
+            <Chip label="Team Admin" color="secondary" variant="outlined" size="small" />
+          ) : (
+            <Chip label="Member" color="default" variant="outlined" size="small" />
+          ),
+          team
+        ])}
+        columns={[
+          {
+            name: "Name",
+            options: {
+              customBodyRender: (value, tableMeta) => (
+                <Box display="flex" alignItems="center" gap={1}>
+                  {value}
+                </Box>
+              )
+            }
+          },
+          {
+            name: "Description",
+            options: {
+              customBodyRender: value => (
+                <Box sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</Box>
+              )
+            }
+          },
+          {
+            name: "Users",
+            options: {}
+          },
+          {
+            name: "Projects",
+            options: {}
+          },
+          {
+            name: "Your Role",
+            options: {}
+          },
+          {
+            name: "Actions",
+            options: {
+              customBodyRender: (team) => (
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Tooltip title="View Team">
+                    <IconButton onClick={() => onView(team.id)}>
+                      <Visibility color="primary" />
                     </IconButton>
                   </Tooltip>
-                )}
-                {isAdmin && (
-                  <Tooltip title="Delete Team">
-                    <IconButton onClick={() => onDelete(team.id)}>
-                      <Delete color="error" />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                  {(isAdmin || team.admins?.some(admin => admin.id === user?.id)) && (
+                    <Tooltip title="Edit Team">
+                      <IconButton onClick={() => onEdit(team.id)}>
+                        <Edit color="secondary" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                  {isAdmin && (
+                    <Tooltip title="Delete Team">
+                      <IconButton onClick={() => onDelete(team.id)}>
+                        <Delete color="error" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Box>
+              )
+            }
+          }
+        ]}
+      />
     </Card>
   );
 }

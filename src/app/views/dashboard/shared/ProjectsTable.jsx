@@ -42,6 +42,20 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
 
   const navigate = useNavigate();
 
+  // Custom toolbar for the top right
+  const CustomToolbar = () => (
+    <Tooltip title="Create New Project">
+      <StyledButton
+        variant="contained"
+        color="primary"
+        onClick={() => navigate("/project/new")}
+        sx={{ ml: 2 }}
+      >
+        New Project
+      </StyledButton>
+    </Tooltip>
+  );
+
   return (
     <Card elevation={3} sx={{ pt: "20px", mb: 3 }}>
       <MUIDataTable
@@ -61,7 +75,8 @@ export default function ProjectsTable({ projects = [], title = "Projects" }) {
               toolTip: "Sort",
               columnHeaderTooltip: column => `Sort for ${column.label}`
             },
-          }
+          },
+          customToolbar: CustomToolbar
         }}
         data={projects.map(project => [project.id, project.name, project.type, project.llm, project.users, project.team.name, project.id])}
         columns={[{
