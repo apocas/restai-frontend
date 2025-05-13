@@ -87,6 +87,7 @@ export default function ImageChatContainer({
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [file, setFile] = useState(null);
   const [state, setState] = useState({});
+  const [expandedChunks, setExpandedChunks] = useState(null);
 
   const handleMessageSend = (message) => {
     handler(message);
@@ -293,6 +294,28 @@ export default function ImageChatContainer({
 
                 <UserStatus human={false} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer.text}</Span>
+                  {/* Timestamp chunks collapsible */}
+                  {message.answer && Array.isArray(message.answer.chunks) && message.answer.chunks.length > 0 && (
+                    <Fragment>
+                      <Box mt={1}>
+                        <span
+                          style={{ color: '#1976d2', fontSize: '0.85em', cursor: 'pointer', textDecoration: 'underline' }}
+                          onClick={() => setExpandedChunks(expandedChunks === index ? null : index)}
+                        >
+                          {expandedChunks === index ? 'Hide timestamps ⏱️' : 'Show timestamps ⏱️'}
+                        </span>
+                      </Box>
+                      {expandedChunks === index && (
+                        <Box mt={1} sx={{ background: '#f5f5f5', borderRadius: 2, p: 1 }}>
+                          {message.answer.chunks.map((chunk, cidx) => (
+                            <Box key={cidx} mb={1}>
+                              <b>[{chunk.timestamp[0]}s - {chunk.timestamp[1]}s]</b> {chunk.text}
+                            </Box>
+                          ))}
+                        </Box>
+                      )}
+                    </Fragment>
+                  )}
                 </UserStatus>
               </Box>
             </Message>
