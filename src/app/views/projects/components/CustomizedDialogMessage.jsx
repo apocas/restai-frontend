@@ -65,7 +65,7 @@ const CustomizedDialogMessage = ({ message, onclose }) => {
         </DialogTitle>
 
         <DialogContent dividers>
-          <ReactJson src={message} enableClipboard={false} collapsed={1} name={false} />
+          <ReactJson src={message} enableClipboard={true} collapsed={1} name={false} />
         </DialogContent>
 
         <DialogActions>

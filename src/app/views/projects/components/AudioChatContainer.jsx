@@ -292,7 +292,7 @@ export default function ImageChatContainer({
                 </Paragraph>
 
                 <UserStatus human={false} >
-                  <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer}</Span>
+                  <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer.text}</Span>
                 </UserStatus>
               </Box>
             </Message>
