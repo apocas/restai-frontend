@@ -113,7 +113,7 @@ export const gpuDependentItems = {
 
 // Pure function to build navigation structure based on gpu capability
 // This doesn't use any hooks
-export const buildNavigations = (hasGpu) => {
+export const buildNavigations = (hasGpu, hasProxy) => {
   const navigations = [...defaultNavigations];
   
   // Insert GPU-dependent items before the Docs label
@@ -131,8 +131,8 @@ export const buildNavigations = (hasGpu) => {
   }
 
   // Only show AI Proxy if GPU is available
-  if (hasGpu) {
-    navigations.splice(insertPosition + (hasGpu ? 2 : 0), 0, gpuDependentItems.aiProxy);
+  if (hasProxy) {
+    navigations.splice(insertPosition + (hasProxy ? 2 : 0), 0, gpuDependentItems.aiProxy);
   }
 
   return navigations;
@@ -142,7 +142,8 @@ export const buildNavigations = (hasGpu) => {
 export const useNavigations = () => {
   const { platformCapabilities } = usePlatformCapabilities();
   const hasGpu = platformCapabilities?.gpu ?? false;
-  return buildNavigations(hasGpu);
+  const hasProxy = platformCapabilities?.proxy ?? false;
+  return buildNavigations(hasGpu, hasProxy);
 };
 
 // For compatibility with direct imports (non-component files)

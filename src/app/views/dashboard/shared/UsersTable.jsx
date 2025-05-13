@@ -35,7 +35,7 @@ export default function UsersTable({ users = [], title = "Users" }) {
       <StyledButton
         variant="contained"
         color="primary"
-        onClick={() => navigate("/user/new")}
+        onClick={() => navigate("/users/new")}
         sx={{ ml: 2 }}
       >
         New User
