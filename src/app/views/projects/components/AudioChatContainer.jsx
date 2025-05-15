@@ -3,6 +3,7 @@ import { Delete, MoreVert, Send, CloudUpload, MusicNote } from "@mui/icons-mater
 import { Fragment, useState } from "react";
 import Scrollbar from "react-perfect-scrollbar";
 import shortid from "shortid";
+import ReactJson from '@microlink/react-json-view';
 
 import MatxMenu from "app/components/MatxMenu";
 import ChatAvatar from "app/components/ChatAvatar";
@@ -73,7 +74,7 @@ const MessageBox = styled(FlexAlignCenter)(() => ({
 export default function ImageChatContainer({
   generators,
   opponentUser = {
-    name: "A.I. Musician",
+    name: "AI Musician",
     avatar: "/admin/assets/images/musician.jpg"
   }
 }) {
@@ -88,6 +89,7 @@ export default function ImageChatContainer({
   const [file, setFile] = useState(null);
   const [state, setState] = useState({});
   const [expandedChunks, setExpandedChunks] = useState(null);
+  const [language, setLanguage] = useState("");
 
   const handleMessageSend = (message) => {
     handler(message);
@@ -107,13 +109,13 @@ export default function ImageChatContainer({
       "prompt": prompt
     };
 
-
     if (canSubmit) {
       setCanSubmit(false);
 
       const formData = new FormData();
       formData.append("file", file);
       formData.append("prompt", prompt);
+      formData.append("language", language);
 
       setMessages([...messages, { id: body.id, prompt: prompt + " (" + state.generator + ")", input_audio: file, answer: null, sources: [] }]);
       fetch(url + "/audio/" + state.generator + "/transcript", {
@@ -198,7 +200,6 @@ export default function ImageChatContainer({
                 label="Generator"
                 variant="outlined"
                 onChange={handleChange}
-                //sx={{ minWidth: 188}}
                 sx={{
                   minWidth: 188,
                   "& .MuiOutlinedInput-notchedOutline": {
@@ -226,6 +227,32 @@ export default function ImageChatContainer({
                   </MenuItem>
                 ))}
               </TextField>
+              <TextField
+                size="small"
+                name="language"
+                label="Language"
+                variant="outlined"
+                value={language}
+                onChange={e => setLanguage(e.target.value)}
+                sx={{
+                  minWidth: 120,
+                  marginLeft: 2,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "2px solid white"
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": {
+                      border: "2px solid white"
+                    }
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "white"
+                  },
+                  "& .MuiInputBase-input": {
+                    color: "white"
+                  }
+                }}
+              />
             </UserName>
           </Fragment>
         </Box>
@@ -294,27 +321,30 @@ export default function ImageChatContainer({
 
                 <UserStatus human={false} >
                   <Span sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", cursor: 'pointer' }} value={message} onClick={() => handleClickMessage(message)}>{!message.answer ? <CircularProgress size="1rem" /> : message.answer.text}</Span>
-                  {/* Timestamp chunks collapsible */}
-                  {message.answer && Array.isArray(message.answer.chunks) && message.answer.chunks.length > 0 && (
-                    <Fragment>
-                      <Box mt={1}>
-                        <span
-                          style={{ color: '#1976d2', fontSize: '0.85em', cursor: 'pointer', textDecoration: 'underline' }}
-                          onClick={() => setExpandedChunks(expandedChunks === index ? null : index)}
-                        >
-                          {expandedChunks === index ? 'Hide timestamps ⏱️' : 'Show timestamps ⏱️'}
-                        </span>
-                      </Box>
-                      {expandedChunks === index && (
-                        <Box mt={1} sx={{ background: '#f5f5f5', borderRadius: 2, p: 1 }}>
-                          {message.answer.chunks.map((chunk, cidx) => (
-                            <Box key={cidx} mb={1}>
-                              <b>[{chunk.timestamp[0]}s - {chunk.timestamp[1]}s]</b> {chunk.text}
-                            </Box>
-                          ))}
+                  {/* Render answer.chunks or answer.segments as JSON if present */}
+                  {message.answer && (Array.isArray(message.answer.chunks)) && (
+                    <Box mt={2}>
+                      <ReactJson
+                        src={message.answer.chunks || message.answer.segments}
+                        name={Array.isArray(message.answer.chunks) ? 'chunks' : 'segments'}
+                        collapsed={1}
+                        enableClipboard={true}
+                        displayDataTypes={false}
+                        style={{ fontSize: '0.9em', background: '#f5f5f5', borderRadius: 8, padding: 8 }}
+                      />
+                      {message.answer.word_chunks && (
+                        <Box mt={2}>
+                          <ReactJson
+                            src={message.answer.word_chunks}
+                            name="word_chunks"
+                            collapsed={1}
+                            enableClipboard={true}
+                            displayDataTypes={false}
+                            style={{ fontSize: '0.9em', background: '#f5f5f5', borderRadius: 8, padding: 8 }}
+                          />
                         </Box>
                       )}
-                    </Fragment>
+                    </Box>
                   )}
                 </UserStatus>
               </Box>
@@ -335,7 +365,7 @@ export default function ImageChatContainer({
           onKeyUp={sendMessageOnEnter}
           label="Type your prompt here..."
           onChange={(e) => setMessage(e.target.value)}
-          sx={{marginRight: 2}}
+          sx={{ marginRight: 2 }}
         />
 
         <div style={{ display: "flex" }}>
