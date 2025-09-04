@@ -58,15 +58,15 @@ export default function ProjectEdit({ project, projects, info }) {
     }
 
     if (project.type === "rag") {
-      opts.colbert_rerank = state.colbert_rerank
-      opts.llm_rerank = state.llm_rerank
-      opts.score = parseFloat(state.score)
-      opts.k = parseInt(state.k)
-      opts.cache = state.cache
-      opts.cache_threshold = parseFloat(state.cache_threshold) / 100
+      opts.options.colbert_rerank = state.options.colbert_rerank
+      opts.options.llm_rerank = state.options.llm_rerank
+      opts.options.score = parseFloat(state.options.score) || 0.0
+      opts.options.k = parseInt(state.options.k) || 4
+      opts.options.cache = state.options.cache
+      opts.options.cache_threshold = parseFloat(state.options.cache_threshold) || 0
 
       if (opts.censorship.trim() === "") {
-        delete opts.censorship;
+        delete opts.options.censorship;
       }
     }
 
@@ -194,22 +194,69 @@ export default function ProjectEdit({ project, projects, info }) {
   const handleChange = (event) => {
     if (event && event.persist) event.persist();
 
-    // Special handling for options properties like logging
-    if (event.target.name === "logging") {
+    // Handle options properties
+    if (["logging", "cache", "llm_rerank", "colbert_rerank"].includes(event.target.name)) {
       setState({
         ...state,
         options: {
           ...state.options,
-          logging: event.target.checked
+          [event.target.name]: event.target.checked
         }
       });
-    } else {
+    } 
+    // Handle slider changes for cache_threshold
+    else if (event.target.name === "cache_threshold") {
+      setState({ 
+        ...state, 
+        options: {
+          ...state.options,
+          cache_threshold: event.target.value / 100
+        }
+      });
+    }
+    // Handle K field (slider)
+    else if (event.target.name === "k") {
+      setState({ 
+        ...state, 
+        options: {
+          ...state.options,
+          k: parseInt(event.target.value)
+        }
+      });
+    }
+    // Handle score field (text input - store as string during editing)
+    else if (event.target.name === "score") {
+      setState({ 
+        ...state, 
+        options: {
+          ...state.options,
+          score: event.target.value
+        }
+      });
+    }
+    else {
       setState({ ...state, [event.target.name]: (event.target.type === "checkbox" ? event.target.checked : event.target.value) });
     }
   };
 
   useEffect(() => {
-    setState(project);
+    // Initialize state with project data, ensuring options object exists
+    const initialState = {
+      ...project,
+      options: {
+        logging: false,
+        colbert_rerank: false,
+        llm_rerank: false,
+        cache: false,
+        cache_threshold: 0,
+        score: 0.0,
+        k: 4,
+        tools: null,
+        ...project.options
+      }
+    };
+    
+    setState(initialState);
     fetchTools();
     fetchUsers();
     fetchTeams();
@@ -308,7 +355,7 @@ export default function ProjectEdit({ project, projects, info }) {
                 label="Logging"
                 control={
                   <Switch
-                    checked={state.options && state.options.logging !== undefined ? state.options.logging : (project.options?.logging || false)}
+                    checked={state.options?.logging ?? false}
                     name="logging"
                     inputProps={{ "aria-label": "logging checkbox" }}
                     onChange={handleChange}
@@ -504,7 +551,7 @@ export default function ProjectEdit({ project, projects, info }) {
                             }
                           });
                         }}
-                        defaultValue={state.options.tools ? state.options.tools.split(",") : []}
+                        value={state.options?.tools ? state.options.tools.split(",").filter(tool => tool.trim() !== "") : []}
                         renderInput={(params) => (
                           <TextField
                             {...params}
@@ -533,7 +580,7 @@ export default function ProjectEdit({ project, projects, info }) {
                   </Typography>
                   <Slider
                     name="k"
-                    defaultValue={state.k}
+                    value={state.options?.k ?? 4}
                     onChange={handleChange}
                     aria-labelledby="input-slider"
                     step={1}
@@ -551,7 +598,7 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="Cutoff Score"
                     variant="outlined"
                     onChange={handleChange}
-                    value={state.score ?? ''}
+                    value={state.options?.score ?? ''}
                   />
                 </Grid>
                 <Grid item sm={6} xs={12}>
@@ -559,7 +606,8 @@ export default function ProjectEdit({ project, projects, info }) {
                     Cache Threshold
                   </Typography>
                   <Slider
-                    defaultValue={state.cache_threshold * 100}
+                    name="cache_threshold"
+                    value={(state.options?.cache_threshold ?? 0) * 100}
                     onChange={handleChange}
                     aria-labelledby="input-slider"
                     step={1}
@@ -574,8 +622,10 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="Cache"
                     control={
                       <Switch
-                        checked={state.cache}
-                        inputProps={{ "aria-label": "secondary checkbox" }}
+                        checked={state.options?.cache ?? false}
+                        name="cache"
+                        inputProps={{ "aria-label": "cache checkbox" }}
+                        onChange={handleChange}
                       />
                     }
                   />
@@ -585,8 +635,10 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="LLM Rerank"
                     control={
                       <Switch
-                        checked={state.llm_rerank}
-                        inputProps={{ "aria-label": "secondary checkbox" }}
+                        checked={state.options?.llm_rerank ?? false}
+                        name="llm_rerank"
+                        inputProps={{ "aria-label": "llm rerank checkbox" }}
+                        onChange={handleChange}
                       />
                     }
                   />
@@ -596,8 +648,10 @@ export default function ProjectEdit({ project, projects, info }) {
                     label="Colbert Rerank"
                     control={
                       <Switch
-                        checked={state.colbert_rerank}
-                        inputProps={{ "aria-label": "secondary checkbox" }}
+                        checked={state.options?.colbert_rerank ?? false}
+                        name="colbert_rerank"
+                        inputProps={{ "aria-label": "colbert rerank checkbox" }}
+                        onChange={handleChange}
                       />
                     }
                   />
