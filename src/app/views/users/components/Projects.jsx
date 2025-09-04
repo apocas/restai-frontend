@@ -63,7 +63,11 @@ export default function Preferences({ user, projects }) {
       method: 'PATCH',
       headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Basic ' + auth.user.token }),
       body: JSON.stringify({
-        "projects": user.projects.map((p) => p.name)
+        "projects": user.projects.map((p) => {
+          // Try to get name from the project object or from the projectMap
+          const projectName = p.name || (projectMap[p.id] && projectMap[p.id].name);
+          return projectName;
+        }).filter(name => name != null) // Filter out null/undefined values
       }),
     })
       .then(response => {
@@ -106,7 +110,13 @@ export default function Preferences({ user, projects }) {
               </TextField>
             </Grid>
             <Grid item sm={6} xs={12}>
-              <Button type="submit" variant="contained" mt={1} onClick={() => { user.projects.push({ "name": state.addproject }); onSubmitHandler() }}>
+              <Button type="submit" variant="contained" mt={1} onClick={() => { 
+                const selectedProject = projects.find(p => p.name === state.addproject);
+                if (selectedProject) {
+                  user.projects.push({ "name": selectedProject.name, "id": selectedProject.id }); 
+                  onSubmitHandler();
+                }
+              }}>
                 Associate
               </Button>
             </Grid>
